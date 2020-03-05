@@ -6,7 +6,7 @@ namespace AlkalineThunder.CodenameLadouceur
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            using (var loop = new GameLoop()) loop.Run();
         }
     }
 }
