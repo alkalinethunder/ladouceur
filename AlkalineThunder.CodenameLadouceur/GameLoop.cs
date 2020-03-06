@@ -11,6 +11,7 @@ namespace AlkalineThunder.CodenameLadouceur
         private GraphicsDeviceManager _graphics = null;
         private SpriteBatch _batch;
         private ScreenManager _screenManager = null;
+        private InputManager _input = null;
 
         public GameLoop()
         {
@@ -27,7 +28,9 @@ namespace AlkalineThunder.CodenameLadouceur
 
         protected override void Initialize()
         {
+            _input = new InputManager(this);
             _screenManager = new ScreenManager(this);
+            Components.Add(_input);
             Components.Add(_screenManager);
 
             base.Initialize();
