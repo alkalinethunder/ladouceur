@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace AlkalineThunder.CodenameLadouceur
+namespace AlkalineThunder.CodenameLadouceur.Debugging
 {
     public static class Logger
     {
@@ -37,14 +37,5 @@ namespace AlkalineThunder.CodenameLadouceur
 
             Console.WriteLine("[{0}] [{1}:{2}] <{3}/{4}> {5}", DateTime.Now.ToShortTimeString(), fname, ln, member, level.ToString().ToLower(), message);
         }
-    }
-
-    public enum LogLevel
-    {
-        Info,
-        Warning,
-        Message,
-        Error,
-        Debug
     }
 }

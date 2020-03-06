@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AlkalineThunder.CodenameLadouceur.Debugging;
+using System;
 
 namespace AlkalineThunder.CodenameLadouceur
 {

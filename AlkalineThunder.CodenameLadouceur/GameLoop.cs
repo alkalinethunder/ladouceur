@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using AlkalineThunder.CodenameLadouceur.Input;
 
 namespace AlkalineThunder.CodenameLadouceur
 {
