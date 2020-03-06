@@ -3,15 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AlkalineThunder.CodenameLadouceur
+namespace AlkalineThunder.CodenameLadouceur.Screens
 {
     public sealed class ScreenManager : GameComponent
     {
-        private GameLoop _game = null;
-
         public ScreenManager(GameLoop game) : base(game)
         {
-            _game = game;
         }
 
         public override void Initialize()
