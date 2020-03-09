@@ -1,0 +1,3 @@
+[submodule "DevConsole"]
+	path = DevConsole
+	url = https://github.com/alkalinethunder/DevConsole
