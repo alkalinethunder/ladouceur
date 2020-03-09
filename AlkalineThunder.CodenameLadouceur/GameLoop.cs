@@ -6,13 +6,14 @@ using System.Text;
 using AlkalineThunder.CodenameLadouceur.Input;
 using AlkalineThunder.CodenameLadouceur.Screens;
 using AlkalineThunder.DevConsole;
+using AlkalineThunder.CodenameLadouceur.Rendering;
 
 namespace AlkalineThunder.CodenameLadouceur
 {
     public sealed class GameLoop : Game
     {
         private GraphicsDeviceManager _graphics = null;
-        private SpriteBatch _batch;
+        private Renderer _renderer = null;
         private ScreenManager _screenManager = null;
         private InputManager _input = null;
         
@@ -35,13 +36,14 @@ namespace AlkalineThunder.CodenameLadouceur
 
         protected override void Initialize()
         {
-            _batch = new SpriteBatch(GraphicsDevice);
+            _renderer = new Renderer(this.GraphicsDevice);
+
             _input = new InputManager(this);
             _screenManager = new ScreenManager(this);
             Components.Add(_input);
             Components.Add(_screenManager);
 
-            DevConsole = new DevConsole.DevConsole(this, new SpriteBatchConsoleRenderer(_batch));
+            DevConsole = new DevConsole.DevConsole(this, _renderer);
 
             base.Initialize();
         }
@@ -57,7 +59,7 @@ namespace AlkalineThunder.CodenameLadouceur
         {
             GraphicsDevice.Clear(Color.Black);
 
-            _screenManager.Draw(gameTime);
+            _screenManager.Draw(gameTime, _renderer);
 
             base.Draw(gameTime);
         }
