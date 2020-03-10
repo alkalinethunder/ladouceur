@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -22,6 +23,17 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
                     if (_content != null) InternalChildren.Add(_content);
                 }
             }
+        }
+
+        protected override Vector2 MeasureOverride()
+        {
+            if (_content != null) return _content.CalculateSize();
+            return Vector2.Zero;
+        }
+
+        protected override void ArrangeOverride()
+        {
+            if (_content != null) Control.PlaceControl(_content, Bounds);
         }
     }
 }

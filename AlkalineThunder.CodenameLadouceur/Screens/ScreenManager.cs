@@ -1,4 +1,5 @@
-﻿using AlkalineThunder.CodenameLadouceur.Rendering;
+﻿using AlkalineThunder.CodenameLadouceur.Gui;
+using AlkalineThunder.CodenameLadouceur.Rendering;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,12 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
 
         public override void Update(GameTime gameTime)
         {
-            foreach (var screen in _screens) screen.Update(gameTime);
+            foreach (var screen in _screens)
+            {
+                Control.PlaceControl(screen, new Rectangle(0, 0, Game.GraphicsDevice.PresentationParameters.BackBufferWidth, Game.GraphicsDevice.PresentationParameters.BackBufferHeight));
+
+                screen.Update(gameTime);
+            }
             base.Update(gameTime);
         }
 

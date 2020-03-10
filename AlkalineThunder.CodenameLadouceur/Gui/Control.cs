@@ -22,7 +22,7 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
             public int Count => _children.Count;
 
-            public bool IsReadOnly => _owner.SupportsChildren;
+            public bool IsReadOnly => !_owner.SupportsChildren;
 
             public void Add(Control item)
             {
@@ -76,10 +76,24 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
         private Renderer _renderer = null;
 
+        public Padding Padding { get; set; } = 0;
+        public Padding Margin { get; set; } = 0;
+        public int MinWidth { get; set; }
+        public int MinHeight { get; set; }
+        public int MaxWidth { get; set; }
+        public int MaxHeight { get; set; }
+
+        public int Width { get; set; }
+        public int Height { get; set; }
+
         protected virtual bool SupportsChildren => false;
         protected ControlCollection InternalChildren { get; } = null;
         public Control Parent { get; private set; }
-
+        public HorizontalAlignment HorizontalAlignment { get; set; }
+        public VerticalAlignment VerticalAlignment { get; set; }
+        public Rectangle Bounds { get; private set; }
+        public Vector2 DesiredSize { get; private set; }
+        
         public Control()
         {
             InternalChildren = new ControlCollection(this);
@@ -116,6 +130,16 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             foreach (var child in InternalChildren) child.Update(gameTime);
         }
 
+        protected virtual Vector2 MeasureOverride()
+        {
+            return Vector2.Zero;
+        }
+
+        protected virtual void ArrangeOverride()
+        {
+
+        }
+
         public void Draw(GameTime gameTime, Renderer renderer)
         {
             if (_renderer != null) throw new InvalidOperationException("Control is already drawing.");
@@ -127,6 +151,67 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             foreach (var child in InternalChildren) child.Draw(gameTime, _renderer);
 
             _renderer = null;
+        }
+
+        public Vector2 CalculateSize()
+        {
+            var desiredSize = MeasureOverride() + Padding + Margin;
+
+            if (desiredSize.X < MinWidth) desiredSize.X = MinWidth;
+            if (desiredSize.Y < MinHeight) desiredSize.Y = MinHeight;
+            if (MaxWidth > 0 && desiredSize.X > MaxWidth) desiredSize.X = MaxWidth;
+            if (MaxHeight > 0 && desiredSize.Y > MaxHeight) desiredSize.Y = MaxHeight;
+
+            DesiredSize = desiredSize;
+
+            return new Vector2(Width == 0 ? DesiredSize.X : Width, Height == 0 ? DesiredSize.Y : Height);
+        }
+
+        public static void PlaceControl(Control control, Rectangle bounds)
+        {
+            var actualSize = control.CalculateSize();
+
+            var finalBounds = new Rectangle();
+
+            finalBounds.Width = (control.HorizontalAlignment == HorizontalAlignment.Stretch) ? bounds.Width : (int)actualSize.X;
+            finalBounds.Height = (control.VerticalAlignment == VerticalAlignment.Stretch) ? bounds.Height : (int)actualSize.Y;
+
+            switch(control.HorizontalAlignment)
+            {
+                case HorizontalAlignment.Left:
+                case HorizontalAlignment.Stretch:
+                    finalBounds.X = bounds.X;
+                    break;
+                case HorizontalAlignment.Center:
+                    finalBounds.X = bounds.Left + ((bounds.Width - finalBounds.Width) / 2);
+                    break;
+                case HorizontalAlignment.Right:
+                    finalBounds.X = bounds.Right - finalBounds.Width;
+                    break;
+            }
+            
+            switch(control.VerticalAlignment)
+            {
+                case VerticalAlignment.Stretch:
+                case VerticalAlignment.Top:
+                    finalBounds.Y = bounds.Y;
+                    break;
+                case VerticalAlignment.Middle:
+                    finalBounds.Y = bounds.Y + ((bounds.Height - finalBounds.Height)) / 2;
+                    break;
+                case VerticalAlignment.Bottom:
+                    finalBounds.Y = bounds.Bottom - finalBounds.Height;
+                    break;
+            }
+
+            finalBounds.X += control.Margin.Left;
+            finalBounds.Y += control.Margin.Top;
+            finalBounds.Width -= control.Margin.Width;
+            finalBounds.Height -= control.Margin.Height;
+
+            control.Bounds = finalBounds;
+
+            control.ArrangeOverride();
         }
     }
 }
