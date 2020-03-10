@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using AlkalineThunder.CodenameLadouceur.Input;
 using AlkalineThunder.CodenameLadouceur.Screens;
+using AlkalineThunder.DevConsole;
 using AlkalineThunder.CodenameLadouceur.Rendering;
 
 namespace AlkalineThunder.CodenameLadouceur
@@ -15,6 +16,8 @@ namespace AlkalineThunder.CodenameLadouceur
         private Renderer _renderer = null;
         private ScreenManager _screenManager = null;
         private InputManager _input = null;
+        
+        public DevConsole.DevConsole DevConsole { get; private set; }
 
         public GameLoop()
         {
@@ -27,21 +30,28 @@ namespace AlkalineThunder.CodenameLadouceur
             _graphics.PreferredBackBufferHeight = nativeResolution.Height;
 
             IsFixedTimeStep = true;
+
+            Content.RootDirectory = "Content";
         }
 
         protected override void Initialize()
         {
+            _renderer = new Renderer(this.GraphicsDevice);
+
             _input = new InputManager(this);
             _screenManager = new ScreenManager(this);
             Components.Add(_input);
             Components.Add(_screenManager);
+
+            DevConsole = new DevConsole.DevConsole(this, _renderer);
 
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            _renderer = new Renderer(this.GraphicsDevice);
+            this.DevConsole.ConsoleFont = Content.Load<SpriteFont>("ConsoleFont");
+
             base.LoadContent();
         }
 

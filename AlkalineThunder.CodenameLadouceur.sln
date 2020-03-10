@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlkalineThunder.CodenameLadouceur", "AlkalineThunder.CodenameLadouceur\AlkalineThunder.CodenameLadouceur.csproj", "{A6FFC59B-BD12-462D-B01C-3E7244E86D4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlkalineThunder.CodenameLadouceur", "AlkalineThunder.CodenameLadouceur\AlkalineThunder.CodenameLadouceur.csproj", "{A6FFC59B-BD12-462D-B01C-3E7244E86D4C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Components", "Components", "{C289CCE0-80ED-40F1-8A44-82AA66540E2E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlkalineThunder.DevConsole", "DevConsole\AlkalineThunder.DevConsole\AlkalineThunder.DevConsole.csproj", "{30DE0688-6BBA-4EA7-83C8-2F5E3697CFAE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +19,16 @@ Global
 		{A6FFC59B-BD12-462D-B01C-3E7244E86D4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6FFC59B-BD12-462D-B01C-3E7244E86D4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6FFC59B-BD12-462D-B01C-3E7244E86D4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30DE0688-6BBA-4EA7-83C8-2F5E3697CFAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30DE0688-6BBA-4EA7-83C8-2F5E3697CFAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30DE0688-6BBA-4EA7-83C8-2F5E3697CFAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30DE0688-6BBA-4EA7-83C8-2F5E3697CFAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{30DE0688-6BBA-4EA7-83C8-2F5E3697CFAE} = {C289CCE0-80ED-40F1-8A44-82AA66540E2E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {02ADE793-FEA6-4F0D-AB8A-B2737F831C34}

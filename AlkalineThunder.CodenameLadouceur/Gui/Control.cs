@@ -124,6 +124,11 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
         }
 
+        public void DrawRectangle(Rectangle bounds, Color color, int thickness)
+        {
+            _renderer.DrawRectangle(bounds, color, thickness);
+        }
+
         public void Update(GameTime gameTime)
         {
             OnUpdate(gameTime);

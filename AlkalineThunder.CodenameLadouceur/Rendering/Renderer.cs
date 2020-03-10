@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using AlkalineThunder.DevConsole;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace AlkalineThunder.CodenameLadouceur.Rendering
 {
-    public sealed class Renderer : IRenderer
+    public sealed class Renderer : IRenderer, IConsoleRenderer
     {
         private SpriteBatch _batch = null;
         private Texture2D _white = null;
@@ -36,6 +37,17 @@ namespace AlkalineThunder.CodenameLadouceur.Rendering
         public void FillRectangle(Rectangle rect, Color color)
         {
             FillRectangle(rect, _white, color);
+        }
+
+        public void DrawRectangle(Rectangle rect, Color color, int thickness)
+        {
+            if (thickness < 1) return;
+
+            FillRectangle(new Rectangle(rect.X, rect.Y, thickness, rect.Height), color);
+            FillRectangle(new Rectangle(rect.X + thickness, rect.Y, rect.Width - (thickness * 2), thickness), color);
+            FillRectangle(new Rectangle(rect.Right - thickness, rect.Y, thickness, rect.Height), color);
+            FillRectangle(new Rectangle(rect.X + thickness, rect.Bottom - thickness, rect.Width - (thickness * 2), thickness), color);
+
         }
 
         public void DrawString(SpriteFont font, string text, Vector2 pos, Color color)
