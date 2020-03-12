@@ -1,6 +1,7 @@
 ﻿using AlkalineThunder.CodenameLadouceur.Input;
 using AlkalineThunder.CodenameLadouceur.Rendering;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections;
@@ -82,6 +83,7 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
         private Renderer _renderer = null;
 
+        public static GuiTheme ActiveTheme { get; private set; }
         public Padding Padding { get; set; } = 0;
         public Padding Margin { get; set; } = 0;
         public int MinWidth { get; set; }
@@ -102,7 +104,16 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         
         public Control()
         {
+            if (ActiveTheme == null) throw new InvalidOperationException("You must load a theme before you can use the GUI.  Michael, you're retarded.  Your game loop should've never let this happen.  God damnit.");
             InternalChildren = new ControlCollection(this);
+        }
+
+        public static void LoadTheme<T>(ContentManager content) where T : GuiTheme, new()
+        {
+            if (content == null) throw new ArgumentNullException(nameof(content));
+
+            Control.ActiveTheme = new T();
+            Control.ActiveTheme.LoadContent(content);
         }
 
         public void DrawString(SpriteFont font, string text, Vector2 pos, Color color)

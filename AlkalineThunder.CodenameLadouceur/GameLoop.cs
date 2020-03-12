@@ -7,6 +7,7 @@ using AlkalineThunder.CodenameLadouceur.Input;
 using AlkalineThunder.CodenameLadouceur.Screens;
 using AlkalineThunder.DevConsole;
 using AlkalineThunder.CodenameLadouceur.Rendering;
+using AlkalineThunder.CodenameLadouceur.Gui;
 
 namespace AlkalineThunder.CodenameLadouceur
 {
@@ -36,6 +37,8 @@ namespace AlkalineThunder.CodenameLadouceur
 
         protected override void Initialize()
         {
+            Control.LoadTheme<DefaultTheme>(Content);
+
             _renderer = new Renderer(this.GraphicsDevice);
 
             Input = new InputManager(this);
