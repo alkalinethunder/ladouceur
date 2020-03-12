@@ -1,4 +1,5 @@
-﻿using AlkalineThunder.CodenameLadouceur.Rendering;
+﻿using AlkalineThunder.CodenameLadouceur.Input;
+using AlkalineThunder.CodenameLadouceur.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -23,6 +24,11 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             public int Count => _children.Count;
 
             public bool IsReadOnly => !_owner.SupportsChildren;
+
+            public Control this[int index]
+            {
+                get => this._children[index];
+            }
 
             public void Add(Control item)
             {
@@ -114,9 +120,61 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             _renderer.FillRectangle(rect, color);
         }
 
+        public bool MouseEnter(MouseMoveEventArgs e)
+        {
+            return false;
+        }
+
+        public bool MouseLeave(MouseMoveEventArgs e)
+        {
+            return false;
+        }
+
+        public bool MouseMove(MouseMoveEventArgs e)
+        {
+            return false;
+        }
+
+        public bool HasParent(Control control)
+        {
+            var parent = this.Parent;
+            while(parent != null)
+            {
+                if(parent == control)
+                {
+                    return true;
+                }
+                else
+                {
+                    parent = parent.Parent;
+                }
+            }
+
+            return false;
+        }
+
         protected virtual void OnUpdate(GameTime gameTime)
         {
 
+        }
+
+        public Control FindControl(int x, int y)
+        {
+            for(int i = this.InternalChildren.Count - 1; i >= 0; i--)
+            {
+                var child = this.InternalChildren[i];
+                var foundInChild = child.FindControl(x, y);
+                if (foundInChild != null) return foundInChild;
+            }
+
+            if(x >= this.Bounds.Left && x <= this.Bounds.Right && y >= this.Bounds.Top && y <= this.Bounds.Bottom)
+            {
+                return this;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         protected virtual void OnDraw(GameTime gameTime)
