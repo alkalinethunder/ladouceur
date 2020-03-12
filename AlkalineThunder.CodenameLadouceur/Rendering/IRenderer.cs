@@ -1,9 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using AlkalineThunder.MultiColorText;
 
 namespace AlkalineThunder.CodenameLadouceur.Rendering
 {
-    public interface IRenderer
+    public interface IRenderer : ITextRenderer
     {
         void FillRectangle(Rectangle rect, Texture2D texture, Color color);
         void FillRectangle(Rectangle rect, Color color);

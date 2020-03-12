@@ -1,3 +1,6 @@
 [submodule "DevConsole"]
 	path = DevConsole
 	url = https://github.com/alkalinethunder/DevConsole
+[submodule "MulticolorTextRenderer"]
+	path = MulticolorTextRenderer
+	url = https://github.com/alkalinethunder/MulticolorTextRenderer

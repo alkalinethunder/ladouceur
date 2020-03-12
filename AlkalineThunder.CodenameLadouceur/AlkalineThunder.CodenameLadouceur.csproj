@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DevConsole\AlkalineThunder.DevConsole\AlkalineThunder.DevConsole.csproj" />
+    <ProjectReference Include="..\MulticolorTextRenderer\MultiColorText\AlkalineThunder.MultiColorText.csproj" />
   </ItemGroup>
 
 </Project>

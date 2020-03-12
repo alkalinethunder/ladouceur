@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Components", "Components", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlkalineThunder.DevConsole", "DevConsole\AlkalineThunder.DevConsole\AlkalineThunder.DevConsole.csproj", "{30DE0688-6BBA-4EA7-83C8-2F5E3697CFAE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlkalineThunder.MultiColorText", "MulticolorTextRenderer\MultiColorText\AlkalineThunder.MultiColorText.csproj", "{6D5820E1-27BB-45CE-91E9-B355A4322A05}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,12 +25,17 @@ Global
 		{30DE0688-6BBA-4EA7-83C8-2F5E3697CFAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30DE0688-6BBA-4EA7-83C8-2F5E3697CFAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30DE0688-6BBA-4EA7-83C8-2F5E3697CFAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D5820E1-27BB-45CE-91E9-B355A4322A05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D5820E1-27BB-45CE-91E9-B355A4322A05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D5820E1-27BB-45CE-91E9-B355A4322A05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D5820E1-27BB-45CE-91E9-B355A4322A05}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{30DE0688-6BBA-4EA7-83C8-2F5E3697CFAE} = {C289CCE0-80ED-40F1-8A44-82AA66540E2E}
+		{6D5820E1-27BB-45CE-91E9-B355A4322A05} = {C289CCE0-80ED-40F1-8A44-82AA66540E2E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {02ADE793-FEA6-4F0D-AB8A-B2737F831C34}
