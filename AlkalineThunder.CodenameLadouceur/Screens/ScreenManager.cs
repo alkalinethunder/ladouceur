@@ -149,17 +149,26 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
 
         private void HandleTextInput(object sender, TextInputEventArgs e)
         {
-            throw new NotImplementedException();
+            if(FocusedControl != null)
+            {
+                FocusedControl.TextInput(e);
+            }
         }
 
         private void HandleKeyUp(object sender, InputKeyEventArgs e)
         {
-            throw new NotImplementedException();
+            if (FocusedControl != null)
+            {
+                FocusedControl.KeyUp(e);
+            }
         }
 
         private void HandleKeyDown(object sender, InputKeyEventArgs e)
         {
-            throw new NotImplementedException();
+            if (FocusedControl != null)
+            {
+                FocusedControl.KeyDown(e);
+            }
         }
 
         public override void Update(GameTime gameTime)

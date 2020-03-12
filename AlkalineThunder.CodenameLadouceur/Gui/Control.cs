@@ -130,6 +130,21 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             return true;
         }
 
+        public bool KeyUp(InputKeyEventArgs e)
+        {
+            return true;
+        }
+
+        public bool KeyDown(InputKeyEventArgs e)
+        {
+            return true;
+        }
+
+        public bool TextInput(TextInputEventArgs e)
+        {
+            return true;
+        }
+
         public bool GainedFocus(FocusEventArgs e)
         {
             return true;
