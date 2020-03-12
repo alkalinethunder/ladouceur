@@ -125,6 +125,31 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             return false;
         }
 
+        public bool LostFocus(FocusEventArgs e)
+        {
+            return true;
+        }
+
+        public bool GainedFocus(FocusEventArgs e)
+        {
+            return true;
+        }
+
+        public bool MouseDown(MouseButtonEventArgs e)
+        {
+            return true;
+        }
+
+        public bool MouseUp(MouseButtonEventArgs e)
+        {
+            return true;
+        }
+
+        public bool Click(MouseButtonEventArgs e)
+        {
+            return true; ;
+        }
+
         public bool MouseLeave(MouseMoveEventArgs e)
         {
             return false;

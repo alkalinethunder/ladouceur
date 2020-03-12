@@ -90,14 +90,61 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
             return false;
         }
 
+        public void SetFocus(Control control)
+        {
+            if(FocusedControl != control)
+            {
+                var ev = new FocusEventArgs(FocusedControl, control);
+
+                if(FocusedControl != null)
+                {
+                    Propagate(HoveredControl, x => x.LostFocus(ev));
+                }
+
+                FocusedControl = control;
+
+                if (FocusedControl != null)
+                {
+                    Propagate(HoveredControl, x => x.GainedFocus(ev));
+                }
+            }
+        }
+
         private void HandleMouseUp(object sender, Input.MouseButtonEventArgs e)
         {
-            throw new NotImplementedException();
+            if(HoveredControl != null)
+            {
+                Propagate(HoveredControl, x => x.MouseUp(e));
+
+                // Focus is only handled on left-clicks
+                if(e.Button == Input.MouseButton.Left)
+                {
+                    // Are we still hovering over the same control?
+                    if(_preFocus == HoveredControl)
+                    {
+                        if (Propagate(_preFocus, x => x.Click(e)))
+                        {
+                            SetFocus(_preFocus);
+                        }
+                    }
+
+                    _preFocus = null;
+                }
+            }
         }
 
         private void HandleMouseDown(object sender, Input.MouseButtonEventArgs e)
         {
-            throw new NotImplementedException();
+            if (HoveredControl != null)
+            {
+                // Focus is only handled on left-clicks
+                if (e.Button == Input.MouseButton.Left)
+                {
+                    _preFocus = HoveredControl;
+                }
+
+                Propagate(HoveredControl, x => x.MouseDown(e));
+            }
         }
 
         private void HandleTextInput(object sender, TextInputEventArgs e)
