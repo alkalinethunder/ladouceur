@@ -12,6 +12,13 @@ namespace AlkalineThunder.CodenameLadouceur.Input
         private MouseState _lastMouse;
         private MouseState _mouse;
 
+        public event EventHandler<TextInputEventArgs> TextInput;
+        public event EventHandler<InputKeyEventArgs> KeyDown;
+        public event EventHandler<InputKeyEventArgs> KeyUp;
+        public event EventHandler<MouseButtonEventArgs> MouseDown;
+        public event EventHandler<MouseButtonEventArgs> MouseUp;
+        public event EventHandler<MouseMoveEventArgs> MouseMove;
+
 
         public InputManager(Game game) : base(game)
         {
@@ -34,31 +41,37 @@ namespace AlkalineThunder.CodenameLadouceur.Input
         private void HandleKeyDown(object sender, InputKeyEventArgs e)
         {
             Logger.Log($"{e.Key}", LogLevel.Debug);
+            KeyDown?.Invoke(this, e);
         }
 
         private void HandleKeyUp(object sender, InputKeyEventArgs e)
         {
             Logger.Log($"{e.Key}", LogLevel.Debug);
+            KeyUp?.Invoke(this, e);
         }
 
         private void HandleTextInput(object sender, TextInputEventArgs e)
         {
             Logger.Log(e.Character.ToString(), LogLevel.Debug);
+            TextInput?.Invoke(this, e);
         }
 
         private void HandleMouseMove(object sender, MouseMoveEventArgs e)
         {
             Logger.Log($"{e.MovementX}, {e.MovementY}", LogLevel.Debug);
+            MouseMove?.Invoke(this, e);
         }
 
         private void HandleMouseDown(object sender, MouseButtonEventArgs e)
         {
             Logger.Log($"{e.Button}", LogLevel.Debug);
+            MouseDown?.Invoke(this, e);
         }
 
         private void HandleMouseUp(object sender, MouseButtonEventArgs e)
         {
             Logger.Log($"{e.Button}", LogLevel.Debug);
+            MouseUp?.Invoke(this, e);
         }
 
 

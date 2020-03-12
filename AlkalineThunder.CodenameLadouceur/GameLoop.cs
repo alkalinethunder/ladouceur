@@ -14,9 +14,9 @@ namespace AlkalineThunder.CodenameLadouceur
     {
         private GraphicsDeviceManager _graphics = null;
         private Renderer _renderer = null;
-        private ScreenManager _screenManager = null;
-        private InputManager _input = null;
         
+        public ScreenManager ScreenManager { get; private set; }
+        public InputManager Input { get; private set; }
         public DevConsole.DevConsole DevConsole { get; private set; }
 
         public GameLoop()
@@ -38,10 +38,10 @@ namespace AlkalineThunder.CodenameLadouceur
         {
             _renderer = new Renderer(this.GraphicsDevice);
 
-            _input = new InputManager(this);
-            _screenManager = new ScreenManager(this);
-            Components.Add(_input);
-            Components.Add(_screenManager);
+            Input = new InputManager(this);
+            ScreenManager = new ScreenManager(this);
+            Components.Add(Input);
+            Components.Add(ScreenManager);
 
             DevConsole = new DevConsole.DevConsole(this, _renderer);
 
@@ -59,7 +59,7 @@ namespace AlkalineThunder.CodenameLadouceur
         {
             GraphicsDevice.Clear(Color.Black);
 
-            _screenManager.Draw(gameTime, _renderer);
+            ScreenManager.Draw(gameTime, _renderer);
 
             base.Draw(gameTime);
         }
