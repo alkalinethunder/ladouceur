@@ -9,6 +9,8 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
 {
     public sealed class AboutScreen : Screen
     {
+        private ImageBox myImage = null;
+
         protected override void OnInitialize()
         {
             var rootStacker = new StackPanel();
@@ -28,7 +30,7 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
             var aboutTitle = new Label("Nucleus - Test UI");
             var aboutBody = new Label("This is a tiny test UI for Nucleus, my MonoGame-based virtual unix-like operating environment.  This UI is a test of the user interface system I'm developing for the graphical shell.  It is a light-weight container-based GUI system.");
             var textBox = new TextEntry();
-            var myImage = new ImageBox();
+            myImage = new ImageBox();
             var myButton = new Button();
 
             myImage.Image = ContentManager.Load<Texture2D>("MgBranding/HorizontalLogo_128px");
@@ -67,11 +69,20 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
 
             listStacker.Enabled = false;
 
-            myImage.Visible = false;
             myImage.Collapsed = true;
+
+            checker.CheckedChanged += HandleCheckerCheckedChanged;
+            checker.Checked = !myImage.Collapsed;
 
             this.Content = rootStacker;
             base.OnInitialize();
+        }
+
+        private void HandleCheckerCheckedChanged(object sender, EventArgs e)
+        {
+            var checker = sender as CheckBox;
+
+            myImage.Collapsed = !checker.Checked;
         }
 
         protected override void OnDraw(GameTime gameTime)
