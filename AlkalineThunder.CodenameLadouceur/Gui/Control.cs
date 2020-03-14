@@ -248,6 +248,20 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
         }
 
+        private Rectangle GetScissorRect()
+        {
+            var bounds = Bounds;
+
+            var parent = Parent;
+            while(parent != null)
+            {
+                bounds = Rectangle.Intersect(bounds, parent.Bounds);
+                parent = parent.Parent;
+            }
+
+            return bounds;
+        }
+
         public void DrawRectangle(Rectangle bounds, Color color, int thickness)
         {
             _renderer.DrawRectangle(bounds, color, thickness);
@@ -273,9 +287,11 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         {
             if (_renderer != null) throw new InvalidOperationException("Control is already drawing.");
             _renderer = renderer;
+            _renderer.SetScissorRect(this.GetScissorRect());
             _renderer.Begin();
             OnDraw(gameTime);
             _renderer.End();
+            _renderer.SetScissorRect(Rectangle.Empty);
 
             foreach (var child in InternalChildren) child.Draw(gameTime, _renderer);
 
