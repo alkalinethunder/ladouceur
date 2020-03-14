@@ -26,6 +26,8 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
         public override int ButtonBorderThickness => 2;
 
+        public override SpriteFont TextEntryFont => DefaultFont;
+
         public override Color ButtonBorderColor => DefaultForeground;
 
         public override Color ButtonBackgroundColor => DarkMode ? new Color(72, 72, 72) : Color.LightGray;
