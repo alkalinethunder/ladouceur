@@ -11,17 +11,35 @@ namespace AlkalineThunder.CodenameLadouceur.Rendering
     {
         private SpriteBatch _batch = null;
         private Texture2D _white = null;
+        private RasterizerState _rasterizerState = null;
 
         public Renderer(GraphicsDevice device)
         {
             _batch = new SpriteBatch(device);
             _white = new Texture2D(device, 1, 1);
             _white.SetData<uint>(new[] { 0xffffffff });
+
+            _rasterizerState = new RasterizerState
+            {
+                ScissorTestEnable = true
+            };
+        }
+
+        public void SetScissorRect(Rectangle rect)
+        {
+            if (rect == Rectangle.Empty)
+            {
+                _batch.GraphicsDevice.ScissorRectangle = new Rectangle(0, 0, _batch.GraphicsDevice.PresentationParameters.BackBufferWidth, _batch.GraphicsDevice.PresentationParameters.BackBufferHeight);
+            }
+            else
+            {
+                _batch.GraphicsDevice.ScissorRectangle = rect;
+            }
         }
 
         public void Begin()
         {
-            _batch.Begin();
+            _batch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, _rasterizerState); ;
         }
         
         public void End()

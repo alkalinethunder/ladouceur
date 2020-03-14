@@ -1,5 +1,6 @@
 ﻿using AlkalineThunder.CodenameLadouceur.Gui;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,12 +24,22 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
 
             var aboutTitle = new Label("Nucleus - Test UI");
             var aboutBody = new Label("This is a tiny test UI for Nucleus, my MonoGame-based virtual unix-like operating environment.  This UI is a test of the user interface system I'm developing for the graphical shell.  It is a light-weight container-based GUI system.");
+            var textBox = new TextEntry();
+            var myImage = new ImageBox();
+            var myButton = new Button();
+
+            myImage.Image = ContentManager.Load<Texture2D>("MgBranding/HorizontalLogo_128px");
+
+            myButton.Content = new Label("Click me!");
 
             aboutTitle.HorizontalAlignment = HorizontalAlignment.Center;
             aboutBody.WrapWidth = 384;
+            textBox.MaxWidth = 384;
 
             aboutStacker.Children.Add(aboutTitle);
             aboutStacker.Children.Add(aboutBody);
+            aboutStacker.Children.Add(myImage);
+            aboutStacker.Children.Add(textBox);
 
             listStacker.Children.Add(new Label("Below is a list box."));
 
@@ -39,6 +50,10 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
             listBox.Items.Add("Item 3");
 
             listStacker.Children.Add(listBox);
+            listStacker.Children.Add(myButton);
+
+            myButton.Content.HorizontalAlignment = HorizontalAlignment.Center;
+            myButton.Content.VerticalAlignment = VerticalAlignment.Middle;
 
             rootStacker.Spacing = 15;
             aboutStacker.Spacing = 15;
