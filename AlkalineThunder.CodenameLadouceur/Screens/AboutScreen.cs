@@ -8,48 +8,44 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
 {
     public sealed class AboutScreen : Screen
     {
-        protected override void OnUpdate(GameTime gameTime)
+        protected override void OnInitialize()
         {
-            if(Content == null)
-            {
-                var rootStacker = new StackPanel();
-                var aboutStacker = new StackPanel();
-                var listStacker = new StackPanel();
+            var rootStacker = new StackPanel();
+            var aboutStacker = new StackPanel();
+            var listStacker = new StackPanel();
 
-                rootStacker.Orientation = Orientation.Horizontal;
-                rootStacker.HorizontalAlignment = HorizontalAlignment.Center;
-                rootStacker.VerticalAlignment = VerticalAlignment.Middle;
+            rootStacker.Orientation = Orientation.Horizontal;
+            rootStacker.HorizontalAlignment = HorizontalAlignment.Center;
+            rootStacker.VerticalAlignment = VerticalAlignment.Middle;
 
-                rootStacker.Children.Add(aboutStacker);
-                rootStacker.Children.Add(listStacker);
+            rootStacker.Children.Add(aboutStacker);
+            rootStacker.Children.Add(listStacker);
 
-                var aboutTitle = new Label("Nucleus - Test UI");
-                var aboutBody = new Label("This is a tiny test UI for Nucleus, my MonoGame-based virtual unix-like operating environment.  This UI is a test of the user interface system I'm developing for the graphical shell.  It is a light-weight container-based GUI system.");
+            var aboutTitle = new Label("Nucleus - Test UI");
+            var aboutBody = new Label("This is a tiny test UI for Nucleus, my MonoGame-based virtual unix-like operating environment.  This UI is a test of the user interface system I'm developing for the graphical shell.  It is a light-weight container-based GUI system.");
 
-                aboutTitle.HorizontalAlignment = HorizontalAlignment.Center;
-                aboutBody.WrapWidth = 384;
+            aboutTitle.HorizontalAlignment = HorizontalAlignment.Center;
+            aboutBody.WrapWidth = 384;
 
-                aboutStacker.Children.Add(aboutTitle);
-                aboutStacker.Children.Add(aboutBody);
+            aboutStacker.Children.Add(aboutTitle);
+            aboutStacker.Children.Add(aboutBody);
 
-                listStacker.Children.Add(new Label("Below is a list box."));
+            listStacker.Children.Add(new Label("Below is a list box."));
 
-                var listBox = new ListBox();
+            var listBox = new ListBox();
 
-                listBox.Items.Add("Item 1");
-                listBox.Items.Add("Item 2");
-                listBox.Items.Add("Item 3");
+            listBox.Items.Add("Item 1");
+            listBox.Items.Add("Item 2");
+            listBox.Items.Add("Item 3");
 
-                listStacker.Children.Add(listBox);
+            listStacker.Children.Add(listBox);
 
-                rootStacker.Spacing = 15;
-                aboutStacker.Spacing = 15;
-                listStacker.Spacing = 15;
+            rootStacker.Spacing = 15;
+            aboutStacker.Spacing = 15;
+            listStacker.Spacing = 15;
 
-                this.Content = rootStacker;
-
-            }
-            base.OnUpdate(gameTime);
+            this.Content = rootStacker;
+            base.OnInitialize();
         }
 
         protected override void OnDraw(GameTime gameTime)

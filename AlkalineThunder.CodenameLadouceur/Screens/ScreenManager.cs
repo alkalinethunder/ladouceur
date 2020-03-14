@@ -23,8 +23,6 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
 
         public override void Initialize()
         {
-            _screens.Add(new AboutScreen());
-
             var input = (Game as GameLoop).Input;
 
             input.KeyDown += HandleKeyDown;
@@ -35,7 +33,28 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
             input.MouseUp += HandleMouseUp;
             input.MouseMove += HandleMouseMove;
 
+            AddScreen<AboutScreen>();
+
             base.Initialize();
+        }
+
+        public T AddScreen<T>() where T : Screen, new()
+        {
+            var newScreen = new T();
+            _screens.Add(newScreen);
+
+            newScreen.LoadContent(this.Game.Content);
+            newScreen.Initialize(this);
+
+            return newScreen;
+        }
+
+        public void RemoveScreen(Screen screen)
+        {
+            if(this._screens.Contains(screen))
+            {
+                this._screens.Remove(screen);
+            }
         }
 
         private Control FindControl(int x, int y)
