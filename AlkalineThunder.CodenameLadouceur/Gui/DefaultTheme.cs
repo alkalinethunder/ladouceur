@@ -35,6 +35,8 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         public override Color ButtonHoveredColor => Color.Gray;
 
         public override Color ButtonPressedColor => DarkMode ? Color.Black : Color.White;
+        public override Color TextEntryHintColor => Color.Gray;
+        public override Color TextEntryTextColor => DefaultForeground;
 
         public override void LoadContent(ContentManager content)
         {

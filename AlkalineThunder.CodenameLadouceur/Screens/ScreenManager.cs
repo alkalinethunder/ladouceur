@@ -14,7 +14,7 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
         private Control _preFocus = null;
         
         public Control HoveredControl { get; private set; }
-        public Control FocusedControl { get; private set; }
+        public static Control FocusedControl { get; private set; }
         public Screen ActiveScreen => _screens.LastOrDefault();
 
         public ScreenManager(GameLoop game) : base(game)

@@ -21,6 +21,7 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
 
                 var titleLabel = new Label();
                 var bodyLabel = new Label();
+                var textEntry = new TextEntry();
                 var infoButton = new Button();
 
                 infoButton.HorizontalAlignment = HorizontalAlignment.Center;
@@ -33,6 +34,7 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
 
                 stackPanel.Children.Add(titleLabel);
                 stackPanel.Children.Add(bodyLabel);
+                stackPanel.Children.Add(textEntry);
                 stackPanel.Children.Add(infoButton);
 
                 this.Content = stackPanel;

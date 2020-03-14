@@ -187,17 +187,19 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             return OnMouseMove(e);
         }
 
-        protected virtual bool OnMouseEnter(MouseMoveEventArgs e) { return false; }
-        protected virtual bool OnMouseLeave(MouseMoveEventArgs e) { return false; }
-        protected virtual bool OnMouseMove(MouseMoveEventArgs e) { return false; }
-        protected virtual bool OnKeyDown(InputKeyEventArgs e) {  return false; }
-        protected virtual bool OnKeyUp(InputKeyEventArgs e) { return false; }
-        protected virtual bool OnTextInput(TextInputEventArgs e) { return false; }
-        protected virtual bool OnClick(MouseButtonEventArgs e) { return false; }
-        protected virtual bool OnMouseDown(MouseButtonEventArgs e) { return false; }
-        protected virtual bool OnMouseUp(MouseButtonEventArgs e) { return false; }
-        protected virtual bool OnGainedFocus(FocusEventArgs e) { return false; }
-        protected virtual bool OnLostFocus(FocusEventArgs e) { return false; }
+        protected virtual bool OnMouseEnter(MouseMoveEventArgs e) { return true; }
+        protected virtual bool OnMouseLeave(MouseMoveEventArgs e) { return true; }
+        protected virtual bool OnMouseMove(MouseMoveEventArgs e) { return true; }
+        protected virtual bool OnKeyDown(InputKeyEventArgs e) {  return true; }
+        protected virtual bool OnKeyUp(InputKeyEventArgs e) { return true; }
+        protected virtual bool OnTextInput(TextInputEventArgs e) { return true; }
+        protected virtual bool OnClick(MouseButtonEventArgs e) { return true; }
+        protected virtual bool OnMouseDown(MouseButtonEventArgs e) { return true; }
+        protected virtual bool OnMouseUp(MouseButtonEventArgs e) { return true; }
+        protected virtual bool OnGainedFocus(FocusEventArgs e) { return true; }
+        protected virtual bool OnLostFocus(FocusEventArgs e) { return true; }
+
+        public bool IsFocused => Screens.ScreenManager.FocusedControl == this;
 
         public bool HasParent(Control control)
         {

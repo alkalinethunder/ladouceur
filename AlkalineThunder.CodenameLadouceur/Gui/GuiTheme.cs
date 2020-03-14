@@ -23,6 +23,8 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         public abstract Color ButtonHoveredColor { get; }
         public abstract Color ButtonPressedColor { get; }
         public abstract SpriteFont TextEntryFont { get; }
+        public abstract Color TextEntryHintColor { get; }
+        public abstract Color TextEntryTextColor { get; }
 
         public abstract void LoadContent(ContentManager content);
     }
