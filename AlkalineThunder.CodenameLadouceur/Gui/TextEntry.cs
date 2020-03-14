@@ -13,6 +13,7 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         private int _cursorPos = 0;
         private bool _caretVisible = false;
         private double _caretTime = 0;
+        private float _offset = 0;
 
         public string HintText { get; set; } = "Enter text here...";
         public bool IsPassword { get; set; } = false;
@@ -48,6 +49,36 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         public SpriteFont Font { get; set; } = null;
         public double CaretBlinkSeconds { get; set; } = 0.25;
 
+        private void UpdateTextOffset()
+        {
+            var toCaret = _text.Substring(0, _cursorPos);
+
+            if (IsPassword)
+            {
+                int l = toCaret.Length;
+                for (int i = 0; i < l; i++)
+                {
+                    toCaret = toCaret.Remove(0, 1) + "*";
+                }
+            }
+
+            var font = Font ?? ActiveTheme.DefaultFont;
+
+            var measure = font.MeasureString(toCaret);
+
+            var realCaret = measure.X - _offset;
+
+            if(realCaret > Bounds.Width)
+            {
+                _offset = measure.X - Bounds.Width;
+            }
+            else if(realCaret < 0)
+            {
+                _offset = 0;
+            }
+
+        }
+
         protected override void OnUpdate(GameTime gameTime)
         {
             if(IsFocused)
@@ -59,6 +90,8 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
                     _caretVisible = !_caretVisible;
                 }
             }
+
+            UpdateTextOffset();
 
             base.OnUpdate(gameTime);
         }
@@ -196,14 +229,14 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
             var y = Bounds.Top + ((Bounds.Height - measure.Y) / 2);
 
-            DrawString(font, text, new Vector2(Bounds.Left, y), color);
+            DrawString(font, text, new Vector2(Bounds.Left - (int)_offset, y), color);
 
             if(IsFocused && _caretVisible)
             {
                 var toCaret = text.Substring(0, _cursorPos);
                 var toCaretMeasure = font.MeasureString(toCaret);
 
-                FillRectangle(new Rectangle(Bounds.Left + (int)toCaretMeasure.X, (int)y, 1, (int)measure.Y), ActiveTheme.TextEntryTextColor);
+                FillRectangle(new Rectangle((Bounds.Left + (int)toCaretMeasure.X) - (int)_offset, (int)y, 1, (int)measure.Y), ActiveTheme.TextEntryTextColor);
             }
 
             base.OnDraw(gameTime);

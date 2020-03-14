@@ -37,6 +37,8 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
                 stackPanel.Children.Add(textEntry);
                 stackPanel.Children.Add(infoButton);
 
+                stackPanel.MaxWidth = 480;
+
                 this.Content = stackPanel;
             }
             base.OnUpdate(gameTime);
