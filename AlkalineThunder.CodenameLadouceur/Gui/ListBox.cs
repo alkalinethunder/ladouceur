@@ -10,6 +10,8 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 {
     public sealed class ListBox : Control
     {
+        private int _selectedIndex = -1;
+
         public class ListBoxCollection : ICollection<string>
         {
             private List<string> _items = new List<string>();
@@ -85,8 +87,35 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         }
 
         public ListBoxCollection Items { get; private set; }
-        public int SelectedIndex { get; private set; } = -1;
+        public int SelectedIndex
+        {
+            get => _selectedIndex;
+            set
+            {
+                if(_selectedIndex != value)
+                {
+                    if(value < -1)
+                    {
+                        _selectedIndex = -1;
+                    }
+                    else if(value > Items.Count - 1)
+                    {
+                        _selectedIndex = Items.Count - 1;
+                    }
+                    else
+                    {
+                        _selectedIndex = value;
+                    }
+
+                    SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
         public SpriteFont Font { get; set; }
+        public string SelectedItem => SelectedIndex == 1 ? null : Items[SelectedIndex];
+
+
+        public event EventHandler SelectedIndexChanged;
 
         private string StripNewLines(string text)
         {
