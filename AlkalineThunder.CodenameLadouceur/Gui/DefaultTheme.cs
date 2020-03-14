@@ -8,7 +8,7 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
     {
         private SpriteFont _font = null;
 
-        public bool DarkMode { get; set; } = false;
+        public bool DarkMode { get; set; } = true;
 
         public override SpriteFont DefaultFont => _font;
 
@@ -23,6 +23,16 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         public override Color DefaultBackground => DarkMode ? new Color(32, 32, 32) : Color.WhiteSmoke;
 
         public override Color DefaultForeground => DarkMode ? Color.WhiteSmoke : new Color(32, 32, 32);
+
+        public override int ButtonBorderThickness => 2;
+
+        public override Color ButtonBorderColor => DefaultForeground;
+
+        public override Color ButtonBackgroundColor => DarkMode ? new Color(72, 72, 72) : Color.LightGray;
+
+        public override Color ButtonHoveredColor => Color.Gray;
+
+        public override Color ButtonPressedColor => DarkMode ? Color.Black : Color.White;
 
         public override void LoadContent(ContentManager content)
         {

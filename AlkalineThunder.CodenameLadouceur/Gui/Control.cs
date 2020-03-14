@@ -102,7 +102,7 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         public Rectangle Bounds { get; private set; }
         public Vector2 DesiredSize { get; private set; }
         public Rectangle ContentBounds => Margin.Affect(Bounds);
-
+        
         public Control()
         {
             if (ActiveTheme == null) throw new InvalidOperationException("You must load a theme before you can use the GUI.  Michael, you're retarded.  Your game loop should've never let this happen.  God damnit.");
@@ -134,32 +134,32 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
         public bool MouseEnter(MouseMoveEventArgs e)
         {
-            return false;
+            return OnMouseEnter(e);
         }
 
         public bool LostFocus(FocusEventArgs e)
         {
-            return true;
+            return OnLostFocus(e);
         }
 
         public bool KeyUp(InputKeyEventArgs e)
         {
-            return true;
+            return OnKeyUp(e);
         }
 
         public bool KeyDown(InputKeyEventArgs e)
         {
-            return true;
+            return OnKeyDown(e);
         }
 
         public bool TextInput(TextInputEventArgs e)
         {
-            return true;
+            return OnTextInput(e);
         }
 
         public bool GainedFocus(FocusEventArgs e)
         {
-            return true;
+            return OnGainedFocus(e);
         }
 
         public bool MouseDown(MouseButtonEventArgs e)
@@ -169,23 +169,35 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
         public bool MouseUp(MouseButtonEventArgs e)
         {
-            return true;
+            return OnMouseUp(e);
         }
 
         public bool Click(MouseButtonEventArgs e)
         {
-            return true; ;
+            return OnClick(e);
         }
 
         public bool MouseLeave(MouseMoveEventArgs e)
         {
-            return false;
+            return OnMouseLeave(e);
         }
 
         public bool MouseMove(MouseMoveEventArgs e)
         {
-            return false;
+            return OnMouseMove(e);
         }
+
+        protected virtual bool OnMouseEnter(MouseMoveEventArgs e) { return false; }
+        protected virtual bool OnMouseLeave(MouseMoveEventArgs e) { return false; }
+        protected virtual bool OnMouseMove(MouseMoveEventArgs e) { return false; }
+        protected virtual bool OnKeyDown(InputKeyEventArgs e) {  return false; }
+        protected virtual bool OnKeyUp(InputKeyEventArgs e) { return false; }
+        protected virtual bool OnTextInput(TextInputEventArgs e) { return false; }
+        protected virtual bool OnClick(MouseButtonEventArgs e) { return false; }
+        protected virtual bool OnMouseDown(MouseButtonEventArgs e) { return false; }
+        protected virtual bool OnMouseUp(MouseButtonEventArgs e) { return false; }
+        protected virtual bool OnGainedFocus(FocusEventArgs e) { return false; }
+        protected virtual bool OnLostFocus(FocusEventArgs e) { return false; }
 
         public bool HasParent(Control control)
         {
