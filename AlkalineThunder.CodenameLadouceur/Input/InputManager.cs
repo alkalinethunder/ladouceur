@@ -41,7 +41,16 @@ namespace AlkalineThunder.CodenameLadouceur.Input
         private void HandleKeyDown(object sender, InputKeyEventArgs e)
         {
             Logger.Log($"{e.Key}", LogLevel.Debug);
-            KeyDown?.Invoke(this, e);
+
+            if (e.Key == Keys.F11)
+            {
+                Game.GraphicsDevice.PresentationParameters.IsFullScreen = !Game.GraphicsDevice.PresentationParameters.IsFullScreen;
+                Game.GraphicsDevice.Reset();
+            }
+            else
+            {
+                KeyDown?.Invoke(this, e);
+            }
         }
 
         private void HandleKeyUp(object sender, InputKeyEventArgs e)
