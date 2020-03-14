@@ -164,7 +164,7 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
         public bool MouseDown(MouseButtonEventArgs e)
         {
-            return true;
+            return OnMouseDown(e);
         }
 
         public bool MouseUp(MouseButtonEventArgs e)
