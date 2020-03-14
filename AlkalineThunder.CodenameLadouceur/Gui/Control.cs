@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace AlkalineThunder.CodenameLadouceur.Gui
 {
@@ -187,6 +188,23 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             return OnMouseMove(e);
         }
 
+        public bool Enabled { get; set; } = true;
+
+        public IEnumerable<Control> Parents
+        {
+            get
+            {
+                var parent = Parent;
+                while(parent != null)
+                {
+                    yield return parent;
+                    parent = parent.Parent;
+                }
+            }
+        }
+
+        public bool ParentsEnabled => Enabled && !Parents.Any(x => x.Enabled == false);
+
         protected virtual bool OnMouseEnter(MouseMoveEventArgs e) { return true; }
         protected virtual bool OnMouseLeave(MouseMoveEventArgs e) { return true; }
         protected virtual bool OnMouseMove(MouseMoveEventArgs e) { return true; }
@@ -288,10 +306,18 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             if (_renderer != null) throw new InvalidOperationException("Control is already drawing.");
             _renderer = renderer;
             _renderer.SetScissorRect(this.GetScissorRect());
+
+            if(!ParentsEnabled)
+            {
+                _renderer.Tint = Color.Gray;
+            }
+
             _renderer.Begin();
             OnDraw(gameTime);
             _renderer.End();
             _renderer.SetScissorRect(Rectangle.Empty);
+
+            _renderer.Tint = Color.White;
 
             foreach (var child in InternalChildren) child.Draw(gameTime, _renderer);
 

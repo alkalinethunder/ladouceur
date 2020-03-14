@@ -59,6 +59,8 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
             aboutStacker.Spacing = 15;
             listStacker.Spacing = 15;
 
+            listStacker.Enabled = false;
+
             this.Content = rootStacker;
             base.OnInitialize();
         }
