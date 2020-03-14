@@ -23,9 +23,10 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
         protected override Vector2 MeasureOverride()
         {
-            if(Font != null && !string.IsNullOrEmpty(Text))
+            if (!string.IsNullOrEmpty(Text))
             {
-                return _textRenderer.MeasureString(Font, Text, WrapWidth);
+                var realFont = Font ?? ActiveTheme.DefaultFont;
+                return _textRenderer.MeasureString(realFont, Text, WrapWidth);
             }
             else
             {
@@ -35,9 +36,10 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
         protected override void OnDraw(GameTime gameTime)
         {
-            if(Font != null && !string.IsNullOrEmpty(Text))
+            if(!string.IsNullOrEmpty(Text))
             {
-                _textRenderer.DrawString(this, Text, Font, new Vector2(Bounds.Left, Bounds.Top), WrapWidth);
+                var realFont = Font ?? ActiveTheme.DefaultFont;
+                _textRenderer.DrawString(this, Text, realFont, new Vector2(Bounds.Left, Bounds.Top), WrapWidth);
             }
         }
     }

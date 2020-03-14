@@ -12,13 +12,26 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
         {
             if(Content == null)
             {
-                Content = new Border();
-                var b = Content as Border;
+                var stackPanel = new StackPanel();
 
-                b.BackgroundColor = Color.CornflowerBlue;
+                stackPanel.HorizontalAlignment = HorizontalAlignment.Center;
+                stackPanel.VerticalAlignment = VerticalAlignment.Middle;
 
-                this.Padding = 25;
-                this.Margin = 25;
+                stackPanel.Spacing = 15;
+
+                var titleLabel = new Label();
+                var bodyLabel = new Label();
+
+                titleLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                bodyLabel.WrapWidth = 480;
+
+                titleLabel.Text = "Welcome to Project: Ladouceur.";
+                bodyLabel.Text = "Project: Ladouceur is a .NET Core and MonoGame-based user interface and game development framework written by Alkaline Thunder.";
+
+                stackPanel.Children.Add(titleLabel);
+                stackPanel.Children.Add(bodyLabel);
+
+                this.Content = stackPanel;
             }
             base.OnUpdate(gameTime);
         }
