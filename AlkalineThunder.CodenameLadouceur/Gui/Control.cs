@@ -13,6 +13,8 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 {
     public abstract class Control : IRenderer
     {
+        private List<IAttachedProperty> _props = new List<IAttachedProperty>();
+
         public sealed class ControlCollection : ICollection<Control>
         {
             private List<Control> _children = new List<Control>();
@@ -108,6 +110,36 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         {
             if (ActiveTheme == null) throw new InvalidOperationException("You must load a theme before you can use the GUI.  Michael, you're retarded.  Your game loop should've never let this happen.  God damnit.");
             InternalChildren = new ControlCollection(this);
+        }
+
+        public bool GetProperty<T>(string name, out T prop)
+        {
+            var attachedProperty = _props.FirstOrDefault(x => x.Name == name && x.Value is T);
+            if(attachedProperty != null)
+            {
+                prop = (T)attachedProperty.Value;
+                return true;
+            }
+            else
+            {
+                prop = default(T);
+                return false;
+            }
+        }
+
+        public bool HasProperty<T>(string name)
+        {
+            return _props.Any(x => x.Name == name && x.Value is T);
+        }
+
+        public void SetAttachedProperty<T>(string name, T value)
+        {
+            if (HasProperty<T>(name))
+            {
+                _props.RemoveAll(x => x.Name == name);
+            }
+            _props.Add(new AttachedProperty<T>(name, value));
+
         }
 
         public static void LoadTheme<T>(ContentManager content) where T : GuiTheme, new()
