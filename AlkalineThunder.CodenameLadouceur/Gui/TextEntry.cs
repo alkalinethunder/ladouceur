@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using AlkalineThunder.CodenameLadouceur.Input;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -137,6 +138,38 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             _caretVisible = true;
             _caretTime = 0;
             return base.OnGainedFocus(e);
+        }
+
+        protected override bool OnMouseUp(MouseButtonEventArgs e)
+        {
+            if(e.Button == MouseButton.Left)
+            {
+                var xPos = e.X;
+
+                var font = Font ?? ActiveTheme.DefaultFont;
+
+                float measure = 0;
+                for(int i = 0; i < _text.Length; i++)
+                {
+                    if(IsPassword)
+                    {
+                        measure += font.MeasureString("*").X;
+                    }
+                    else
+                    {
+                        measure += font.MeasureString(_text[i].ToString()).X;
+                    }
+
+                    if (Bounds.Left + measure >= xPos)
+                    {
+                        _cursorPos = i;
+                        return true;
+                    }
+                }
+
+                _cursorPos = _text.Length;
+            }
+            return base.OnMouseUp(e);
         }
 
         protected override void OnDraw(GameTime gameTime)
