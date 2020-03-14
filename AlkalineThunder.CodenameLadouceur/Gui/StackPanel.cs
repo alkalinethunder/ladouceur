@@ -52,17 +52,18 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
                 foreach(var child in InternalChildren)
                 {
-                    PlaceControl(child, new Rectangle(Bounds.Left, Bounds.Top + (int)y, Bounds.Width, (int)child.DesiredSize.Y));
+                    PlaceControl(child, new Rectangle(ContentBounds.Left, ContentBounds.Top + (int)y, ContentBounds.Width, (int)child.DesiredSize.Y));
                     y += (int)child.DesiredSize.Y + Spacing;
                 }
             }
+
             else
             {
                 float x = 0;
 
                 foreach (var child in InternalChildren)
                 {
-                    PlaceControl(child, new Rectangle(Bounds.Left + (int)x, Bounds.Top, (int)child.DesiredSize.X, Bounds.Height));
+                    PlaceControl(child, new Rectangle(ContentBounds.Left + (int)x, ContentBounds.Top, (int)child.DesiredSize.X, ContentBounds.Height));
                     x += (int)child.DesiredSize.X + Spacing;
                 }
             }

@@ -16,6 +16,11 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             _textRenderer = new TextRenderer();
         }
 
+        public Label(string text) : this()
+        {
+            this.Text = text;
+        }
+
         public string Text { get; set; } = string.Empty;
         public Color TextColor { get => _textRenderer.DefaultColor; set => _textRenderer.DefaultColor = value; }
         public SpriteFont Font { get; set; }
@@ -41,6 +46,11 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
                 var realFont = Font ?? ActiveTheme.DefaultFont;
                 _textRenderer.DrawString(this, Text, realFont, new Vector2(Bounds.Left, Bounds.Top), WrapWidth);
             }
+        }
+
+        public static implicit operator Label(string text)
+        {
+            return new Label(text);
         }
     }
 }

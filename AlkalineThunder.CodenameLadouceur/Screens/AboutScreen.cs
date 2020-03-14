@@ -21,15 +21,19 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
 
                 var titleLabel = new Label();
                 var bodyLabel = new Label();
+                var infoButton = new Button();
 
+                infoButton.HorizontalAlignment = HorizontalAlignment.Center;
                 titleLabel.HorizontalAlignment = HorizontalAlignment.Center;
                 bodyLabel.WrapWidth = 480;
 
                 titleLabel.Text = "Welcome to Project: Ladouceur.";
                 bodyLabel.Text = "Project: Ladouceur is a .NET Core and MonoGame-based user interface and game development framework written by Alkaline Thunder.";
+                infoButton.Content = new Label("Do something!");
 
                 stackPanel.Children.Add(titleLabel);
                 stackPanel.Children.Add(bodyLabel);
+                stackPanel.Children.Add(infoButton);
 
                 this.Content = stackPanel;
             }

@@ -101,7 +101,8 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         public VerticalAlignment VerticalAlignment { get; set; }
         public Rectangle Bounds { get; private set; }
         public Vector2 DesiredSize { get; private set; }
-        
+        public Rectangle ContentBounds => Margin.Affect(Bounds);
+
         public Control()
         {
             if (ActiveTheme == null) throw new InvalidOperationException("You must load a theme before you can use the GUI.  Michael, you're retarded.  Your game loop should've never let this happen.  God damnit.");
@@ -317,11 +318,6 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
                     finalBounds.Y = bounds.Bottom - finalBounds.Height;
                     break;
             }
-
-            finalBounds.X += control.Margin.Left;
-            finalBounds.Y += control.Margin.Top;
-            finalBounds.Width -= control.Margin.Width;
-            finalBounds.Height -= control.Margin.Height;
 
             control.Bounds = finalBounds;
 

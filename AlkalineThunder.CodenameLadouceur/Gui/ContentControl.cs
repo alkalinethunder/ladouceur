@@ -33,7 +33,7 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
         protected override void ArrangeOverride()
         {
-            if (_content != null) Control.PlaceControl(_content, Bounds);
+            if (_content != null) Control.PlaceControl(_content, ContentBounds);
         }
     }
 }

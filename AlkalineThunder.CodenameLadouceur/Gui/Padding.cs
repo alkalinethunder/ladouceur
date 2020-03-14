@@ -77,7 +77,15 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             return HashCode.Combine(Left, Top, Bottom, Right);
         }
 
-
+        public Rectangle Affect(Rectangle rect)
+        {
+            return new Rectangle(
+                rect.Left + Left,
+                rect.Top + Top,
+                rect.Width - Width,
+                rect.Height - Height
+                );
+        }
 
     }
 }
