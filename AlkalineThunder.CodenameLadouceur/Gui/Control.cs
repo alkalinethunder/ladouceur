@@ -244,16 +244,23 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
         public Control FindControl(int x, int y)
         {
-            for(int i = this.InternalChildren.Count - 1; i >= 0; i--)
+            if (Enabled)
             {
-                var child = this.InternalChildren[i];
-                var foundInChild = child.FindControl(x, y);
-                if (foundInChild != null) return foundInChild;
-            }
+                for (int i = this.InternalChildren.Count - 1; i >= 0; i--)
+                {
+                    var child = this.InternalChildren[i];
+                    var foundInChild = child.FindControl(x, y);
+                    if (foundInChild != null) return foundInChild;
+                }
 
-            if(x >= this.Bounds.Left && x <= this.Bounds.Right && y >= this.Bounds.Top && y <= this.Bounds.Bottom)
-            {
-                return this;
+                if (x >= this.Bounds.Left && x <= this.Bounds.Right && y >= this.Bounds.Top && y <= this.Bounds.Bottom)
+                {
+                    return this;
+                }
+                else
+                {
+                    return null;
+                }
             }
             else
             {
