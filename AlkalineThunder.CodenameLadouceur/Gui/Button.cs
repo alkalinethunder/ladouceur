@@ -10,7 +10,7 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         public Button()
         {
             Content = new Label("Button Text");
-            Margin = new Padding(70, 40);
+            Margin = new Padding(7, 4);
         }
 
         public int BorderThickness { get; set; } = 2;
