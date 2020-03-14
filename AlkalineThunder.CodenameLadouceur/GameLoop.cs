@@ -31,6 +31,7 @@ namespace AlkalineThunder.CodenameLadouceur
             _graphics.PreferredBackBufferHeight = nativeResolution.Height;
 
             IsFixedTimeStep = true;
+            IsMouseVisible = true;
 
             Content.RootDirectory = "Content";
         }
