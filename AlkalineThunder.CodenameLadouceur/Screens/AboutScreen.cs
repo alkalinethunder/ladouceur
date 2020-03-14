@@ -14,6 +14,9 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
             var rootStacker = new StackPanel();
             var aboutStacker = new StackPanel();
             var listStacker = new StackPanel();
+            var checker = new CheckBox();
+
+            checker.Content = new Label("Enable MonoGame Logo?");
 
             rootStacker.Orientation = Orientation.Horizontal;
             rootStacker.HorizontalAlignment = HorizontalAlignment.Center;
@@ -39,7 +42,10 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
             aboutStacker.Children.Add(aboutTitle);
             aboutStacker.Children.Add(aboutBody);
             aboutStacker.Children.Add(myImage);
+            aboutStacker.Children.Add(checker);
             aboutStacker.Children.Add(textBox);
+
+            checker.Content.VerticalAlignment = VerticalAlignment.Middle;
 
             listStacker.Children.Add(new Label("Below is a list box."));
 

@@ -43,6 +43,9 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         public override Color ListBoxBorderColor => DefaultForeground;
         public override int ListBoxBorderThickness => 2;
 
+        public override int CheckBorderThickness => 1;
+        public override int CheckSize => 22;
+
         public override void LoadContent(ContentManager content)
         {
             _font = content.Load<SpriteFont>("ConsoleFont");

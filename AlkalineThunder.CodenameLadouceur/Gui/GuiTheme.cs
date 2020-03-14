@@ -31,6 +31,9 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         public abstract Color ListBoxBorderColor { get; }
         public abstract int ListBoxBorderThickness { get; }
 
+        public abstract int CheckSize { get; }
+        public abstract int CheckBorderThickness { get; }
+        
         public abstract void LoadContent(ContentManager content);
     }
 }
