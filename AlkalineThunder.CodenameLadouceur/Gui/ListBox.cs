@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using AlkalineThunder.CodenameLadouceur.Input;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections;
@@ -139,6 +140,64 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             }
 
             base.OnDraw(gameTime);
+        }
+
+        protected override bool OnMouseUp(MouseButtonEventArgs e)
+        {
+            if(e.Button == MouseButton.Left)
+            {
+                var font = Font ?? ActiveTheme.DefaultFont;
+
+                for(int i = 0; i < Items.Count; i++)
+                {
+                    var text = StripNewLines(Items[i]);
+
+                    var height = font.MeasureString(text).Y;
+
+                    var rect = new Rectangle(
+                        Bounds.Left + ActiveTheme.ListBoxBorderThickness,
+                        Bounds.Top + ActiveTheme.ListBoxBorderThickness + ((int)height * i),
+                        Bounds.Width - (ActiveTheme.ListBoxBorderThickness * 2),
+                        (int)height
+                        );
+
+                    if(e.X >= rect.Left && e.X <= rect.Right && e.Y >= rect.Top && e.Y <= rect.Bottom)
+                    {
+                        SelectedIndex = i;
+                        return true;
+                    }
+                }
+            }
+            return base.OnMouseUp(e);
+        }
+
+        protected override bool OnKeyDown(InputKeyEventArgs e)
+        {
+            if(Items.Count > 0)
+            {
+                switch(e.Key)
+                {
+                    case Microsoft.Xna.Framework.Input.Keys.PageUp:
+                        SelectedIndex = 0;
+                        break;
+                    case Microsoft.Xna.Framework.Input.Keys.PageDown:
+                        SelectedIndex = Items.Count - 1;
+                        break;
+                    case Microsoft.Xna.Framework.Input.Keys.Up:
+                        if(SelectedIndex > 0)
+                        {
+                            SelectedIndex--;
+                        }
+                        break;
+                    case Microsoft.Xna.Framework.Input.Keys.Down:
+                        if(SelectedIndex < Items.Count - 1)
+                        {
+                            SelectedIndex++;
+                        }
+                        break;
+                }
+            }
+            return base.OnKeyDown(e);
         }
     }
 }
