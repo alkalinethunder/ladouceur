@@ -188,6 +188,8 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             return OnMouseMove(e);
         }
 
+        public bool Collapsed { get; set; } = false;
+        public bool Visible { get; set; } = true;
         public bool Enabled { get; set; } = true;
 
         public IEnumerable<Control> Parents
@@ -244,7 +246,7 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
         public Control FindControl(int x, int y)
         {
-            if (Enabled)
+            if (Enabled && Visible)
             {
                 for (int i = this.InternalChildren.Count - 1; i >= 0; i--)
                 {
@@ -310,39 +312,49 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
         public void Draw(GameTime gameTime, Renderer renderer)
         {
-            if (_renderer != null) throw new InvalidOperationException("Control is already drawing.");
-            _renderer = renderer;
-            _renderer.SetScissorRect(this.GetScissorRect());
-
-            if(!ParentsEnabled)
+            if (Visible)
             {
-                _renderer.Tint = Color.Gray;
+                if (_renderer != null) throw new InvalidOperationException("Control is already drawing.");
+                _renderer = renderer;
+                _renderer.SetScissorRect(this.GetScissorRect());
+
+                if (!ParentsEnabled)
+                {
+                    _renderer.Tint = Color.Gray;
+                }
+
+                _renderer.Begin();
+                OnDraw(gameTime);
+                _renderer.End();
+                _renderer.SetScissorRect(Rectangle.Empty);
+
+                _renderer.Tint = Color.White;
+
+                foreach (var child in InternalChildren) child.Draw(gameTime, _renderer);
+
+                _renderer = null;
             }
-
-            _renderer.Begin();
-            OnDraw(gameTime);
-            _renderer.End();
-            _renderer.SetScissorRect(Rectangle.Empty);
-
-            _renderer.Tint = Color.White;
-
-            foreach (var child in InternalChildren) child.Draw(gameTime, _renderer);
-
-            _renderer = null;
         }
 
         public Vector2 CalculateSize()
         {
-            var desiredSize = MeasureOverride() + Padding + Margin;
+            if (Collapsed)
+            {
+                return Vector2.Zero;
+            }
+            else
+            {
+                var desiredSize = MeasureOverride() + Padding + Margin;
 
-            if (desiredSize.X < MinWidth) desiredSize.X = MinWidth;
-            if (desiredSize.Y < MinHeight) desiredSize.Y = MinHeight;
-            if (MaxWidth > 0 && desiredSize.X > MaxWidth) desiredSize.X = MaxWidth;
-            if (MaxHeight > 0 && desiredSize.Y > MaxHeight) desiredSize.Y = MaxHeight;
+                if (desiredSize.X < MinWidth) desiredSize.X = MinWidth;
+                if (desiredSize.Y < MinHeight) desiredSize.Y = MinHeight;
+                if (MaxWidth > 0 && desiredSize.X > MaxWidth) desiredSize.X = MaxWidth;
+                if (MaxHeight > 0 && desiredSize.Y > MaxHeight) desiredSize.Y = MaxHeight;
 
-            DesiredSize = desiredSize;
+                DesiredSize = desiredSize;
 
-            return new Vector2(Width == 0 ? DesiredSize.X : Width, Height == 0 ? DesiredSize.Y : Height);
+                return new Vector2(Width == 0 ? DesiredSize.X : Width, Height == 0 ? DesiredSize.Y : Height);
+            }
         }
 
         public static void PlaceControl(Control control, Rectangle bounds)
@@ -351,8 +363,8 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
             var finalBounds = new Rectangle();
 
-            finalBounds.Width = (control.HorizontalAlignment == HorizontalAlignment.Stretch) ? bounds.Width : (int)actualSize.X;
-            finalBounds.Height = (control.VerticalAlignment == VerticalAlignment.Stretch) ? bounds.Height : (int)actualSize.Y;
+            finalBounds.Width = (control.HorizontalAlignment == HorizontalAlignment.Stretch && !control.Collapsed) ? bounds.Width : (int)actualSize.X;
+            finalBounds.Height = (control.VerticalAlignment == VerticalAlignment.Stretch && !control.Collapsed) ? bounds.Height : (int)actualSize.Y;
 
             switch(control.HorizontalAlignment)
             {

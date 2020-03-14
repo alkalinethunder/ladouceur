@@ -61,6 +61,9 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
 
             listStacker.Enabled = false;
 
+            myImage.Visible = false;
+            myImage.Collapsed = true;
+
             this.Content = rootStacker;
             base.OnInitialize();
         }
