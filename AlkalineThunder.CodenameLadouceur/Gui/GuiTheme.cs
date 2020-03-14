@@ -25,6 +25,11 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         public abstract SpriteFont TextEntryFont { get; }
         public abstract Color TextEntryHintColor { get; }
         public abstract Color TextEntryTextColor { get; }
+        public abstract Color ListBoxItemColor { get; }
+        public abstract Color ListBoxSelectedItemColor { get; }
+        public abstract Color ListBoxSelectedHighlightColor { get; }
+        public abstract Color ListBoxBorderColor { get; }
+        public abstract int ListBoxBorderThickness { get; }
 
         public abstract void LoadContent(ContentManager content);
     }

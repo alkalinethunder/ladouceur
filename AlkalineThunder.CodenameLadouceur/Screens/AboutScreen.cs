@@ -12,34 +12,42 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
         {
             if(Content == null)
             {
-                var stackPanel = new StackPanel();
+                var rootStacker = new StackPanel();
+                var aboutStacker = new StackPanel();
+                var listStacker = new StackPanel();
 
-                stackPanel.HorizontalAlignment = HorizontalAlignment.Center;
-                stackPanel.VerticalAlignment = VerticalAlignment.Middle;
+                rootStacker.Orientation = Orientation.Horizontal;
+                rootStacker.HorizontalAlignment = HorizontalAlignment.Center;
+                rootStacker.VerticalAlignment = VerticalAlignment.Middle;
 
-                stackPanel.Spacing = 15;
+                rootStacker.Children.Add(aboutStacker);
+                rootStacker.Children.Add(listStacker);
 
-                var titleLabel = new Label();
-                var bodyLabel = new Label();
-                var textEntry = new TextEntry();
-                var infoButton = new Button();
+                var aboutTitle = new Label("Nucleus - Test UI");
+                var aboutBody = new Label("This is a tiny test UI for Nucleus, my MonoGame-based virtual unix-like operating environment.  This UI is a test of the user interface system I'm developing for the graphical shell.  It is a light-weight container-based GUI system.");
 
-                infoButton.HorizontalAlignment = HorizontalAlignment.Center;
-                titleLabel.HorizontalAlignment = HorizontalAlignment.Center;
-                bodyLabel.WrapWidth = 480;
+                aboutTitle.HorizontalAlignment = HorizontalAlignment.Center;
+                aboutBody.WrapWidth = 384;
 
-                titleLabel.Text = "Welcome to Project: Ladouceur.";
-                bodyLabel.Text = "Project: Ladouceur is a .NET Core and MonoGame-based user interface and game development framework written by Alkaline Thunder.";
-                infoButton.Content = new Label("Do something!");
+                aboutStacker.Children.Add(aboutTitle);
+                aboutStacker.Children.Add(aboutBody);
 
-                stackPanel.Children.Add(titleLabel);
-                stackPanel.Children.Add(bodyLabel);
-                stackPanel.Children.Add(textEntry);
-                stackPanel.Children.Add(infoButton);
+                listStacker.Children.Add(new Label("Below is a list box."));
 
-                stackPanel.MaxWidth = 480;
+                var listBox = new ListBox();
 
-                this.Content = stackPanel;
+                listBox.Items.Add("Item 1");
+                listBox.Items.Add("Item 2");
+                listBox.Items.Add("Item 3");
+
+                listStacker.Children.Add(listBox);
+
+                rootStacker.Spacing = 15;
+                aboutStacker.Spacing = 15;
+                listStacker.Spacing = 15;
+
+                this.Content = rootStacker;
+
             }
             base.OnUpdate(gameTime);
         }
