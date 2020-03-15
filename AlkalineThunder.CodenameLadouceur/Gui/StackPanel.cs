@@ -126,11 +126,9 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             // Pass 3: Find and group all filled widgets.
             var filledGroups = new List<FilledLayoutGroup>();
             int fillStart = -1;
-            for(int i = 0; i < layoutInfo.Count; i++)
+            for(int i = 0; i <= layoutInfo.Count; i++)
             {
-                var layout = layoutInfo[i];
-
-                if(layout.SizeMode == SizeMode.Auto)
+                if (i == layoutInfo.Count)
                 {
                     if(fillStart > -1)
                     {
@@ -140,7 +138,20 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
                 }
                 else
                 {
-                    if (fillStart == -1) fillStart = i;
+                    var layout = layoutInfo[i];
+
+                    if (layout.SizeMode == SizeMode.Auto)
+                    {
+                        if (fillStart > -1)
+                        {
+                            filledGroups.Add(new FilledLayoutGroup(fillStart, i - 1));
+                            fillStart = -1;
+                        }
+                    }
+                    else
+                    {
+                        if (fillStart == -1) fillStart = i;
+                    }
                 }
             }
             
@@ -157,9 +168,9 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
                 int endPos = (Orientation == Orientation.Horizontal) ? ContentBounds.Right : ContentBounds.Bottom;
 
                 // Calculate the start position of the fill - it's the total size of each auto-sized widget before the fill group.
-                if(group.StartIndex > 0)
+                int prevAccum = 0;
+                if (group.StartIndex > 0)
                 {
-                    int prevAccum = 0;
                     for(int j = 0; j < group.StartIndex; j++)
                     {
                         var layout = layoutInfo[j];
@@ -198,6 +209,86 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
                 // End position gets decreased by that accumulated value.
                 endPos -= accum;
+
+                // Move over previous controls to make some more room for this widget.
+                int gainedArea = 0;
+                int lostArea = 0;
+                for(int j = i - 1; j >= 0; j--)
+                {
+                    var prevGroup = filledGroups[j];
+
+                    // Calculate size of widgets between the fill group and the next.
+                    int afterSize = 0;
+                    for(int k = prevGroup.EndIndex + 1; k < layoutInfo.Count; k++)
+                    {
+                        var afLayout = layoutInfo[k];
+
+                        if(afLayout.SizeMode == SizeMode.Fill)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            afterSize += (int)afLayout.Size;
+                        }
+                    }
+
+                    int fillDecrease = prevAccum / prevGroup.Count;
+
+                    for(int k = prevGroup.StartIndex; k <= prevGroup.EndIndex; k++)
+                    {
+                        var kLayout = layoutInfo[k];
+
+                        if(Orientation == Orientation.Horizontal)
+                        {
+                            kLayout.Bounds.Width -= fillDecrease;
+                            if(k > prevGroup.StartIndex)
+                            {
+                                kLayout.Bounds.X -= fillDecrease;
+                            }
+
+                            lostArea += kLayout.Bounds.Width + Spacing;
+                        }
+                        else
+                        {
+                            kLayout.Bounds.Height -= fillDecrease;
+                            if (k > prevGroup.StartIndex)
+                            {
+                                kLayout.Bounds.Y -= fillDecrease;
+                            }
+
+                            lostArea += kLayout.Bounds.Height + Spacing;
+                        }
+
+                        layoutInfo[k] = kLayout;
+                    }
+
+                    gainedArea += fillDecrease + (Spacing * prevGroup.Count);
+
+                    // Move over widgets that come after this fill group.
+                    for(int k = prevGroup.EndIndex + 1; k < layoutInfo.Count; k++)
+                    {
+                        var kLayout = layoutInfo[k];
+
+                        if (kLayout.SizeMode == SizeMode.Auto)
+                        {
+                            if(Orientation == Orientation.Horizontal)
+                            {
+                                kLayout.Bounds.X -= gainedArea;
+                            }
+                            else
+                            {
+                                kLayout.Bounds.Y -= gainedArea;
+                            }
+                        }
+                        else break;
+
+                        layoutInfo[k] = kLayout;
+                    }
+                }
+
+                startPos -= gainedArea;
+                startPos += lostArea;
 
                 // And now we know our total width.
                 int totalFillWidth = endPos - startPos;

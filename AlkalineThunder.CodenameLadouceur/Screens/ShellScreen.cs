@@ -18,6 +18,7 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
         private Button _exitButton = new Button();
         private Button _appsButton = new Button();
         private StackPanel _panelButtons = new StackPanel();
+        private Button _test = new Button();
 
         protected override void OnInitialize()
         {
@@ -37,6 +38,11 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
             _desktopPanelItems.Children.Add(_appsButton);
             _desktopPanelItems.Children.Add(_panelButtons);
             _desktopPanelItems.Children.Add(_time);
+            _desktopPanelItems.Children.Add(_test);
+
+            _test.Content = new Label("Test...");
+
+            _desktopPanelItems.SetSizeMode(_test, SizeMode.Fill);
 
             _panelButtons.VerticalAlignment = VerticalAlignment.Middle;
 
