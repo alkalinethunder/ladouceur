@@ -138,17 +138,17 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
                 x = Math.Max(x, measure.X);
             }
 
-            return new Vector2(x + (ActiveTheme.ListBoxBorderThickness * 2), y + (ActiveTheme.ListBoxBorderThickness * 2));
+            return new Vector2(x + (ActiveTheme.ListBoxBrush.Margin.Width), y + (ActiveTheme.ListBoxBrush.Margin.Height));
         }
 
         protected override void OnDraw(GameTime gameTime)
         {
             var font = Font ?? ActiveTheme.DefaultFont;
 
-            float x = Bounds.Left + ActiveTheme.ListBoxBorderThickness;
-            float y = Bounds.Top + ActiveTheme.ListBoxBorderThickness;
+            float x = Bounds.Left + ActiveTheme.ListBoxBrush.Margin.Left;
+            float y = Bounds.Top + ActiveTheme.ListBoxBrush.Margin.Top;
 
-            DrawRectangle(Bounds, ActiveTheme.ListBoxBorderColor, ActiveTheme.ListBoxBorderThickness);
+            DrawBrush(Bounds, ActiveTheme.ListBoxBrush);
 
             for(int i = 0; i < Items.Count; i++)
             {
@@ -160,7 +160,7 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
                 if(i == SelectedIndex)
                 {
-                    FillRectangle(new Rectangle((int)x, (int)y, Bounds.Width - (ActiveTheme.ListBoxBorderThickness * 2), (int)measure.Y), ActiveTheme.ListBoxSelectedHighlightColor);
+                    DrawBrush(new Rectangle((int)x, (int)y, Bounds.Width - (ActiveTheme.ListBoxBrush.Margin.Width), (int)measure.Y), ActiveTheme.SelectionBrush);
                 }
 
                 DrawString(font, text, new Vector2(x, y), textColor);
@@ -184,9 +184,9 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
                     var height = font.MeasureString(text).Y;
 
                     var rect = new Rectangle(
-                        Bounds.Left + ActiveTheme.ListBoxBorderThickness,
-                        Bounds.Top + ActiveTheme.ListBoxBorderThickness + ((int)height * i),
-                        Bounds.Width - (ActiveTheme.ListBoxBorderThickness * 2),
+                        Bounds.Left + ActiveTheme.ListBoxBrush.Margin.Left,
+                        Bounds.Top + ActiveTheme.ListBoxBrush.Margin.Top + ((int)height * i),
+                        Bounds.Width - (ActiveTheme.ListBoxBrush.Margin.Width),
                         (int)height
                         );
 

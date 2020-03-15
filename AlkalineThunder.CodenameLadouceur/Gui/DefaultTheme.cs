@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using AlkalineThunder.CodenameLadouceur.Rendering;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -20,34 +21,37 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
         public override SpriteFont ConsoleFont => _font;
 
-        public override Color DefaultBackground => DarkMode ? new Color(32, 32, 32) : Color.WhiteSmoke;
+        public override Color DefaultBackground => DarkMode ? new Color(22,22,22) : Color.WhiteSmoke;
 
-        public override Color DefaultForeground => DarkMode ? Color.WhiteSmoke : new Color(32, 32, 32);
+        public override Color DefaultForeground => DarkMode ? Color.WhiteSmoke : Color.Black;
 
-        public override int ButtonBorderThickness => 2;
+        public override Brush SelectionBrush => Color.CornflowerBlue;
 
-        public override SpriteFont TextEntryFont => DefaultFont;
+        public override Brush ButtonBrush => new Brush(Color.Blue, new Padding(7, 4));
 
-        public override Color ButtonBorderColor => DefaultForeground;
+        public override Brush ButtonHoveredBrush => ButtonBrush.InColor(Color.CornflowerBlue);
 
-        public override Color ButtonBackgroundColor => DarkMode ? new Color(72, 72, 72) : Color.LightGray;
+        public override Brush ButtonPressedBrush => ButtonBrush.InColor(Color.Black);
 
-        public override Color ButtonHoveredColor => Color.Gray;
+        public override SpriteFont TextEntryFont => _font;
 
-        public override Color ButtonPressedColor => DarkMode ? Color.Black : Color.White;
         public override Color TextEntryHintColor => Color.Gray;
-        public override Color TextEntryTextColor => DefaultForeground;
-        public override Color ListBoxItemColor => DefaultForeground;
-        public override Color ListBoxSelectedItemColor => DefaultForeground;
-        public override Color ListBoxSelectedHighlightColor => Color.Blue;
-        public override Color ListBoxBorderColor => DefaultForeground;
-        public override int ListBoxBorderThickness => 2;
 
-        public override int CheckBorderThickness => 1;
-        public override int CheckSize => 22;
+        public override Color TextEntryTextColor => DefaultForeground;
+
+        public override Color ListBoxItemColor => DefaultForeground;
+
+        public override Color ListBoxSelectedItemColor => Color.White;
+
+        public override Brush ListBoxBrush => Brush.None;
+
+        public override int CheckSize => 12;
+
+        public override int CheckBorderThickness => 2;
 
         public override int ScrollBarWidth => 16;
-        public override Color ScrollBarColor => DefaultForeground;
+
+        public override Brush ScrollBarBrush => DefaultForeground;
 
         public override void LoadContent(ContentManager content)
         {

@@ -136,12 +136,12 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
                     var offsetDrawLoc = MathHelper.Lerp(Bounds.Top, Bounds.Bottom, offsetPercentage);
                     var nubDrawHeight = MathHelper.Lerp(0, Bounds.Height, viewHeightPercentage);
 
-                    FillRectangle(new Rectangle(
+                    DrawBrush(new Rectangle(
                             Bounds.Right - ActiveTheme.ScrollBarWidth,
                             (int)offsetDrawLoc,
                             ActiveTheme.ScrollBarWidth,
                             (int)nubDrawHeight
-                        ), ActiveTheme.ScrollBarColor);
+                        ), ActiveTheme.ScrollBarBrush);
                 }
             }
         }

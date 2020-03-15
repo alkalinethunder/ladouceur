@@ -55,23 +55,22 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             if(Content != null)
             {
                 var measure = Content.CalculateSize();
-                return new Vector2(measure.X + (ActiveTheme.ButtonBorderThickness * 2), measure.Y + (ActiveTheme.ButtonBorderThickness * 2));
+                return new Vector2(measure.X, measure.Y);
             }
             else
             {
-                return new Vector2(ActiveTheme.ButtonBorderThickness * 2, ActiveTheme.ButtonBorderThickness * 2);
+                return Vector2.Zero;
             }
         }
 
         protected override void OnDraw(GameTime gameTime)
         {
-            var bgColor = ActiveTheme.ButtonBackgroundColor;
+            var bgColor = ActiveTheme.ButtonBrush;
 
-            if (IsHovered) bgColor = ActiveTheme.ButtonHoveredColor;
-            if (IsPressed) bgColor = ActiveTheme.ButtonPressedColor;
+            if (IsHovered) bgColor = ActiveTheme.ButtonHoveredBrush;
+            if (IsPressed) bgColor = ActiveTheme.ButtonPressedBrush;
 
-            FillRectangle(Bounds, bgColor);
-            DrawRectangle(Bounds, ActiveTheme.ButtonBorderColor, ActiveTheme.ButtonBorderThickness);
+            DrawBrush(Bounds, bgColor);
         }
     }
 }

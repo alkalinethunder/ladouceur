@@ -47,6 +47,11 @@ namespace AlkalineThunder.CodenameLadouceur.Rendering
 
         }
 
+        public Brush(Color color, Padding padding) : this(null, color, padding, BrushType.Box)
+        {
+
+        }
+
         public Brush(Texture2D texture) : this(texture, 0, BrushType.Image)
         {
 
@@ -97,6 +102,11 @@ namespace AlkalineThunder.CodenameLadouceur.Rendering
         public override string ToString()
         {
             return $"(BrushColor={BrushColor}, Texture={Texture}, Margin={Margin}, BrushType={BrushType})";
+        }
+
+        public Brush InColor(Color color)
+        {
+            return new Brush(this.Texture, color, this.Margin, this.BrushType);
         }
     }
 }
