@@ -69,7 +69,7 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             }
             else
             {
-                return false;
+                return true;
             }
         }
 
@@ -131,9 +131,9 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
                 var alignment = GetAlignment(child);
                 var anchor = GetAnchor(child);
 
-                var actualSize = autosize ? new Vector2(width, height) : child.DesiredSize;
+                var actualSize = !autosize ? new Vector2(width, height) : child.CalculateSize();
 
-                var relativeCAnvasPos = new Vector2(ContentBounds.Left + (ContentBounds.Width * anchor.LeftValue), ContentBounds.Top + (Bounds.Height * anchor.TopValue));
+                var relativeCAnvasPos = new Vector2(ContentBounds.Left + (ContentBounds.Width * anchor.LeftValue), ContentBounds.Top + (ContentBounds.Height * anchor.TopValue));
 
                 var alignOffset = new Vector2(actualSize.X * alignment.LeftValue, actualSize.Y * alignment.TopValue);
 
