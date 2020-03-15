@@ -481,8 +481,13 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             if (Visible)
             {
                 if (_renderer != null) throw new InvalidOperationException("Control is already drawing.");
+
+                var rect = GetScissorRect();
+
+                if (rect.IsEmpty) return;
+
                 _renderer = renderer;
-                _renderer.SetScissorRect(this.GetScissorRect());
+                _renderer.SetScissorRect(rect);
 
                 if (!ParentsEnabled)
                 {
