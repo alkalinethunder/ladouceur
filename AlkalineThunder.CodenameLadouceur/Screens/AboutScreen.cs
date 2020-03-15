@@ -15,7 +15,8 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
         private StackPanel _buttons = new StackPanel();
         private Button _github = new Button();
         private Button _exit = new Button();
-
+        private StackPanel _screensStacker = new StackPanel();
+        private Button _shellTest = new Button();
 
         protected override void OnInitialize()
         {
@@ -23,8 +24,16 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
 
             canvas.Margin = 25;
 
+            canvas.Children.Add(_screensStacker);
             canvas.Children.Add(_infoStacker);
             canvas.Children.Add(_buttons);
+
+            _screensStacker.Children.Add(new Label("Other screens: "));
+            _screensStacker.Children.Add(_shellTest);
+
+            _shellTest.Content = new Label("Shell test");
+
+            _screensStacker.Spacing = 10;
 
             _buttons.Orientation = Orientation.Horizontal;
             _buttons.Spacing = 15;
