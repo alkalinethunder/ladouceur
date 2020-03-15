@@ -58,6 +58,10 @@ namespace AlkalineThunder.CodenameLadouceur.Rendering
         }
 
         public static Brush None => new Brush(null, Color.White, 0, BrushType.None);
+        public static Brush Border => new Brush(null, Color.White, 1, BrushType.Border);
+        public static Brush Box => new Brush(null, Color.White, 1, BrushType.Box);
+        public static Brush Image => new Brush(null, Color.White, 0, BrushType.Image);
+
 
         public static implicit operator Texture2D(Brush brush)
         {
@@ -107,6 +111,21 @@ namespace AlkalineThunder.CodenameLadouceur.Rendering
         public Brush InColor(Color color)
         {
             return new Brush(this.Texture, color, this.Margin, this.BrushType);
+        }
+
+        public Brush Pad(Padding padding)
+        {
+            return new Brush(Texture, BrushColor, padding, BrushType);
+        }
+
+        public Brush WithTexture(Texture2D texture)
+        {
+            return new Brush(texture, BrushColor, Margin, BrushType);
+        }
+
+        public Brush AsType(BrushType type)
+        {
+            return new Brush(Texture, BrushColor, Margin, type);
         }
     }
 }
