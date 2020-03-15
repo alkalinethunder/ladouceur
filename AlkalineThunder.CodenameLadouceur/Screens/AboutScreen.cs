@@ -17,6 +17,9 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
         private Button _exit = new Button();
         private StackPanel _screensStacker = new StackPanel();
         private Button _shellTest = new Button();
+        private StackPanel _scrollerTest = new StackPanel();
+        private ScrollPanel _scroller = new ScrollPanel();
+        private StackPanel _scrollerContent = new StackPanel();
 
         protected override void OnInitialize()
         {
@@ -27,6 +30,23 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
             canvas.Children.Add(_screensStacker);
             canvas.Children.Add(_infoStacker);
             canvas.Children.Add(_buttons);
+            canvas.Children.Add(_scrollerTest);
+
+            _scrollerTest.Children.Add(new Label("Scroll Panel Test:"));
+            _scrollerTest.Children.Add(_scroller);
+
+            _scroller.Content = _scrollerContent;
+
+            for(int i = 0; i < 100; i++)
+            {
+                _scrollerContent.Children.Add(new Label("Scroller content " + i));
+            }
+
+            canvas.SetAutoSize(_scrollerTest, false);
+            canvas.SetWidth(_scrollerTest, 384);
+            canvas.SetHeight(_scrollerTest, 500);
+            canvas.SetAnchor(_scrollerTest, CanvasAlignment.TopRight);
+            canvas.SetAlignment(_scrollerTest, CanvasAlignment.TopRight);
 
             _screensStacker.Children.Add(new Label("Other screens: "));
             _screensStacker.Children.Add(_shellTest);

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AlkalineThunder.CodenameLadouceur.Gui
 {
-    public abstract class ContentControl : Control
+    public abstract class ContentControl : Control, IContentControl
     {
         private Control _content = null;
 

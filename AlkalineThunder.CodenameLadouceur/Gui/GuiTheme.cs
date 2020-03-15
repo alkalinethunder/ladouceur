@@ -33,7 +33,12 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
         public abstract int CheckSize { get; }
         public abstract int CheckBorderThickness { get; }
-        
+
+        public abstract int ScrollBarWidth { get; }
+        public abstract Color ScrollBarColor { get; }
+
         public abstract void LoadContent(ContentManager content);
+
+
     }
 }

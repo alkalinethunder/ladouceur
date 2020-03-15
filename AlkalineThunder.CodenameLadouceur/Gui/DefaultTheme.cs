@@ -46,6 +46,9 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         public override int CheckBorderThickness => 1;
         public override int CheckSize => 22;
 
+        public override int ScrollBarWidth => 16;
+        public override Color ScrollBarColor => DefaultForeground;
+
         public override void LoadContent(ContentManager content)
         {
             _font = content.Load<SpriteFont>("ConsoleFont");
