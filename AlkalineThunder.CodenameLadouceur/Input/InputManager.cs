@@ -111,28 +111,26 @@ namespace AlkalineThunder.CodenameLadouceur.Input
 
         public override void Update(GameTime gameTime)
         {
-            if (Game.IsActive)
+            _mouse = Mouse.GetState(this.Game.Window);
+
+            if (_mouse.X != _lastMouse.X || _mouse.Y != _lastMouse.Y)
             {
-                _mouse = Mouse.GetState(this.Game.Window);
-
-                if (_mouse.X != _lastMouse.X || _mouse.Y != _lastMouse.Y)
-                {
-                    HandleMouseMove(this, new MouseMoveEventArgs(_mouse.X, _mouse.Y, _mouse.X - _lastMouse.X, _mouse.Y - _lastMouse.Y));
-                }
-
-                DetermineButtonState(_lastMouse.LeftButton, _mouse.LeftButton, MouseButton.Left);
-                DetermineButtonState(_lastMouse.MiddleButton, _mouse.MiddleButton, MouseButton.Middle);
-                DetermineButtonState(_lastMouse.RightButton, _mouse.RightButton, MouseButton.Right);
-                DetermineButtonState(_lastMouse.XButton1, _mouse.XButton1, MouseButton.XButton1);
-                DetermineButtonState(_lastMouse.XButton2, _mouse.XButton2, MouseButton.XButton2);
-
-                if(_mouse.ScrollWheelValue != _lastMouse.ScrollWheelValue)
-                {
-                    HandleMouseScroll(new MouseScrollEventArgs(_mouse.X, _mouse.Y, _mouse.ScrollWheelValue, _mouse.ScrollWheelValue - _lastMouse.ScrollWheelValue));
-                }
-
-                _lastMouse = _mouse;
+                HandleMouseMove(this, new MouseMoveEventArgs(_mouse.X, _mouse.Y, _mouse.X - _lastMouse.X, _mouse.Y - _lastMouse.Y));
             }
+
+            DetermineButtonState(_lastMouse.LeftButton, _mouse.LeftButton, MouseButton.Left);
+            DetermineButtonState(_lastMouse.MiddleButton, _mouse.MiddleButton, MouseButton.Middle);
+            DetermineButtonState(_lastMouse.RightButton, _mouse.RightButton, MouseButton.Right);
+            DetermineButtonState(_lastMouse.XButton1, _mouse.XButton1, MouseButton.XButton1);
+            DetermineButtonState(_lastMouse.XButton2, _mouse.XButton2, MouseButton.XButton2);
+
+            if (_mouse.ScrollWheelValue != _lastMouse.ScrollWheelValue)
+            {
+                HandleMouseScroll(new MouseScrollEventArgs(_mouse.X, _mouse.Y, _mouse.ScrollWheelValue, _mouse.ScrollWheelValue - _lastMouse.ScrollWheelValue));
+            }
+
+            _lastMouse = _mouse;
+
 
             base.Update(gameTime);
         }
