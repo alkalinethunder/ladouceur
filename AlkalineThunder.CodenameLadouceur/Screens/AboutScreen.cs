@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace AlkalineThunder.CodenameLadouceur.Screens
@@ -48,8 +49,23 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
             canvas.SetAnchor(_buttons, CanvasAlignment.BottomRight);
             canvas.SetAlignment(_buttons, CanvasAlignment.BottomRight);
 
+            _github.Click += GitHubClick;
+            _exit.Click += ExitClick;
+
             Content = canvas;
             base.OnInitialize();
+        }
+
+        private void ExitClick(object sender, Input.MouseButtonEventArgs e)
+        {
+            Exit();
+        }
+
+        private void GitHubClick(object sender, Input.MouseButtonEventArgs e)
+        {
+            var info = new ProcessStartInfo("https://github.com/alkalinethunder/ladouceur");
+            info.UseShellExecute = true;
+            Process.Start(info);
         }
 
         protected override void OnDraw(GameTime gameTime)

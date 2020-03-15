@@ -12,6 +12,11 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
         private ScreenManager ScreenManager { get; set; }
         public ContentManager ContentManager { get; private set; }
 
+        public void Exit()
+        {
+            ScreenManager.Game.Exit();
+        }
+
         protected T AddScreen<T>() where T : Screen, new()
         {
             return ScreenManager.AddScreen<T>();
