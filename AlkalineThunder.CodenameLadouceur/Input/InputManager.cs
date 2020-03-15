@@ -18,6 +18,7 @@ namespace AlkalineThunder.CodenameLadouceur.Input
         public event EventHandler<MouseButtonEventArgs> MouseDown;
         public event EventHandler<MouseButtonEventArgs> MouseUp;
         public event EventHandler<MouseMoveEventArgs> MouseMove;
+        public event EventHandler<MouseScrollEventArgs> MouseScroll;
 
 
         public InputManager(Game game) : base(game)
@@ -83,6 +84,11 @@ namespace AlkalineThunder.CodenameLadouceur.Input
             MouseUp?.Invoke(this, e);
         }
 
+        private void HandleMouseScroll(MouseScrollEventArgs e)
+        {
+            Logger.Log($"Mouse scrolled - delta: {e.ScrollWheelDelta}, value: {e.ScrollWheelValue}");
+            MouseScroll?.Invoke(this, e);
+        }
 
         private void DetermineButtonState(ButtonState lasts, ButtonState current, MouseButton button)
         {
@@ -119,6 +125,11 @@ namespace AlkalineThunder.CodenameLadouceur.Input
                 DetermineButtonState(_lastMouse.RightButton, _mouse.RightButton, MouseButton.Right);
                 DetermineButtonState(_lastMouse.XButton1, _mouse.XButton1, MouseButton.XButton1);
                 DetermineButtonState(_lastMouse.XButton2, _mouse.XButton2, MouseButton.XButton2);
+
+                if(_mouse.ScrollWheelValue != _lastMouse.ScrollWheelValue)
+                {
+                    HandleMouseScroll(new MouseScrollEventArgs(_mouse.X, _mouse.Y, _mouse.ScrollWheelValue, _mouse.ScrollWheelValue - _lastMouse.ScrollWheelValue));
+                }
 
                 _lastMouse = _mouse;
             }
