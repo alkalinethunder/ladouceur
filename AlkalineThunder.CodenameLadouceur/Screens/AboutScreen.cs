@@ -61,8 +61,16 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
             _github.Click += GitHubClick;
             _exit.Click += ExitClick;
 
+            _shellTest.Click += ShellTestClick;
+
             Content = canvas;
             base.OnInitialize();
+        }
+
+        private void ShellTestClick(object sender, Input.MouseButtonEventArgs e)
+        {
+            AddScreen<ShellScreen>();
+            RemoveScreen();
         }
 
         private void ExitClick(object sender, Input.MouseButtonEventArgs e)
