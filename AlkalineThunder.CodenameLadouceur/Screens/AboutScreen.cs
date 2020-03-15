@@ -20,6 +20,8 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
         private StackPanel _scrollerTest = new StackPanel();
         private ScrollPanel _scroller = new ScrollPanel();
         private StackPanel _scrollerContent = new StackPanel();
+        private WrapBox _wrapperTest = new WrapBox();
+        
 
         protected override void OnInitialize()
         {
@@ -31,6 +33,20 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
             canvas.Children.Add(_infoStacker);
             canvas.Children.Add(_buttons);
             canvas.Children.Add(_scrollerTest);
+            canvas.Children.Add(_wrapperTest);
+
+            canvas.SetAnchor(_wrapperTest, CanvasAlignment.Center);
+            canvas.SetAlignment(_wrapperTest, CanvasAlignment.Center);
+
+            for(int i = 0; i < 25; i++)
+            {
+                var lbl = new Label("This is element number " + (i + 1) + " of the wrap box.");
+                lbl.WrapWidth = 100;
+                _wrapperTest.Children.Add(lbl);
+            }
+
+            _wrapperTest.HorizontalSpacing = 15;
+            _wrapperTest.VerticalSpacing = 10;
 
             _scrollerTest.Children.Add(new Label("Scroll Panel Test:"));
             _scrollerTest.Children.Add(_scroller);
