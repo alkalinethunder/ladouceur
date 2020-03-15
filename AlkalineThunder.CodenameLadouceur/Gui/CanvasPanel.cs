@@ -11,6 +11,19 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         private static readonly string AutoSizeProp = "AutoSize";
         private static readonly string AlignmentProp = "Alignment";
         private static readonly string LocationProp = "Location";
+        public static readonly string AnchorProp = "Anchor";
+
+        public CanvasAlignment GetAnchor(Control control)
+        {
+            if(control.GetProperty(AnchorProp, out CanvasAlignment anchor))
+            {
+                return anchor;
+            }
+            else
+            {
+                return CanvasAlignment.TopLeft;
+            }
+        }
 
         public Vector2 GetLocation(Control control)
         {
@@ -96,6 +109,11 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         {
             control.SetAttachedProperty(LocationProp, location);
         }
+        
+        public void SetAnchor(Control control, CanvasAlignment anchor)
+        {
+            control.SetAttachedProperty(AnchorProp, anchor);
+        }
 
         protected override Vector2 MeasureOverride()
         {
@@ -111,16 +129,19 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
                 var width = GetWidth(child);
                 var height = GetHeight(child);
                 var alignment = GetAlignment(child);
+                var anchor = GetAnchor(child);
 
                 var actualSize = autosize ? new Vector2(width, height) : child.DesiredSize;
+
+                var relativeCAnvasPos = new Vector2(ContentBounds.Left + (ContentBounds.Width * anchor.LeftValue), ContentBounds.Top + (Bounds.Height * anchor.TopValue));
 
                 var alignOffset = new Vector2(actualSize.X * alignment.LeftValue, actualSize.Y * alignment.TopValue);
 
                 var alignedLocation = loc - alignOffset;
 
                 PlaceControl(child, new Rectangle(
-                        ContentBounds.Left + (int)alignedLocation.X,
-                        ContentBounds.Top + (int)alignedLocation.Y,
+                        (int)relativeCAnvasPos.X + (int)alignedLocation.X,
+                        (int)relativeCAnvasPos.Y + (int)alignedLocation.Y,
                         (int)actualSize.X,
                         (int)actualSize.Y
                     ));
