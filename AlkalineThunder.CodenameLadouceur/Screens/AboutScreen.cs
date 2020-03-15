@@ -37,6 +37,8 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
 
             _scroller.Content = _scrollerContent;
 
+            _scrollerTest.SetSizeMode(_scroller, SizeMode.Fill);
+
             for(int i = 0; i < 100; i++)
             {
                 _scrollerContent.Children.Add(new Label("Scroller content " + i));
