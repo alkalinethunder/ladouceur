@@ -43,6 +43,13 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             return base.OnMouseDown(e);
         }
 
+        protected override void OnContentChanged(Control content)
+        {
+            content.HorizontalAlignment = HorizontalAlignment.Center;
+            content.VerticalAlignment = VerticalAlignment.Middle;
+            base.OnContentChanged(content);
+        }
+
         protected override Vector2 MeasureOverride()
         {
             if(Content != null)

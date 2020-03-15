@@ -20,9 +20,18 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
                 {
                     if (_content != null) InternalChildren.Remove(_content);
                     _content = value;
-                    if (_content != null) InternalChildren.Add(_content);
+                    if (_content != null)
+                    {
+                        InternalChildren.Add(_content);
+                        OnContentChanged(_content);
+                    }
                 }
             }
+        }
+
+        protected virtual void OnContentChanged(Control content)
+        {
+
         }
 
         protected override Vector2 MeasureOverride()
