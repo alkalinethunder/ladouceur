@@ -42,14 +42,15 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
 
             _test.Content = new Label("Test...");
 
-            _desktopPanelItems.SetSizeMode(_test, SizeMode.Fill);
+            //_desktopPanelItems.SetSizeMode(_test, SizeMode.Fill);
 
+            _panelButtons.HorizontalAlignment = HorizontalAlignment.Center;
             _panelButtons.VerticalAlignment = VerticalAlignment.Middle;
 
             _panelButtons.Children.Add(new Label("This is a test."));
 
             _desktopPanelItems.SetSizeMode(_panelButtons, SizeMode.Fill);
-            _desktopPanelItems.SetSizeMode(_appsButton, SizeMode.Fill);
+            //_desktopPanelItems.SetSizeMode(_appsButton, SizeMode.Fill);
 
             _exitButton.Content = new Label("<< Back");
             _appsButton.Content = new Label("Applications");
