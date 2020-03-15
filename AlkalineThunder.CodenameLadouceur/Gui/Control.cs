@@ -414,15 +414,15 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         {
             if (Enabled && Visible)
             {
-                for (int i = this.InternalChildren.Count - 1; i >= 0; i--)
-                {
-                    var child = this.InternalChildren[i];
-                    var foundInChild = child.FindControl(x, y);
-                    if (foundInChild != null) return foundInChild;
-                }
-
                 if (x >= this.Bounds.Left && x <= this.Bounds.Right && y >= this.Bounds.Top && y <= this.Bounds.Bottom)
                 {
+                    for (int i = this.InternalChildren.Count - 1; i >= 0; i--)
+                    {
+                        var child = this.InternalChildren[i];
+                        var foundInChild = child.FindControl(x, y);
+                        if (foundInChild != null) return foundInChild;
+                    }
+
                     return this;
                 }
                 else
