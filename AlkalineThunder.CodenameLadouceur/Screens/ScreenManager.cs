@@ -32,10 +32,19 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
             input.MouseDown += HandleMouseDown;
             input.MouseUp += HandleMouseUp;
             input.MouseMove += HandleMouseMove;
+            input.MouseScroll += HandleMouseScroll;
 
             AddScreen<AboutScreen>();
 
             base.Initialize();
+        }
+
+        private void HandleMouseScroll(object sender, Input.MouseScrollEventArgs e)
+        {
+            if(HoveredControl != null)
+            {
+                Propagate(HoveredControl, x => x.FireMouseScroll(e));
+            }
         }
 
         public T AddScreen<T>() where T : Screen, new()

@@ -220,6 +220,24 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             return OnMouseMove(e);
         }
 
+        public bool FireMouseScroll(MouseScrollEventArgs e)
+        {
+            return OnMouseScroll(e);
+        }
+
+        protected virtual bool OnMouseScroll(MouseScrollEventArgs e)
+        {
+            if(MouseScroll != null)
+            {
+                MouseScroll(this, e);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public bool Collapsed { get; set; } = false;
         public bool Visible { get; set; } = true;
         public bool Enabled { get; set; } = true;
@@ -235,6 +253,7 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         public event EventHandler<TextInputEventArgs> TextInput;
         public event EventHandler<FocusEventArgs> GainedFocus;
         public event EventHandler<FocusEventArgs> LostFocus;
+        public event EventHandler<MouseScrollEventArgs> MouseScroll;
 
         public IEnumerable<Control> Parents
         {
