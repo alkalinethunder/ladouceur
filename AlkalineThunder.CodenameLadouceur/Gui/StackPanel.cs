@@ -156,19 +156,28 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
                 // End position of the fill group.
                 int endPos = (Orientation == Orientation.Horizontal) ? ContentBounds.Right : ContentBounds.Bottom;
 
-                // Calculate the start position of the fill - it's the right position of the previous control, plus spacing.
+                // Calculate the start position of the fill - it's the total size of each auto-sized widget before the fill group.
                 if(group.StartIndex > 0)
                 {
-                    var prevBounds = layoutInfo[group.StartIndex - 1].Bounds;
+                    int prevAccum = 0;
+                    for(int j = 0; j < group.StartIndex; j++)
+                    {
+                        var layout = layoutInfo[j];
 
-                    if(Orientation == Orientation.Horizontal)
-                    {
-                        startPos = prevBounds.Right + Spacing;
+                        if(layout.SizeMode == SizeMode.Auto)
+                        {
+                            if(Orientation == Orientation.Horizontal)
+                            {
+                                prevAccum += layout.Bounds.Width + Spacing;
+                            }
+                            else
+                            {
+                                prevAccum += layout.Bounds.Height + Spacing;
+                            }
+                        }
                     }
-                    else
-                    {
-                        startPos = prevBounds.Bottom + Spacing;
-                    }
+
+                    startPos += prevAccum;
                 }
 
                 // The end position is trickier - first we need to know the size of everything "below" the fill group...
