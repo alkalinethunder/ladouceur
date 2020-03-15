@@ -77,253 +77,119 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             }
         }
 
-        protected override void ArrangeOverride()
+        private IEnumerable<FilledLayoutGroup> GetFilledGroups(List<StackLayoutInfo> layoutInfo)
         {
-            // Pass 1: Figure out how big everything is and what their size mode is.
-            var layoutInfo = GetLayoutInfo().ToList();
-
-            // Pass 2: Calculate sizes and locations of auto-sized elements.
-            int totalSpace = (Orientation == Orientation.Horizontal) ? ContentBounds.Width : ContentBounds.Height;
-            int loc = (Orientation == Orientation.Horizontal) ? ContentBounds.Left : ContentBounds.Top;
-            for(int i = 0; i < layoutInfo.Count; i++)
+            int groupStart = -1;
+            for (int i = 0; i <= layoutInfo.Count; i++)
             {
-                var layout = layoutInfo[i];
-
-                if(layout.SizeMode == SizeMode.Auto)
+                if (i < layoutInfo.Count)
                 {
-                    int x = 0;
-                    int y = 0;
-                    int width = 0;
-                    int height = 0;
+                    var layout = layoutInfo[i];
 
-                    switch(Orientation)
+                    if (layout.SizeMode == SizeMode.Fill)
                     {
-                        case Orientation.Horizontal:
-                            x = loc;
-                            y = ContentBounds.Top;
-                            width = (int)layout.Size;
-                            height = ContentBounds.Height;
-
-                            loc += width + Spacing;
-                            totalSpace -= width + Spacing;
-                            break;
-                        case Orientation.Vertical:
-                            x = ContentBounds.Left;
-                            y = loc;
-                            width = ContentBounds.Width;
-                            height = (int)layout.Size;
-
-                            loc += height + Spacing;
-                            totalSpace -= height + Spacing;
-                            break;
+                        if (groupStart == -1)
+                        {
+                            groupStart = i;
+                        }
                     }
-
-                    layout.Bounds = new Rectangle(x, y, width, height);
-                    layoutInfo[i] = layout;
-                }
-            }
-
-            // Pass 3: Find and group all filled widgets.
-            var filledGroups = new List<FilledLayoutGroup>();
-            int fillStart = -1;
-            for(int i = 0; i <= layoutInfo.Count; i++)
-            {
-                if (i == layoutInfo.Count)
-                {
-                    if(fillStart > -1)
+                    else
                     {
-                        filledGroups.Add(new FilledLayoutGroup(fillStart, i - 1));
-                        fillStart = -1;
+                        if (groupStart > -1)
+                        {
+                            yield return new FilledLayoutGroup(groupStart, i - 1);
+                            groupStart = -1;
+                        }
                     }
                 }
                 else
                 {
-                    var layout = layoutInfo[i];
-
-                    if (layout.SizeMode == SizeMode.Auto)
+                    if (groupStart > -1)
                     {
-                        if (fillStart > -1)
-                        {
-                            filledGroups.Add(new FilledLayoutGroup(fillStart, i - 1));
-                            fillStart = -1;
-                        }
-                    }
-                    else
-                    {
-                        if (fillStart == -1) fillStart = i;
+                        yield return new FilledLayoutGroup(groupStart, i - 1);
+                        groupStart = -1;
                     }
                 }
             }
-            
-            // Pass 4: 
-            for(int i = 0; i < filledGroups.Count; i++)
+        }
+
+        protected override void ArrangeOverride()
+        {
+            // Pass 1: Get layout information for each control.
+            var layoutInfo = GetLayoutInfo().ToList();
+
+            // Pass 2: Group all controls that fill the remainder of this widget's space.
+            var fillGroups = GetFilledGroups(layoutInfo).ToList();
+
+            // Pass 3: Figure out how big each fill group should be and where they go.
+            if (fillGroups.Count > 0)
             {
-                // Group information.
-                var group = filledGroups[i];
-
-                // Start position of the fill group.
-                int startPos = (Orientation == Orientation.Horizontal) ? ContentBounds.Left : ContentBounds.Top;
-
-                // End position of the fill group.
-                int endPos = (Orientation == Orientation.Horizontal) ? ContentBounds.Right : ContentBounds.Bottom;
-
-                // Calculate the start position of the fill - it's the total size of each auto-sized widget before the fill group.
-                int prevAccum = 0;
-                if (group.StartIndex > 0)
+                int fillGroupSize = ((Orientation == Orientation.Horizontal) ? ContentBounds.Width : ContentBounds.Height) / fillGroups.Count;
+                for (int i = 0; i < fillGroups.Count; i++)
                 {
-                    for(int j = 0; j < group.StartIndex; j++)
+                    int top = (Orientation == Orientation.Horizontal) ? ContentBounds.Left : ContentBounds.Top;
+                    top += (fillGroupSize + Spacing) * i;
+
+                    var group = fillGroups[i];
+                    group.StartPos = top;
+                    group.EndPos = top + fillGroupSize;
+                    fillGroups[i] = group;
+                }
+
+                // Pass 4: Make room for auto-sized widgets.
+                for (int i = 0; i < fillGroups.Count; i++)
+                {
+                    var group = fillGroups[i];
+
+                    int beforeAccum = 0;
+                    for (int j = group.StartIndex - 1; j >= 0; j--)
                     {
                         var layout = layoutInfo[j];
-
-                        if(layout.SizeMode == SizeMode.Auto)
+                        if (layout.SizeMode == SizeMode.Auto)
                         {
-                            if(Orientation == Orientation.Horizontal)
-                            {
-                                prevAccum += layout.Bounds.Width + Spacing;
-                            }
-                            else
-                            {
-                                prevAccum += layout.Bounds.Height + Spacing;
-                            }
-                        }
-                    }
-
-                    startPos += prevAccum;
-                }
-
-                // The end position is trickier - first we need to know the size of everything "below" the fill group...
-                int accum = 0;
-                for(int j = group.EndIndex + 1; j < layoutInfo.Count; j++)
-                {
-                    var layout = layoutInfo[j];
-
-                    if(Orientation == Orientation.Horizontal)
-                    {
-                        accum += layout.Bounds.Width + Spacing;
-                    }
-                    else
-                    {
-                        accum += layout.Bounds.Height + Spacing;
-                    }
-                }
-
-                // End position gets decreased by that accumulated value.
-                endPos -= accum;
-
-                // Move over previous controls to make some more room for this widget.
-                int gainedArea = 0;
-                int lostArea = 0;
-                for(int j = i - 1; j >= 0; j--)
-                {
-                    var prevGroup = filledGroups[j];
-
-                    // Calculate size of widgets between the fill group and the next.
-                    int afterSize = 0;
-                    for(int k = prevGroup.EndIndex + 1; k < layoutInfo.Count; k++)
-                    {
-                        var afLayout = layoutInfo[k];
-
-                        if(afLayout.SizeMode == SizeMode.Fill)
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            afterSize += (int)afLayout.Size;
-                        }
-                    }
-
-                    int fillDecrease = prevAccum / prevGroup.Count;
-
-                    for(int k = prevGroup.StartIndex; k <= prevGroup.EndIndex; k++)
-                    {
-                        var kLayout = layoutInfo[k];
-
-                        if(Orientation == Orientation.Horizontal)
-                        {
-                            kLayout.Bounds.Width -= fillDecrease;
-                            if(k > prevGroup.StartIndex)
-                            {
-                                kLayout.Bounds.X -= fillDecrease;
-                            }
-
-                            lostArea += kLayout.Bounds.Width + Spacing;
-                        }
-                        else
-                        {
-                            kLayout.Bounds.Height -= fillDecrease;
-                            if (k > prevGroup.StartIndex)
-                            {
-                                kLayout.Bounds.Y -= fillDecrease;
-                            }
-
-                            lostArea += kLayout.Bounds.Height + Spacing;
-                        }
-
-                        layoutInfo[k] = kLayout;
-                    }
-
-                    gainedArea += fillDecrease + (Spacing * prevGroup.Count);
-
-                    // Move over widgets that come after this fill group.
-                    for(int k = prevGroup.EndIndex + 1; k < layoutInfo.Count; k++)
-                    {
-                        var kLayout = layoutInfo[k];
-
-                        if (kLayout.SizeMode == SizeMode.Auto)
-                        {
-                            if(Orientation == Orientation.Horizontal)
-                            {
-                                kLayout.Bounds.X -= gainedArea;
-                            }
-                            else
-                            {
-                                kLayout.Bounds.Y -= gainedArea;
-                            }
+                            beforeAccum += (int)layout.Size + Spacing;
                         }
                         else break;
-
-                        layoutInfo[k] = kLayout;
                     }
-                }
 
-                startPos -= gainedArea;
-                startPos += lostArea;
+                    group.StartPos += beforeAccum;
 
-                // And now we know our total width.
-                int totalFillWidth = endPos - startPos;
-
-                // Make room for the fill group by pushing auto-sized widgets...
-                for(int j = group.EndIndex + 1; j < layoutInfo.Count; j++)
-                {
-                    var layout = layoutInfo[j];
-
-                    if(layout.SizeMode == SizeMode.Auto)
+                    // Special case: Last fill group gets shrunk at the end if there are children after it.
+                    if (i == fillGroups.Count - 1)
                     {
-                        if(Orientation == Orientation.Horizontal)
+                        int afterAccum = 0;
+                        for (int j = group.EndIndex + 1; j < layoutInfo.Count; j++)
                         {
-                            layout.Bounds.X += totalFillWidth;
-                        }
-                        else
-                        {
-                            layout.Bounds.Y += totalFillWidth;
+                            var layout = layoutInfo[j];
+
+                            if (layout.SizeMode == SizeMode.Auto)
+                            {
+                                afterAccum += (int)layout.Size + Spacing;
+                            }
+                            else break;
                         }
 
-                        layoutInfo[j] = layout;
+                        group.EndPos -= afterAccum;
                     }
+
+                    fillGroups[i] = group;
                 }
+            }
 
-                // Now that there's room, we need to figure out how large each widget in the group should be.
-                int individualSize = (totalFillWidth + (Spacing * group.Count)) / group.Count;
-
-                // Go through each layout in the group.
-                for(int j = group.StartIndex; j <= group.EndIndex; j++)
+            // Pass 5: Calculate bounds for fill controls.
+            foreach(var group in fillGroups)
+            {
+                int individualSize = ((group.TotalSize - (Spacing * group.Count))) / group.Count;
+                
+                for(int i = group.StartIndex; i <= group.EndIndex; i++)
                 {
-                    var layout = layoutInfo[j];
+                    var layout = layoutInfo[i];
+
+                    int loc = group.StartPos + ((individualSize + Spacing) * (i - group.StartIndex));
 
                     if(Orientation == Orientation.Horizontal)
                     {
-                        layout.Bounds.X = startPos;
+                        layout.Bounds.X = loc;
                         layout.Bounds.Y = ContentBounds.Top;
                         layout.Bounds.Width = individualSize;
                         layout.Bounds.Height = ContentBounds.Height;
@@ -331,19 +197,53 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
                     else
                     {
                         layout.Bounds.X = ContentBounds.Left;
-                        layout.Bounds.Y = startPos;
+                        layout.Bounds.Y = loc;
                         layout.Bounds.Width = ContentBounds.Width;
                         layout.Bounds.Height = individualSize;
                     }
 
-                    startPos += individualSize + Spacing;
-
-                    layoutInfo[j] = layout;
+                    layoutInfo[i] = layout;
                 }
             }
 
-            // Pass 5: Actually place the UI elements.
-            foreach (var layout in layoutInfo)
+            // Pass 5: Calculate bounds for all other controls.
+            int cloc = (Orientation == Orientation.Horizontal) ? ContentBounds.Left : ContentBounds.Top;
+            for(int i = 0; i < layoutInfo.Count; i++)
+            {
+                var layout = layoutInfo[i];
+
+                if(layout.SizeMode == SizeMode.Auto)
+                {
+                    if(Orientation == Orientation.Horizontal)
+                    {
+                        layout.Bounds.X = cloc;
+                        layout.Bounds.Y = ContentBounds.Top;
+                        layout.Bounds.Width = (int)layout.Size;
+                        layout.Bounds.Height = ContentBounds.Height;
+                    }
+                    else
+                    {
+                        layout.Bounds.X = ContentBounds.Left;
+                        layout.Bounds.Y = cloc;
+                        layout.Bounds.Width = ContentBounds.Width;
+                        layout.Bounds.Height = (int)layout.Size;
+                    }
+                }
+
+                if(Orientation == Orientation.Horizontal)
+                {
+                    cloc += layout.Bounds.Width + Spacing;
+                }
+                else
+                {
+                    cloc += layout.Bounds.Height + Spacing;
+                }
+
+                layoutInfo[i] = layout;
+            }
+
+            // Final pass: Place each control.
+            foreach(var layout in layoutInfo)
             {
                 PlaceControl(layout.Control, layout.Bounds);
             }
@@ -353,6 +253,10 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         {
             public int StartIndex;
             public int EndIndex;
+            public int StartPos;
+            public int EndPos;
+
+            public int TotalSize => EndPos - StartPos;
 
             public int Count => (EndIndex - StartIndex) + 1;
 
@@ -360,6 +264,8 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             {
                 StartIndex = start;
                 EndIndex = end;
+                StartPos = 0;
+                EndPos = 0;
             }
         }
 
