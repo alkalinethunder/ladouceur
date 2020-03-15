@@ -80,7 +80,7 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
                 {
                     if(hovered == null || !hovered.HasParent(HoveredControl))
                     {
-                        Propagate(HoveredControl, x => x.MouseLeave(e));
+                        Propagate(HoveredControl, x => x.FireMouseLeave(e));
                     }
                 }
 
@@ -88,13 +88,13 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
 
                 if(HoveredControl != null)
                 {
-                    Propagate(HoveredControl, x => x.MouseEnter(e));
+                    Propagate(HoveredControl, x => x.FireMouseEnter(e));
                 }
             }
 
             if(HoveredControl != null)
             {
-                Propagate(HoveredControl, x => x.MouseMove(e));
+                Propagate(HoveredControl, x => x.FireMouseMove(e));
             }
         }
 
@@ -117,14 +117,14 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
 
                 if(FocusedControl != null)
                 {
-                    Propagate(HoveredControl, x => x.LostFocus(ev));
+                    Propagate(HoveredControl, x => x.FireLostFocus(ev));
                 }
 
                 FocusedControl = control;
 
                 if (FocusedControl != null)
                 {
-                    Propagate(HoveredControl, x => x.GainedFocus(ev));
+                    Propagate(HoveredControl, x => x.FireGainedFocus(ev));
                 }
             }
         }
@@ -133,7 +133,7 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
         {
             if(HoveredControl != null)
             {
-                Propagate(HoveredControl, x => x.MouseUp(e));
+                Propagate(HoveredControl, x => x.FireMouseUp(e));
 
                 // Focus is only handled on left-clicks
                 if(e.Button == Input.MouseButton.Left)
@@ -141,7 +141,7 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
                     // Are we still hovering over the same control?
                     if(_preFocus == HoveredControl)
                     {
-                        if (Propagate(_preFocus, x => x.Click(e)))
+                        if (Propagate(_preFocus, x => x.FireClick(e)))
                         {
                             SetFocus(_preFocus);
                         }
@@ -162,7 +162,7 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
                     _preFocus = HoveredControl;
                 }
 
-                Propagate(HoveredControl, x => x.MouseDown(e));
+                Propagate(HoveredControl, x => x.FireMouseDown(e));
             }
         }
 
@@ -170,7 +170,7 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
         {
             if(FocusedControl != null)
             {
-                FocusedControl.TextInput(e);
+                FocusedControl.FireTextInput(e);
             }
         }
 
@@ -178,7 +178,7 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
         {
             if (FocusedControl != null)
             {
-                FocusedControl.KeyUp(e);
+                FocusedControl.FireKeyUp(e);
             }
         }
 
@@ -186,7 +186,7 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
         {
             if (FocusedControl != null)
             {
-                FocusedControl.KeyDown(e);
+                FocusedControl.FireKeyDown(e);
             }
         }
 
