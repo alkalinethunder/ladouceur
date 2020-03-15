@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using AlkalineThunder.CodenameLadouceur.Input;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -71,11 +72,11 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             {
                 var contentSize = _content.CalculateSize();
 
-                if(contentSize.Y > Content.Bounds.Height)
+                if(contentSize.Y > ContentBounds.Height)
                 {
                     PlaceControl(_content, new Rectangle(
                             ContentBounds.Left,
-                            ContentBounds.Top - _scrollOffset,
+                            ContentBounds.Top + _scrollOffset,
                             ContentBounds.Width - ActiveTheme.ScrollBarWidth,
                             (int)contentSize.Y
                         ));
@@ -93,6 +94,33 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             }
         }
 
+        public void ScrollTo(int value)
+        {
+            if(_content != null)
+            {
+                var minValue = -(_content.DesiredSize.Y - ContentBounds.Height);
+
+                if(value < minValue)
+                {
+                    _scrollOffset = (int)minValue;
+                }
+                else if(value > 0)
+                {
+                    _scrollOffset = 0;
+                }
+                else
+                {
+                    _scrollOffset = value;
+                }
+            }
+        }
+
+        protected override bool OnMouseScroll(MouseScrollEventArgs e)
+        {
+            ScrollTo(_scrollOffset + e.ScrollWheelDelta);
+            return base.OnMouseScroll(e);
+        }
+
         protected override void OnDraw(GameTime gameTime)
         {
             if(_content != null)
@@ -103,7 +131,7 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
                     var viewHeight = ContentBounds.Height;
 
                     var viewHeightPercentage = viewHeight / scrollTotalHeight;
-                    var offsetPercentage = _scrollOffset / scrollTotalHeight;
+                    var offsetPercentage = -_scrollOffset / scrollTotalHeight;
 
                     var offsetDrawLoc = MathHelper.Lerp(Bounds.Top, Bounds.Bottom, offsetPercentage);
                     var nubDrawHeight = MathHelper.Lerp(0, Bounds.Height, viewHeightPercentage);
