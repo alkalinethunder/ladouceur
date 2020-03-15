@@ -40,7 +40,10 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
 
             _panelButtons.VerticalAlignment = VerticalAlignment.Middle;
 
+            _panelButtons.Children.Add(new Label("This is a test."));
+
             _desktopPanelItems.SetSizeMode(_panelButtons, SizeMode.Fill);
+            _desktopPanelItems.SetSizeMode(_appsButton, SizeMode.Fill);
 
             _exitButton.Content = new Label("<< Back");
             _appsButton.Content = new Label("Applications");

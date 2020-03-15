@@ -176,6 +176,7 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
                                         otherRect.Width - (int)accum,
                                         otherRect.Height
                                     );
+                                accum += otherRect.Width;
                                 break;
                             case Orientation.Vertical:
                                 otherRect = new Rectangle(
@@ -184,10 +185,9 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
                                         otherRect.Width,
                                         otherRect.Height - (int)accum
                                     );
+                                accum += otherRect.Height;
                                 break;
                         }
-
-                        accum = 0;
                     }
 
                     // Update the other rectangle.
@@ -207,6 +207,10 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
                 if(layout.SizeMode == SizeMode.Auto)
                 {
                     totalSpace -= (int)layout.Size + Spacing;
+                }
+                else
+                {
+                    totalSpace -= (int)accum + Spacing;
                 }
             }
 
