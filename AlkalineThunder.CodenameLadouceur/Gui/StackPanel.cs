@@ -82,142 +82,184 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             // Pass 1: Figure out how big everything is and what their size mode is.
             var layoutInfo = GetLayoutInfo().ToList();
 
-            // Pass two: Go through each layout IN REVERSE and start calculating the bounding rectangles.
-            // Total space allowed for each element.
+            // Pass 2: Calculate sizes and locations of auto-sized elements.
             int totalSpace = (Orientation == Orientation.Horizontal) ? ContentBounds.Width : ContentBounds.Height;
-            for(int i = layoutInfo.Count - 1; i >= 0; i--)
+            int loc = (Orientation == Orientation.Horizontal) ? ContentBounds.Left : ContentBounds.Top;
+            for(int i = 0; i < layoutInfo.Count; i++)
             {
                 var layout = layoutInfo[i];
 
-                // x and y positions are easy as fuck.
-                int x = ContentBounds.Left;
-                int y = ContentBounds.Top;
-
-                // Width and height depends on the orientation of the stack panel.
-                int width = 0;
-                int height = 0;
-
-                switch(Orientation)
-                {
-                    case Orientation.Horizontal:
-                        width = (int)layout.Size; // fine for auto-size elements.
-                        height = ContentBounds.Height;
-                        break;
-                    case Orientation.Vertical:
-                        width = ContentBounds.Width;
-                        height = (int)layout.Size;
-                        break;
-                }
-
-                // Does this child fill the available space?
-                if(layout.SizeMode == SizeMode.Fill)
-                {
-                    // Reset the width/height depending on orientation.
-                    switch(Orientation)
-                    {
-                        case Orientation.Horizontal:
-                            width = totalSpace - Spacing;
-                            break;
-                        case Orientation.Vertical:
-                            height = totalSpace - Spacing;
-                            break;
-                    }
-                }
-
-                // Set our child's bounds.
-                layout.Bounds = new Rectangle(x, y, width, height);
-
-                // Update the layout list.
-                layoutInfo[i] = layout;
-
-                // Now we must push everything over to insert the new element.
-                float accum = 0;
-                for(int j = i + 1; j < layoutInfo.Count; j++)
-                {
-                    var otherLayout = layoutInfo[j];
-
-                    var otherRect = otherLayout.Bounds;
-
-                    // Push the location based on the orientation.
-                    switch(Orientation)
-                    {
-                        case Orientation.Horizontal:
-                            otherRect = new Rectangle(
-                                    otherRect.Left + Spacing + layout.Bounds.Width,
-                                    otherRect.Top,
-                                    otherRect.Width,
-                                    otherRect.Height
-                                );
-                            break;
-                        case Orientation.Vertical:
-                            otherRect = new Rectangle(
-                                    otherRect.Left,
-                                    otherRect.Top + Spacing + layout.Bounds.Height,
-                                    otherRect.Width,
-                                    otherRect.Height
-                                );
-                            break;
-                    }
-
-                    // Accumulate auto-sized layouts.
-                    if (otherLayout.SizeMode == SizeMode.Auto)
-                    {
-                        accum += (int)otherLayout.Size;
-                    }
-                    else
-                    {
-                        // We need to shrink the bounds.
-                        switch (Orientation)
-                        {
-                            case Orientation.Horizontal:
-                                otherRect = new Rectangle(
-                                        otherRect.Left,
-                                        otherRect.Top,
-                                        otherRect.Width - (int)accum,
-                                        otherRect.Height
-                                    );
-                                accum += otherRect.Width;
-                                break;
-                            case Orientation.Vertical:
-                                otherRect = new Rectangle(
-                                        otherRect.Left,
-                                        otherRect.Top,
-                                        otherRect.Width,
-                                        otherRect.Height - (int)accum
-                                    );
-                                accum += otherRect.Height;
-                                break;
-                        }
-                    }
-
-                    // Update the other rectangle.
-                    otherLayout.Bounds = otherRect;
-
-                    // Update the list.
-                    layoutInfo[j] = otherLayout;
-
-                    // Break when we've hit a filled element.
-                    if(otherLayout.SizeMode == SizeMode.Fill)
-                    {
-                        break;
-                    }
-                }
-
-                // Decrease the total available space if we are an auto-sized element.
                 if(layout.SizeMode == SizeMode.Auto)
                 {
-                    totalSpace -= (int)layout.Size + Spacing;
-                }
-                else
-                {
-                    totalSpace -= (int)accum + Spacing;
+                    int x = 0;
+                    int y = 0;
+                    int width = 0;
+                    int height = 0;
+
+                    switch(Orientation)
+                    {
+                        case Orientation.Horizontal:
+                            x = loc;
+                            y = ContentBounds.Top;
+                            width = (int)layout.Size;
+                            height = ContentBounds.Height;
+
+                            loc += width + Spacing;
+                            totalSpace -= width + Spacing;
+                            break;
+                        case Orientation.Vertical:
+                            x = ContentBounds.Left;
+                            y = loc;
+                            width = ContentBounds.Width;
+                            height = (int)layout.Size;
+
+                            loc += height + Spacing;
+                            totalSpace -= height + Spacing;
+                            break;
+                    }
+
+                    layout.Bounds = new Rectangle(x, y, width, height);
+                    layoutInfo[i] = layout;
                 }
             }
 
-            // Pass 3: Actually place the UI elements.
-            foreach(var layout in layoutInfo)
+            // Pass 3: Find and group all filled widgets.
+            var filledGroups = new List<FilledLayoutGroup>();
+            int fillStart = -1;
+            for(int i = 0; i < layoutInfo.Count; i++)
+            {
+                var layout = layoutInfo[i];
+
+                if(layout.SizeMode == SizeMode.Auto)
+                {
+                    if(fillStart > -1)
+                    {
+                        filledGroups.Add(new FilledLayoutGroup(fillStart, i - 1));
+                        fillStart = -1;
+                    }
+                }
+                else
+                {
+                    if (fillStart == -1) fillStart = i;
+                }
+            }
+            
+            // Pass 4: 
+            for(int i = 0; i < filledGroups.Count; i++)
+            {
+                // Group information.
+                var group = filledGroups[i];
+
+                // Start position of the fill group.
+                int startPos = (Orientation == Orientation.Horizontal) ? ContentBounds.Left : ContentBounds.Top;
+
+                // End position of the fill group.
+                int endPos = (Orientation == Orientation.Horizontal) ? ContentBounds.Right : ContentBounds.Bottom;
+
+                // Calculate the start position of the fill - it's the right position of the previous control, plus spacing.
+                if(group.StartIndex > 0)
+                {
+                    var prevBounds = layoutInfo[group.StartIndex - 1].Bounds;
+
+                    if(Orientation == Orientation.Horizontal)
+                    {
+                        startPos = prevBounds.Right + Spacing;
+                    }
+                    else
+                    {
+                        startPos = prevBounds.Bottom + Spacing;
+                    }
+                }
+
+                // The end position is trickier - first we need to know the size of everything "below" the fill group...
+                int accum = 0;
+                for(int j = group.EndIndex + 1; j < layoutInfo.Count; j++)
+                {
+                    var layout = layoutInfo[j];
+
+                    if(Orientation == Orientation.Horizontal)
+                    {
+                        accum += layout.Bounds.Width + Spacing;
+                    }
+                    else
+                    {
+                        accum += layout.Bounds.Height + Spacing;
+                    }
+                }
+
+                // End position gets decreased by that accumulated value.
+                endPos -= accum;
+
+                // And now we know our total width.
+                int totalFillWidth = endPos - startPos;
+
+                // Make room for the fill group by pushing auto-sized widgets...
+                for(int j = group.EndIndex + 1; j < layoutInfo.Count; j++)
+                {
+                    var layout = layoutInfo[j];
+
+                    if(layout.SizeMode == SizeMode.Auto)
+                    {
+                        if(Orientation == Orientation.Horizontal)
+                        {
+                            layout.Bounds.X += totalFillWidth;
+                        }
+                        else
+                        {
+                            layout.Bounds.Y += totalFillWidth;
+                        }
+
+                        layoutInfo[j] = layout;
+                    }
+                }
+
+                // Now that there's room, we need to figure out how large each widget in the group should be.
+                int individualSize = (totalFillWidth + (Spacing * group.Count)) / group.Count;
+
+                // Go through each layout in the group.
+                for(int j = group.StartIndex; j <= group.EndIndex; j++)
+                {
+                    var layout = layoutInfo[j];
+
+                    if(Orientation == Orientation.Horizontal)
+                    {
+                        layout.Bounds.X = startPos;
+                        layout.Bounds.Y = ContentBounds.Top;
+                        layout.Bounds.Width = individualSize;
+                        layout.Bounds.Height = ContentBounds.Height;
+                    }
+                    else
+                    {
+                        layout.Bounds.X = ContentBounds.Left;
+                        layout.Bounds.Y = startPos;
+                        layout.Bounds.Width = ContentBounds.Width;
+                        layout.Bounds.Height = individualSize;
+                    }
+
+                    startPos += individualSize + Spacing;
+
+                    layoutInfo[j] = layout;
+                }
+            }
+
+            // Pass 5: Actually place the UI elements.
+            foreach (var layout in layoutInfo)
             {
                 PlaceControl(layout.Control, layout.Bounds);
+            }
+        }
+
+        public struct FilledLayoutGroup
+        {
+            public int StartIndex;
+            public int EndIndex;
+
+            public int Count => (EndIndex - StartIndex) + 1;
+
+            public FilledLayoutGroup(int start, int end)
+            {
+                StartIndex = start;
+                EndIndex = end;
             }
         }
 
