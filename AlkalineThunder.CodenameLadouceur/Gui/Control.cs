@@ -588,5 +588,15 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
             control.ArrangeOverride();
         }
+
+        public void DrawBrush(Rectangle rect, Brush brush)
+        {
+            _renderer.DrawBrush(rect, brush);
+        }
+
+        public void DrawRectangle(Rectangle rect, Color color, Padding edges)
+        {
+            _renderer.DrawRectangle(rect, color, edges);
+        }
     }
 }

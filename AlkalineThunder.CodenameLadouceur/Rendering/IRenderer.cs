@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using AlkalineThunder.MultiColorText;
+using AlkalineThunder.CodenameLadouceur.Gui;
 
 namespace AlkalineThunder.CodenameLadouceur.Rendering
 {
@@ -10,5 +11,7 @@ namespace AlkalineThunder.CodenameLadouceur.Rendering
         void FillRectangle(Rectangle rect, Color color);
         void DrawString(SpriteFont font, string text, Vector2 pos, Color color);
         void DrawRectangle(Rectangle rect, Color color, int thickness);
+        void DrawRectangle(Rectangle rect, Color color, Padding edges);
+        void DrawBrush(Rectangle rect, Brush brush);
     }
 }
