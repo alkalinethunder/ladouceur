@@ -16,12 +16,15 @@ namespace AlkalineThunder.CodenameLadouceur
         private GraphicsDeviceManager _graphics = null;
         private Renderer _renderer = null;
         
+        public static GameLoop Instance { get; private set; }
         public ScreenManager ScreenManager { get; private set; }
         public InputManager Input { get; private set; }
         public DevConsole.DevConsole DevConsole { get; private set; }
 
         public GameLoop()
         {
+            Instance = this;
+
             _graphics = new GraphicsDeviceManager(this);
             _graphics.IsFullScreen = true;
 

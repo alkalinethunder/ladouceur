@@ -101,6 +101,9 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
 
             _shellTest.Click += ShellTestClick;
 
+            var win = OpenWindow("Hello world!");
+            win.Content = new Label("This is a window.");
+
             Content = canvas;
             base.OnInitialize();
         }

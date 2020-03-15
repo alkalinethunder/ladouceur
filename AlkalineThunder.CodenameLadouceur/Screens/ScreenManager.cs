@@ -70,6 +70,18 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
         {
             if(ActiveScreen != null)
             {
+                for(int i = ActiveScreen.Windows.Length - 1; i >= 0; i--)
+                {
+                    var win = ActiveScreen.Windows[i];
+
+                    var winControl = win.FindControl(x, y);
+
+                    if(winControl != null)
+                    {
+                        return winControl;
+                    }
+                }
+
                 return ActiveScreen.FindControl(x, y);
             }
             else
@@ -191,6 +203,8 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
             }
         }
 
+
+
         private void HandleKeyDown(object sender, InputKeyEventArgs e)
         {
             if (FocusedControl != null)
@@ -206,13 +220,26 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
                 Control.PlaceControl(screen, new Rectangle(0, 0, Game.GraphicsDevice.PresentationParameters.BackBufferWidth, Game.GraphicsDevice.PresentationParameters.BackBufferHeight));
 
                 screen.Update(gameTime);
+
+                foreach(var win in screen.Windows)
+                {
+                    win.Update(screen, gameTime);
+                }
             }
             base.Update(gameTime);
         }
 
         public void Draw(GameTime gameTime, Renderer renderer)
         {
-            foreach (var screen in _screens) screen.Draw(gameTime, renderer);
+            foreach (var screen in _screens)
+            {
+                screen.Draw(gameTime, renderer);
+
+                foreach(var win in screen.Windows)
+                {
+                    win.Draw(gameTime, renderer);
+                }
+            }
         }
     }
 }

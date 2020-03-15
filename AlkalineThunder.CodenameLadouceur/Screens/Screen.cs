@@ -1,9 +1,11 @@
 ﻿using AlkalineThunder.CodenameLadouceur.Gui;
 using AlkalineThunder.CodenameLadouceur.Rendering;
+using AlkalineThunder.CodenameLadouceur.Windowing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace AlkalineThunder.CodenameLadouceur.Screens
 {
@@ -11,6 +13,20 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
     {
         private ScreenManager ScreenManager { get; set; }
         public ContentManager ContentManager { get; private set; }
+
+        private List<Window> _windows = new List<Window>();
+
+        public Window[] Windows => _windows.ToArray();
+
+        public virtual Rectangle WindowBounds => Bounds;
+
+        public Window OpenWindow(string titleText)
+        {
+            var win = new Window();
+            win.Title = titleText;
+            _windows.Add(win);
+            return win;
+        }
 
         public void Exit()
         {
