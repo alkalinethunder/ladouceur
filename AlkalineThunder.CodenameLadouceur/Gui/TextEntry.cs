@@ -105,13 +105,13 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
                 if(!string.IsNullOrEmpty(Text))
                 {
                     var charMeasure = font.MeasureString("*");
-                    return new Vector2(charMeasure.X * Text.Length, charMeasure.Y);
+                    return new Vector2((charMeasure.X * Text.Length) + ActiveTheme.TextEntryBrush.Margin.Width, charMeasure.Y + ActiveTheme.TextEntryBrush.Margin.Height);
                 }
             }
 
             var text = string.IsNullOrEmpty(Text) ? HintText : Text;
 
-            return font.MeasureString(text);
+            return font.MeasureString(text) + new Vector2(ActiveTheme.TextEntryBrush.Margin.Width, ActiveTheme.TextEntryBrush.Margin.Height);
         }
 
         protected override bool OnTextInput(TextInputEventArgs e)
@@ -166,6 +166,20 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             return base.OnKeyDown(e);
         }
 
+        protected override bool OnMouseEnter(MouseMoveEventArgs e)
+        {
+            IsHovered = true;
+            return base.OnMouseEnter(e);
+        }
+
+        public bool IsHovered { get; private set; } = false;
+
+        protected override bool OnMouseLeave(MouseMoveEventArgs e)
+        {
+            IsHovered = false;
+            return base.OnMouseLeave(e);
+        }
+
         protected override bool OnGainedFocus(FocusEventArgs e)
         {
             _caretVisible = true;
@@ -173,10 +187,17 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
             return base.OnGainedFocus(e);
         }
 
-        protected override bool OnMouseUp(MouseButtonEventArgs e)
+        protected override bool OnClick(MouseButtonEventArgs e)
         {
             if(e.Button == MouseButton.Left)
             {
+                if(string.IsNullOrEmpty(_text))
+                {
+                    _cursorPos = 0;
+                    _offset = 0;
+                    return true;
+                }
+
                 var xPos = e.X;
 
                 var font = Font ?? ActiveTheme.DefaultFont;
@@ -207,6 +228,13 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
         protected override void OnDraw(GameTime gameTime)
         {
+            var brush = ActiveTheme.TextEntryBrush;
+
+            if (IsHovered) brush = ActiveTheme.TextEntryHoveredBrush;
+            if (IsFocused) brush = ActiveTheme.TextEntryFocusedBrush;
+
+            DrawBrush(Bounds, brush);
+
             var font = Font ?? ActiveTheme.DefaultFont;
 
             var color = string.IsNullOrEmpty(Text) ? ActiveTheme.TextEntryHintColor : ActiveTheme.TextEntryTextColor;
@@ -227,7 +255,7 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
             var measure = font.MeasureString(text);
 
-            var y = Bounds.Top + ((Bounds.Height - measure.Y) / 2);
+            var y = Bounds.Top + brush.Margin.Top;
 
             DrawString(font, text, new Vector2(Bounds.Left - (int)_offset, y), color);
 

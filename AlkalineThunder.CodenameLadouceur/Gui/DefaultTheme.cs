@@ -51,7 +51,13 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
         public override int ScrollBarWidth => 16;
 
-        public override Brush ScrollBarBrush => DefaultForeground;
+        public override Brush ScrollBarBrush => ButtonBrush;
+
+        public override Brush TextEntryBrush => Brush.Border.InColor(Color.Gray).Pad(new Padding(0, 0, 0, 2));
+
+        public override Brush TextEntryHoveredBrush => TextEntryBrush.InColor(DefaultForeground);
+
+        public override Brush TextEntryFocusedBrush => TextEntryBrush.InColor(Color.CornflowerBlue);
 
         public override void LoadContent(ContentManager content)
         {

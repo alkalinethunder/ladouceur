@@ -66,6 +66,16 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
             canvas.SetAnchor(_scrollerTest, CanvasAlignment.TopRight);
             canvas.SetAlignment(_scrollerTest, CanvasAlignment.TopRight);
 
+            _scrollerTest.Children.Add(new TextEntry
+            {
+                HintText = "Text Entry Test"
+            });
+            _scrollerTest.Children.Add(new TextEntry
+            {
+                HintText = "Password Entry Test",
+                IsPassword = true
+            });
+
             _screensStacker.Children.Add(new Label("Other screens: "));
             _screensStacker.Children.Add(_shellTest);
 

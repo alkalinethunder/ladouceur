@@ -36,6 +36,8 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
         public abstract void LoadContent(ContentManager content);
 
-
+        public abstract Brush TextEntryBrush { get; }
+        public abstract Brush TextEntryHoveredBrush { get; }
+        public abstract Brush TextEntryFocusedBrush { get; }
     }
 }
