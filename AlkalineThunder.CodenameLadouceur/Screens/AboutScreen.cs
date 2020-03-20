@@ -138,7 +138,7 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
 
         protected override void OnDraw(GameTime gameTime)
         {
-            FillRectangle(Bounds, new Color(22, 22, 22, 255));
+            Clear(new Color(22, 22, 22));
             base.OnDraw(gameTime);
         }
     }

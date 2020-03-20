@@ -3,6 +3,7 @@ using AlkalineThunder.DevConsole;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,6 +17,7 @@ namespace AlkalineThunder.CodenameLadouceur.Rendering
         private SpriteEffect _basicEffect = null;
         private Texture2D _texture = null;
         private Texture2D _white = null;
+        private const int CIRCLE_SEGMENTS = 240;
 
         public Renderer(GraphicsDevice device)
         {
@@ -355,6 +357,99 @@ namespace AlkalineThunder.CodenameLadouceur.Rendering
             float v = (float)top / (float)tex.Height;
 
             return new Vector2(u, v);
+        }
+
+        public void DrawRoundedRectangle(Rectangle rect, Color color, float roundingPercentage)
+        {
+            int trueRadius = (int)(((float)Math.Min(rect.Width, rect.Height) / 2) * MathHelper.Clamp(roundingPercentage, 0, 1));
+            if(trueRadius <= 0)
+            {
+                FillRectangle(rect, color);
+            }
+
+            var innerRect = new Rectangle(
+                    rect.Left + trueRadius,
+                    rect.Top + trueRadius,
+                    rect.Width - (trueRadius * 2),
+                    rect.Height - (trueRadius * 2)
+                );
+
+            int segments = CIRCLE_SEGMENTS / 4;
+
+            // Fill the inner areas of the rectangle.
+            FillRectangle(new Rectangle(rect.Left + trueRadius, rect.Top, rect.Width - (trueRadius * 2), trueRadius), color);
+            FillRectangle(new Rectangle(rect.Left, rect.Top + trueRadius, rect.Width, rect.Height - (trueRadius * 2)), color);
+            FillRectangle(new Rectangle(rect.Left + trueRadius, rect.Bottom - trueRadius, rect.Width - (trueRadius * 2), trueRadius), color);
+
+            FillCircleSegment(new Vector2(innerRect.Left, innerRect.Top), trueRadius, LeftAngle, TopAngle, segments, color, null, new Rectangle(0, 0, 1, 1));
+            FillCircleSegment(new Vector2(innerRect.Right, innerRect.Top), trueRadius, TopAngle, RightEndAngle, segments, color, null, new Rectangle(0, 0, 1, 1));
+            FillCircleSegment(new Vector2(innerRect.Right, innerRect.Bottom), trueRadius, RightStartAngle, BotAngle, segments, color, null, new Rectangle(0, 0, 1, 1));
+            FillCircleSegment(new Vector2(innerRect.Left, innerRect.Bottom), trueRadius, LeftAngle, BotAngle, segments, color, null, new Rectangle(0, 0, 1, 1));
+        }
+
+        private void FillCircleSegment(Vector2 center, float radius, float start, float end, int sides, Color color, Texture2D texture, Rectangle uvRect)
+        {
+            SetTexture(texture);
+
+            var rect = RectFromRadius(center, radius);
+
+            var segs = GetCircleSegment(center, radius, start, end, sides);
+
+            var vs = segs.Select(x => GetVertex(new Vector3(x.X, x.Y, 0), color, LinearMap(x, rect, uvRect))).ToArray();
+            var vCenter = GetVertex(new Vector3(center.X, center.Y, 0), color, LinearMap(center, rect, uvRect));
+
+            for(int i = 0; i < vs.Length - 1; i++)
+            {
+                int v0 = vs[i];
+                int v1 = vs[i + 1];
+
+                _indexBuffer.Add(vCenter);
+                _indexBuffer.Add(v0);
+                _indexBuffer.Add(v1);
+            }
+        }
+
+        public const float LeftAngle = (float)Math.PI;
+        public const float TopAngle = (float)(1.5 * Math.PI);
+        public const float RightStartAngle = 0;
+        public const float RightEndAngle = (float)(2 * Math.PI);
+        public const float BotAngle = (float)(.5 * Math.PI);
+
+        private Vector2 LinearMap(Vector2 pos, Rectangle src, Rectangle dest)
+        {
+            float x = (pos.X - src.Left) / src.Width;
+            float y = (pos.Y - src.Top) / src.Height;
+
+            return new Vector2(
+                    dest.Left + (dest.Width * x),
+                    dest.Top + (dest.Height * y)
+                );
+        }
+
+        private Rectangle RectFromRadius(Vector2 center, float radius)
+        {
+            int trueRadius = (int)radius;
+
+            return new Rectangle(
+                    (int)center.X - trueRadius,
+                    (int)center.Y - trueRadius,
+                    trueRadius * 2,
+                    trueRadius * 2
+                );
+        }
+
+        private static IEnumerable<Vector2> GetCircleSegment(Vector2 center, float radius, float start, float end, int sides)
+        {
+            float step = (end - start) / sides;
+            float theta = start;
+
+            for(int i = 0; i < sides; i++)
+            {
+                // thank fuck for OpenWheels being open-source... I ain't figuring trig out on my own.  FUCK.  THAT.
+                yield return center + new Vector2((float)(radius * Math.Cos(theta)), (float)(radius * Math.Sin(theta)));
+                theta += step;
+            }
+            yield return center + new Vector2((float)(radius * Math.Cos(end)), (float)(radius * Math.Sin(end)));
         }
     }
 }
