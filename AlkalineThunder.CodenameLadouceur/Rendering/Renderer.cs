@@ -387,6 +387,11 @@ namespace AlkalineThunder.CodenameLadouceur.Rendering
             FillCircleSegment(new Vector2(innerRect.Left, innerRect.Bottom), trueRadius, LeftAngle, BotAngle, segments, color, null, new Rectangle(0, 0, 1, 1));
         }
 
+        public void FillCircle(Vector2 pos, float radius, Texture2D texture, Color color)
+        {
+            FillCircleSegment(pos, radius, RightStartAngle, RightEndAngle, CIRCLE_SEGMENTS, color, texture, new Rectangle(0, 0, 1, 1));
+        }
+
         private void FillCircleSegment(Vector2 center, float radius, float start, float end, int sides, Color color, Texture2D texture, Rectangle uvRect)
         {
             SetTexture(texture);

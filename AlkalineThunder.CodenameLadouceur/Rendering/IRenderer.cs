@@ -20,5 +20,7 @@ namespace AlkalineThunder.CodenameLadouceur.Rendering
         void FillRectangle(Rectangle rect, Texture2D texture, Color color, Padding edges);
 
         void DrawRoundedRectangle(Rectangle rect, Color color, float roundingPercentage);
+
+        void FillCircle(Vector2 pos, float radius, Texture2D texture, Color color);
     }
 }

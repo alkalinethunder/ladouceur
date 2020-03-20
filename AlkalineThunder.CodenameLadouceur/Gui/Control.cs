@@ -618,5 +618,10 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         {
             _renderer.DrawRoundedRectangle(rect, color, roundingPercentage);
         }
+
+        public void FillCircle(Vector2 pos, float radius, Texture2D texture, Color color)
+        {
+            _renderer.FillCircle(pos, radius, texture, color);
+        }
     }
 }

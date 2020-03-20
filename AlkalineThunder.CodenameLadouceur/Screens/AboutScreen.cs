@@ -21,11 +21,13 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
         private ScrollPanel _scroller = new ScrollPanel();
         private StackPanel _scrollerContent = new StackPanel();
         private WrapBox _wrapperTest = new WrapBox();
-        
+        private Texture2D _cogWheel = null;
 
         protected override void OnInitialize()
         {
             var canvas = new CanvasPanel();
+
+            _cogWheel = ContentManager.Load<Texture2D>("CogWheel");
 
             canvas.Margin = 25;
 
@@ -139,6 +141,9 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
         protected override void OnDraw(GameTime gameTime)
         {
             Clear(new Color(22, 22, 22));
+
+            FillCircle(new Vector2(200, 200), 50, _cogWheel, Color.White);
+
             base.OnDraw(gameTime);
         }
     }
