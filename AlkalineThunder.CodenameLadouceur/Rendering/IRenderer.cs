@@ -13,5 +13,10 @@ namespace AlkalineThunder.CodenameLadouceur.Rendering
         void DrawRectangle(Rectangle rect, Color color, int thickness);
         void DrawRectangle(Rectangle rect, Color color, Padding edges);
         void DrawBrush(Rectangle rect, Brush brush);
+
+        void Clear(Color color);
+
+        void DrawRectangle(Rectangle rect, Texture2D texture, Color color, Padding edges);
+        void FillRectangle(Rectangle rect, Texture2D texture, Color color, Padding edges);
     }
 }

@@ -598,5 +598,20 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         {
             _renderer.DrawRectangle(rect, color, edges);
         }
+
+        public void Clear(Color color)
+        {
+            _renderer.Clear(color);
+        }
+
+        public void DrawRectangle(Rectangle rect, Texture2D texture, Color color, Padding edges)
+        {
+            _renderer.DrawRectangle(rect, texture, color, edges);
+        }
+
+        public void FillRectangle(Rectangle rect, Texture2D texture, Color color, Padding edges)
+        {
+            _renderer.FillRectangle(rect, texture, color, edges);
+        }
     }
 }

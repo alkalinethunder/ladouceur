@@ -10,44 +10,87 @@ namespace AlkalineThunder.CodenameLadouceur.Rendering
 {
     public sealed class Renderer : IRenderer, IConsoleRenderer
     {
-        private SpriteBatch _batch = null;
+        private GraphicsDevice _gfx = null;
+        private List<VertexPositionColorTexture> _vertexBuffer = new List<VertexPositionColorTexture>();
+        private List<int> _indexBuffer = new List<int>();
+        private SpriteEffect _basicEffect = null;
+        private Texture2D _texture = null;
         private Texture2D _white = null;
-        private RasterizerState _rasterizerState = null;
 
         public Renderer(GraphicsDevice device)
         {
-            _batch = new SpriteBatch(device);
-            _white = new Texture2D(device, 1, 1);
-            _white.SetData<uint>(new[] { 0xffffffff });
+            _gfx = device;
 
-            _rasterizerState = new RasterizerState
-            {
-                ScissorTestEnable = true
-            };
+            _basicEffect = new SpriteEffect(_gfx);
+
+            _white = new Texture2D(_gfx, 1, 1);
+            _white.SetData<uint>(new[] { 0xffffffff });
         }
 
         public Color Tint { get; set; } = Color.White;
 
         public void SetScissorRect(Rectangle rect)
         {
-            if (rect == Rectangle.Empty)
-            {
-                _batch.GraphicsDevice.ScissorRectangle = new Rectangle(0, 0, _batch.GraphicsDevice.PresentationParameters.BackBufferWidth, _batch.GraphicsDevice.PresentationParameters.BackBufferHeight);
-            }
-            else
-            {
-                _batch.GraphicsDevice.ScissorRectangle = rect;
-            }
+
         }
 
         public void Begin()
         {
-            _batch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, _rasterizerState); ;
+            _vertexBuffer.Clear();
+            _indexBuffer.Clear();
         }
-        
+
+        public void Clear(Color color)
+        {
+            _gfx.Clear(color);
+        }
+
+        private void SetGraphicsState()
+        {
+            _gfx.SamplerStates[0] = SamplerState.PointClamp;
+            _gfx.BlendState = BlendState.AlphaBlend;
+            _gfx.DepthStencilState = DepthStencilState.None;
+            _gfx.RasterizerState = new RasterizerState
+            {
+                CullMode = CullMode.None,
+                ScissorTestEnable = true
+            };
+
+            _basicEffect.CurrentTechnique.Passes[0].Apply();
+
+            _gfx.Textures[0] = _texture ?? _white;
+        }
+    
         public void End()
         {
-            _batch.End();
+            if (_vertexBuffer.Count > 0 && _indexBuffer.Count > 0)
+            {
+                SetGraphicsState();
+
+                _gfx.DrawUserIndexedPrimitives(PrimitiveType.TriangleList,
+                    _vertexBuffer.ToArray(),
+                    0,
+                    _vertexBuffer.Count,
+                    _indexBuffer.ToArray(),
+                    0,
+                    _indexBuffer.Count / 3);
+            }
+        }
+
+        private int GetVertex(Vector3 position, Color color, Vector2 texture)
+        {
+            var vertex = new VertexPositionColorTexture(position, color, texture);
+
+            if(_vertexBuffer.Contains(vertex))
+            {
+                return _vertexBuffer.IndexOf(vertex);
+            }
+            else
+            {
+                int c = _vertexBuffer.Count;
+                _vertexBuffer.Add(vertex);
+                return c;
+            }
         }
 
         private Color TintColor(Color source)
@@ -65,62 +108,141 @@ namespace AlkalineThunder.CodenameLadouceur.Rendering
             return new Color((int)tintedR, (int)tintedG, (int)tintedB, (int)tintedA);
         }
 
+        private void SetTexture(Texture2D texture)
+        {
+            if(_texture != texture)
+            {
+                End();
+                _texture = texture;
+                Begin();
+            }
+        }
+
         public void FillRectangle(Rectangle rect, Texture2D texture, Color color)
         {
-            _batch.Draw(texture, rect, TintColor(color));
+            SetTexture(texture);
+
+            var tl = GetVertex(new Vector3(rect.Left, rect.Top, 0), color, Vector2.Zero);
+            var tr = GetVertex(new Vector3(rect.Right, rect.Top, 0), color, new Vector2(1, 0));
+            var bl = GetVertex(new Vector3(rect.Left, rect.Bottom, 0), color, new Vector2(0, 1));
+            var br = GetVertex(new Vector3(rect.Right, rect.Bottom, 0), color, Vector2.One);
+
+            _indexBuffer.Add(tl);
+            _indexBuffer.Add(tr);
+            _indexBuffer.Add(bl);
+            _indexBuffer.Add(bl);
+            _indexBuffer.Add(tr);
+            _indexBuffer.Add(br);
         }
+
+
 
         public void FillRectangle(Rectangle rect, Color color)
         {
-            FillRectangle(rect, _white, TintColor(color));
+            FillRectangle(rect, null, color);
         }
 
         public void DrawRectangle(Rectangle rect, Color color, Padding edges)
         {
-            var tinted = TintColor(color);
+            DrawRectangle(rect, null, color, edges);
+        }
 
-            _batch.Draw(_white, new Rectangle(
-                    rect.Left,
-                    rect.Top,
-                    edges.Left,
-                    rect.Height
-                ), tinted);
+        public void DrawRectangle(Rectangle rect, Texture2D texture, Color color, Padding edges)
+        {
+            // Set the texture.
+            SetTexture(texture);
 
-            _batch.Draw(_white, new Rectangle(
-                    rect.Right - edges.Right,
-                    rect.Top,
-                    edges.Right,
-                    rect.Height
-                ), tinted);
+            // because I'm FUCKING LAZY.
+            texture = texture ?? _white;
 
-            _batch.Draw(_white, new Rectangle(
-                    rect.Left + edges.Left,
-                    rect.Top,
-                    rect.Width - edges.Width,
-                    edges.Top
-                ), tinted);
+            // Left edge
+            var tl = GetVertex(new Vector3(rect.Left, rect.Top, 0), color, TexCoord(0, 0));
+            var tr = GetVertex(new Vector3(rect.Left + edges.Left, rect.Top, 0), color, TexCoord(edges.Left, 0));
+            var bl = GetVertex(new Vector3(rect.Left, rect.Bottom, 0), color, TexCoord(0, texture.Height));
+            var br = GetVertex(new Vector3(rect.Left + edges.Left, rect.Bottom, 0), color, TexCoord(edges.Left, texture.Height));
 
-            _batch.Draw(_white, new Rectangle(
-                    rect.Left + edges.Left,
-                    rect.Bottom - edges.Bottom,
-                    rect.Width - edges.Width,
-                    edges.Bottom
-                ), tinted);
+            // add the triangles...
+            _indexBuffer.Add(tl);
+            _indexBuffer.Add(tr);
+            _indexBuffer.Add(bl);
+            _indexBuffer.Add(bl);
+            _indexBuffer.Add(br);
+            _indexBuffer.Add(tr);
 
+            // right edge
+            tl = GetVertex(new Vector3(rect.Right - edges.Right, rect.Top, 0), color, TexCoord(texture.Width - edges.Right, 0));
+            tr = GetVertex(new Vector3(rect.Right, rect.Top, 0), color, TexCoord(texture.Width, 0));
+            bl = GetVertex(new Vector3(rect.Right - edges.Right, rect.Bottom, 0), color, TexCoord(texture.Width - edges.Right, texture.Height));
+            br = GetVertex(new Vector3(rect.Right, rect.Bottom, 0), color, TexCoord(texture.Width, texture.Height));
 
+            // add the triangles...
+            _indexBuffer.Add(tl);
+            _indexBuffer.Add(tr);
+            _indexBuffer.Add(bl);
+            _indexBuffer.Add(bl);
+            _indexBuffer.Add(br);
+            _indexBuffer.Add(tr);
+
+            // Top edge.
+            tl = GetVertex(new Vector3(rect.Left + edges.Left, rect.Top, 0), color, TexCoord(edges.Left, 0));
+            tr = GetVertex(new Vector3(rect.Right - edges.Right, rect.Top, 0), color, TexCoord(texture.Width - edges.Right, 0));
+            bl = GetVertex(new Vector3(rect.Left + edges.Left, rect.Top + edges.Top, 0), color, TexCoord(edges.Left, edges.Top));
+            br = GetVertex(new Vector3(rect.Right - edges.Right, rect.Top + edges.Top, 0), color, TexCoord(texture.Width - edges.Right, edges.Top));
+
+            // add the triangles...
+            _indexBuffer.Add(tl);
+            _indexBuffer.Add(tr);
+            _indexBuffer.Add(bl);
+            _indexBuffer.Add(bl);
+            _indexBuffer.Add(br);
+            _indexBuffer.Add(tr);
+
+            // Bottom edge.
+            tl = GetVertex(new Vector3(rect.Left + edges.Left, rect.Bottom - edges.Bottom, 0), color, TexCoord(edges.Left, texture.Height - edges.Bottom));
+            tr = GetVertex(new Vector3(rect.Right - edges.Right, rect.Bottom - edges.Bottom, 0), color, TexCoord(texture.Width - edges.Right, texture.Height - edges.Bottom));
+            bl = GetVertex(new Vector3(rect.Left + edges.Left, rect.Bottom, 0), color, TexCoord(edges.Left, texture.Height));
+            br = GetVertex(new Vector3(rect.Right - edges.Right, rect.Bottom, 0), color, TexCoord(texture.Width - edges.Right, texture.Height));
+
+            // add the triangles...
+            _indexBuffer.Add(tl);
+            _indexBuffer.Add(tr);
+            _indexBuffer.Add(bl);
+            _indexBuffer.Add(bl);
+            _indexBuffer.Add(br);
+            _indexBuffer.Add(tr);
+        }
+
+        public void FillRectangle(Rectangle rect, Texture2D texture, Color color, Padding edges)
+        {
+            // Draw the outline of the rectangle.
+            DrawRectangle(rect, texture, color, edges);
+
+            // again, because I'm lazy.
+
+            texture = texture ?? _white;
+
+            // No need to set texture, DrawRectangle did it for us.
+            // But now we do need to get vertices for the inner rectangle.
+            var innerRect = edges.Affect(rect);
+
+            var tl = GetVertex(new Vector3(innerRect.Left, innerRect.Top, 0), color, new Vector2(edges.Left, edges.Top));
+            var tr = GetVertex(new Vector3(innerRect.Right, innerRect.Top, 0), color, new Vector2(texture.Width - edges.Right, edges.Top));
+            var bl = GetVertex(new Vector3(innerRect.Left, innerRect.Bottom, 0), color, new Vector2(edges.Left, texture.Height - edges.Bottom));
+            var br = GetVertex(new Vector3(innerRect.Right, innerRect.Bottom, 0), color, new Vector2(texture.Width - edges.Right, texture.Height - edges.Bottom));
+
+            // And now we add the triangles.
+            _indexBuffer.Add(tl);
+            _indexBuffer.Add(tr);
+            _indexBuffer.Add(bl);
+
+            _indexBuffer.Add(bl);
+            _indexBuffer.Add(br);
+            _indexBuffer.Add(tr);
         }
 
         public void DrawRectangle(Rectangle rect, Color color, int thickness)
         {
-            if (thickness < 1) return;
-
-            var tinted = TintColor(color);
-
-            FillRectangle(new Rectangle(rect.X, rect.Y, thickness, rect.Height), tinted);
-            FillRectangle(new Rectangle(rect.X + thickness, rect.Y, rect.Width - (thickness * 2), thickness), tinted);
-            FillRectangle(new Rectangle(rect.Right - thickness, rect.Y, thickness, rect.Height), tinted);
-            FillRectangle(new Rectangle(rect.X + thickness, rect.Bottom - thickness, rect.Width - (thickness * 2), thickness), tinted);
-
+            DrawRectangle(rect, color, new Padding(thickness));
         }
 
         public void DrawBrush(Rectangle rect, Brush brush)
@@ -129,7 +251,7 @@ namespace AlkalineThunder.CodenameLadouceur.Rendering
             {
                 if(brush.BrushType == BrushType.Image)
                 {
-                    FillRectangle(rect, brush.Texture ?? _white, brush.BrushColor);
+                    FillRectangle(rect, brush.Texture, brush.BrushColor);
                 }
                 else
                 {
@@ -147,114 +269,15 @@ namespace AlkalineThunder.CodenameLadouceur.Rendering
                     else
                     {
                         var tex = brush.Texture;
-                        var tinted = TintColor(brush.BrushColor);
                         var edges = brush.Margin;
-
-                        _batch.Draw(tex, new Rectangle(
-                                rect.Left,
-                                rect.Top,
-                                edges.Left,
-                                edges.Top
-                            ), new Rectangle(
-                                0, 0,
-                                edges.Left,
-                                edges.Top
-                            ), tinted);
-
-                        _batch.Draw(tex, new Rectangle(
-                                rect.Right - edges.Right,
-                                rect.Top,
-                                edges.Right,
-                                edges.Top
-                            ), new Rectangle(
-                                tex.Width - edges.Right, 0,
-                                edges.Right,
-                                edges.Top
-                            ), tinted);
-
-                        _batch.Draw(tex, new Rectangle(
-                                rect.Left,
-                                rect.Bottom - edges.Bottom,
-                                edges.Left,
-                                edges.Bottom
-                            ), new Rectangle(
-                                0, tex.Height - edges.Bottom,
-                                edges.Left,
-                                edges.Bottom
-                            ), tinted);
-
-                        _batch.Draw(tex, new Rectangle(
-                                rect.Right - edges.Right,
-                                rect.Bottom - edges.Bottom,
-                                edges.Right,
-                                edges.Bottom
-                            ), new Rectangle(
-                                tex.Width - edges.Right, tex.Height - edges.Bottom,
-                                edges.Right,
-                                edges.Top
-                            ), tinted);
-
-                        _batch.Draw(tex, new Rectangle(
-                                rect.Left + edges.Left,
-                                rect.Top,
-                                rect.Width - edges.Width,
-                                edges.Top
-                            ), new Rectangle(
-                                edges.Left,
-                                0,
-                                tex.Width - edges.Width,
-                                edges.Top
-                            ), tinted);
-
-                        _batch.Draw(tex, new Rectangle(
-                                rect.Left + edges.Left,
-                                rect.Bottom - edges.Bottom,
-                                rect.Width - edges.Width,
-                                edges.Bottom
-                            ), new Rectangle(
-                                edges.Left,
-                                tex.Height - edges.Bottom,
-                                tex.Width - edges.Width,
-                                edges.Bottom
-                            ), tinted);
-
-                        _batch.Draw(tex, new Rectangle(
-                                rect.Left,
-                                rect.Top + edges.Top,
-                                edges.Left,
-                                rect.Height - edges.Height
-                            ), new Rectangle(
-                                0,
-                                edges.Top,
-                                edges.Left,
-                                tex.Height - edges.Height
-                            ), tinted);
-
-                        _batch.Draw(tex, new Rectangle(
-                                rect.Right - edges.Right,
-                                rect.Top + edges.Top,
-                                edges.Right,
-                                rect.Height - edges.Height
-                            ), new Rectangle(
-                                tex.Width - edges.Right,
-                                edges.Top,
-                                edges.Right,
-                                tex.Height - edges.Height
-                            ), tinted);
 
                         if(brush.BrushType == BrushType.Box)
                         {
-                            _batch.Draw(tex, new Rectangle(
-                                    rect.Left + edges.Left,
-                                    rect.Top + edges.Top,
-                                    rect.Width - edges.Width,
-                                    rect.Height - edges.Height
-                                ), new Rectangle(
-                                    edges.Left,
-                                    edges.Top,
-                                    tex.Width - edges.Width,
-                                    tex.Height - edges.Height
-                                ), tinted);
+                            DrawRectangle(rect, tex, brush.BrushColor, edges);
+                        }
+                        else
+                        {
+                            FillRectangle(rect, tex, brush.BrushColor, edges);
                         }
                     }
                 }
@@ -263,7 +286,75 @@ namespace AlkalineThunder.CodenameLadouceur.Rendering
 
         public void DrawString(SpriteFont font, string text, Vector2 pos, Color color)
         {
-            _batch.DrawString(font, text, pos, TintColor(color));
+            if(font != null && !string.IsNullOrWhiteSpace(text))
+            {
+                var tex = font.Texture;
+
+                SetTexture(tex);
+
+                // Sorta borrowed from MonoGame's source code.
+                var offset = Vector2.Zero;
+                bool isFirstInLine = true;
+
+                var glyphs = font.GetGlyphs();
+
+                foreach(char c in text)
+                {
+                    if (c == '\r') continue;
+                    if(c == '\n')
+                    {
+                        offset.X = 0;
+                        offset.Y += font.LineSpacing;
+                        isFirstInLine = true;
+                        continue;
+                    }
+
+                    var glyph = glyphs.ContainsKey(c) ? glyphs[c] : glyphs[' '];
+
+                    if(isFirstInLine)
+                    {
+                        offset.X = Math.Max(glyph.LeftSideBearing, 0);
+                        isFirstInLine = false;
+                    }
+                    else
+                    {
+                        offset.X += glyph.LeftSideBearing;
+                    }
+
+                    var rPos = offset;
+                    rPos.X += glyph.Cropping.X;
+                    rPos.Y += glyph.Cropping.Y;
+                    rPos += pos;
+
+                    var tl = GetVertex(new Vector3(rPos.X, rPos.Y, 0), color, TexCoord(glyph.BoundsInTexture.Left, glyph.BoundsInTexture.Top));
+                    var tr = GetVertex(new Vector3(rPos.X + glyph.BoundsInTexture.Width, rPos.Y, 0), color, TexCoord(glyph.BoundsInTexture.Right, glyph.BoundsInTexture.Top));
+                    var bl = GetVertex(new Vector3(rPos.X, rPos.Y + glyph.BoundsInTexture.Height, 0), color, TexCoord(glyph.BoundsInTexture.Left, glyph.BoundsInTexture.Bottom));
+                    var br = GetVertex(new Vector3(rPos.X + glyph.BoundsInTexture.Width, rPos.Y + glyph.BoundsInTexture.Height, 0), color, TexCoord(glyph.BoundsInTexture.Right, glyph.BoundsInTexture.Bottom));
+
+                    _indexBuffer.Add(tl);
+                    _indexBuffer.Add(tr);
+                    _indexBuffer.Add(bl);
+
+                    _indexBuffer.Add(tr);
+                    _indexBuffer.Add(bl);
+                    _indexBuffer.Add(br);
+
+                    offset.X += glyph.Width + glyph.RightSideBearing;
+                }
+
+
+
+            }
+        }
+
+        private Vector2 TexCoord(int left, int top)
+        {
+            var tex = _texture ?? _white;
+
+            float u = (float)left / (float)tex.Width;
+            float v = (float)top / (float)tex.Height;
+
+            return new Vector2(u, v);
         }
     }
 }
