@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using AlkalineThunder.CodenameLadouceur.Debugging;
+using AlkalineThunder.Nucleus.Debugging;
 
-namespace AlkalineThunder.CodenameLadouceur.Input
+namespace AlkalineThunder.Nucleus.Input
 {
     public sealed class InputManager : GameComponent
     {

@@ -1,4 +1,4 @@
-﻿namespace AlkalineThunder.CodenameLadouceur.Debugging
+﻿namespace AlkalineThunder.Nucleus.Debugging
 {
     public enum LogLevel
     {

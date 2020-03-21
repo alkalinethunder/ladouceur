@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AlkalineThunder.CodenameLadouceur.Gui;
+using AlkalineThunder.Nucleus.Gui;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace AlkalineThunder.CodenameLadouceur.Rendering
+namespace AlkalineThunder.Nucleus.Rendering
 {
     public struct Brush
     {

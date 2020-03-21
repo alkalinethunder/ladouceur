@@ -3,13 +3,13 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AlkalineThunder.CodenameLadouceur.Input;
-using AlkalineThunder.CodenameLadouceur.Screens;
+using AlkalineThunder.Nucleus.Input;
+using AlkalineThunder.Nucleus.Screens;
 using AlkalineThunder.DevConsole;
-using AlkalineThunder.CodenameLadouceur.Rendering;
-using AlkalineThunder.CodenameLadouceur.Gui;
+using AlkalineThunder.Nucleus.Rendering;
+using AlkalineThunder.Nucleus.Gui;
 
-namespace AlkalineThunder.CodenameLadouceur
+namespace AlkalineThunder.Nucleus
 {
     public sealed class GameLoop : Game
     {
@@ -26,12 +26,12 @@ namespace AlkalineThunder.CodenameLadouceur
             Instance = this;
 
             _graphics = new GraphicsDeviceManager(this);
-            _graphics.IsFullScreen = true;
+            _graphics.IsFullScreen = false;
 
             var nativeResolution = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
 
-            _graphics.PreferredBackBufferWidth = nativeResolution.Width;
-            _graphics.PreferredBackBufferHeight = nativeResolution.Height;
+            _graphics.PreferredBackBufferWidth = 1366;
+            _graphics.PreferredBackBufferHeight = 768;
 
             IsFixedTimeStep = true;
             IsMouseVisible = true;

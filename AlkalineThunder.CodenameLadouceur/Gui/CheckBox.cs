@@ -1,10 +1,10 @@
-﻿using AlkalineThunder.CodenameLadouceur.Input;
+﻿using AlkalineThunder.Nucleus.Input;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AlkalineThunder.CodenameLadouceur.Gui
+namespace AlkalineThunder.Nucleus.Gui
 {
     public sealed class CheckBox : ContentControl
     {

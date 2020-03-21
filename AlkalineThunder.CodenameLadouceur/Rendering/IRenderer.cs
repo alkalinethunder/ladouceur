@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using AlkalineThunder.MultiColorText;
-using AlkalineThunder.CodenameLadouceur.Gui;
+using AlkalineThunder.Nucleus.Gui;
 
-namespace AlkalineThunder.CodenameLadouceur.Rendering
+namespace AlkalineThunder.Nucleus.Rendering
 {
     public interface IRenderer : ITextRenderer
     {

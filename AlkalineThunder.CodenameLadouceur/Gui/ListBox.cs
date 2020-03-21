@@ -1,4 +1,4 @@
-﻿using AlkalineThunder.CodenameLadouceur.Input;
+﻿using AlkalineThunder.Nucleus.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AlkalineThunder.CodenameLadouceur.Gui
+namespace AlkalineThunder.Nucleus.Gui
 {
     public sealed class ListBox : Control
     {

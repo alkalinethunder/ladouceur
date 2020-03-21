@@ -1,4 +1,4 @@
-﻿using AlkalineThunder.CodenameLadouceur.Gui;
+﻿using AlkalineThunder.Nucleus.Gui;
 using AlkalineThunder.DevConsole;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AlkalineThunder.CodenameLadouceur.Rendering
+namespace AlkalineThunder.Nucleus.Rendering
 {
     public sealed class Renderer : IRenderer, IConsoleRenderer
     {

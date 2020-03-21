@@ -1,12 +1,12 @@
-﻿using AlkalineThunder.CodenameLadouceur.Gui;
-using AlkalineThunder.CodenameLadouceur.Rendering;
-using AlkalineThunder.CodenameLadouceur.Screens;
+﻿using AlkalineThunder.Nucleus.Gui;
+using AlkalineThunder.Nucleus.Rendering;
+using AlkalineThunder.Nucleus.Screens;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AlkalineThunder.CodenameLadouceur.Windowing
+namespace AlkalineThunder.Nucleus.Windowing
 {
     public class Window : IContentControl
     {

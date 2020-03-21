@@ -1,13 +1,13 @@
-﻿using AlkalineThunder.CodenameLadouceur.Gui;
-using AlkalineThunder.CodenameLadouceur.Rendering;
-using AlkalineThunder.CodenameLadouceur.Windowing;
+﻿using AlkalineThunder.Nucleus.Gui;
+using AlkalineThunder.Nucleus.Rendering;
+using AlkalineThunder.Nucleus.Windowing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace AlkalineThunder.CodenameLadouceur.Screens
+namespace AlkalineThunder.Nucleus.Screens
 {
     public abstract class Screen : ContentControl
     {

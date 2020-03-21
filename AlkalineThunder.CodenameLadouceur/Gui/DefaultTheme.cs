@@ -1,25 +1,29 @@
-﻿using AlkalineThunder.CodenameLadouceur.Rendering;
+﻿using AlkalineThunder.Nucleus.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace AlkalineThunder.CodenameLadouceur.Gui
+namespace AlkalineThunder.Nucleus.Gui
 {
     public sealed class DefaultTheme : GuiTheme
     {
         private SpriteFont _font = null;
+        private SpriteFont _title = null;
+        private SpriteFont _big = null;
+        private SpriteFont _small = null;
+        private SpriteFont _console = null;
 
         public bool DarkMode { get; set; } = true;
 
         public override SpriteFont DefaultFont => _font;
 
-        public override SpriteFont TitleFont => _font;
+        public override SpriteFont TitleFont => _title;
 
-        public override SpriteFont BigFont => _font;
+        public override SpriteFont BigFont => _big;
 
-        public override SpriteFont SmallFont => _font;
+        public override SpriteFont SmallFont => _small;
 
-        public override SpriteFont ConsoleFont => _font;
+        public override SpriteFont ConsoleFont => _console;
 
         public override Color DefaultBackground => DarkMode ? new Color(22,22,22) : Color.WhiteSmoke;
 
@@ -33,7 +37,7 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
         public override Brush ButtonPressedBrush => ButtonBrush.InColor(Color.Black);
 
-        public override SpriteFont TextEntryFont => _font;
+        public override SpriteFont TextEntryFont => DefaultFont;
 
         public override Color TextEntryHintColor => Color.Gray;
 
@@ -61,11 +65,21 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
         public override void LoadContent(ContentManager content)
         {
-            _font = content.Load<SpriteFont>("ConsoleFont");
+            _font = content.Load<SpriteFont>("Fonts/Default");
+            _title = content.Load<SpriteFont>("Fonts/Title");
+            _small = content.Load<SpriteFont>("Fonts/Small");
+            _big = content.Load<SpriteFont>("Fonts/Big");
+            _console = content.Load<SpriteFont>("Fonts/Console");
         }
 
         public override Color ToggleSwitchForegroundColor => Color.White;
         public override Color ToggleSwitchBackgroundColor => Color.Gray;
         public override Color ToggleSwitchActiveBackgroundColor => Color.CornflowerBlue;
+
+        public override Brush ProgressBarBrush => (DarkMode) ? Brush.Image.InColor(Color.Black) : Brush.Image.InColor(Color.White);
+
+        public override Brush ProgressBrush => Brush.Image.InColor(Color.CornflowerBlue);
+
+        public override Color SliderBarColor => DefaultForeground;
     }
 }

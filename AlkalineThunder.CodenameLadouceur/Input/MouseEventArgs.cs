@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AlkalineThunder.CodenameLadouceur.Input
+namespace AlkalineThunder.Nucleus.Input
 {
     public abstract class MouseEventArgs : EventArgs
     {

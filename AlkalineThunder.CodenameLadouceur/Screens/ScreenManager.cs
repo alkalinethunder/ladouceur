@@ -1,12 +1,12 @@
-﻿using AlkalineThunder.CodenameLadouceur.Gui;
-using AlkalineThunder.CodenameLadouceur.Rendering;
+﻿using AlkalineThunder.Nucleus.Gui;
+using AlkalineThunder.Nucleus.Rendering;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 
-namespace AlkalineThunder.CodenameLadouceur.Screens
+namespace AlkalineThunder.Nucleus.Screens
 {
     public sealed class ScreenManager : GameComponent
     {

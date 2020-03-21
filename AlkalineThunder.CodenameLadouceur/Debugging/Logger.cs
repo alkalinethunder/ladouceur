@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace AlkalineThunder.CodenameLadouceur.Debugging
+namespace AlkalineThunder.Nucleus.Debugging
 {
     public static class Logger
     {

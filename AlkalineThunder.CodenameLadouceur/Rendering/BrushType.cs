@@ -1,4 +1,4 @@
-﻿namespace AlkalineThunder.CodenameLadouceur.Rendering
+﻿namespace AlkalineThunder.Nucleus.Rendering
 {
     public enum BrushType
     {

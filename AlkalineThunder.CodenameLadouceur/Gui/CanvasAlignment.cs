@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 
-namespace AlkalineThunder.CodenameLadouceur.Gui
+namespace AlkalineThunder.Nucleus.Gui
 {
     public struct CanvasAlignment
     {

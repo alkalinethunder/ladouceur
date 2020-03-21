@@ -1,4 +1,4 @@
-﻿namespace AlkalineThunder.CodenameLadouceur.Input
+﻿namespace AlkalineThunder.Nucleus.Input
 {
     public sealed class MouseMoveEventArgs : MouseEventArgs
     {

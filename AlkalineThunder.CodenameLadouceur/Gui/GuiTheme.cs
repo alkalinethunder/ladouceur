@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AlkalineThunder.CodenameLadouceur.Rendering;
+using AlkalineThunder.Nucleus.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace AlkalineThunder.CodenameLadouceur.Gui
+namespace AlkalineThunder.Nucleus.Gui
 {
     public abstract class GuiTheme{
 
@@ -46,5 +46,16 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
 
         public virtual int ToggleSwitchNubRadius { get; } = 12;
         public virtual int ToggleSwitchNubPadding { get; } = 2;
+
+        public virtual int ProgressBarHeight => 4;
+
+        public abstract Brush ProgressBarBrush { get; }
+        public abstract Brush ProgressBrush { get; }
+
+        public abstract Color SliderBarColor { get; }
+        public virtual int SliderRadius { get; } = 10;
+        public virtual int SliderAxelHeight { get; } = 3;
+
+
     }
 }

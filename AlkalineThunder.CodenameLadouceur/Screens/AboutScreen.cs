@@ -1,4 +1,4 @@
-﻿using AlkalineThunder.CodenameLadouceur.Gui;
+﻿using AlkalineThunder.Nucleus.Gui;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace AlkalineThunder.CodenameLadouceur.Screens
+namespace AlkalineThunder.Nucleus.Screens
 {
     public sealed class AboutScreen : Screen
     {
@@ -20,10 +20,11 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
         private StackPanel _scrollerTest = new StackPanel();
         private ScrollPanel _scroller = new ScrollPanel();
         private StackPanel _scrollerContent = new StackPanel();
-        private WrapBox _wrapperTest = new WrapBox();
         private Texture2D _cogWheel = null;
         private Label _toggleLabel = new Label("Toggle switch");
         private ToggleSwitch _toggleSwitch = new ToggleSwitch();
+        private ProgressBar _testProgress = new ProgressBar();
+        private SliderBar _testSlider = new SliderBar();
 
         protected override void OnInitialize()
         {
@@ -37,22 +38,8 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
             canvas.Children.Add(_infoStacker);
             canvas.Children.Add(_buttons);
             canvas.Children.Add(_scrollerTest);
-            canvas.Children.Add(_wrapperTest);
-
-            canvas.SetAnchor(_wrapperTest, CanvasAlignment.Center);
-            canvas.SetAlignment(_wrapperTest, CanvasAlignment.Center);
-
-            for(int i = 0; i < 25; i++)
-            {
-                var lbl = new Label("This is element number " + (i + 1) + " of the wrap box.");
-                lbl.WrapWidth = 100;
-                _wrapperTest.Children.Add(lbl);
-            }
-
-            _wrapperTest.HorizontalSpacing = 15;
-            _wrapperTest.VerticalSpacing = 10;
-
-            _scrollerTest.Children.Add(new Label("Scroll Panel Test:"));
+            
+            _scrollerTest.Children.Add(new Label("Scroll Panel Test:", ActiveTheme.BigFont));
             _scrollerTest.Children.Add(_scroller);
 
             _scroller.Content = _scrollerContent;
@@ -80,7 +67,7 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
                 IsPassword = true
             });
 
-            _screensStacker.Children.Add(new Label("Other screens: "));
+            _screensStacker.Children.Add(new Label("Other screens: ", ActiveTheme.BigFont));
             _screensStacker.Children.Add(_shellTest);
 
             _shellTest.Content = new Label("Shell test");
@@ -102,7 +89,8 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
             _exit.Content.HorizontalAlignment = HorizontalAlignment.Center;
             _exit.Content.VerticalAlignment = VerticalAlignment.Middle;
 
-            _infoStacker.Children.Add(_nucleusText);
+            _infoStacker.Children.Add(new Label("Nucleus", ActiveTheme.TitleFont));
+            _infoStacker.Children.Add(new Label("UI Test - Developed by Alkaline Thunder", ActiveTheme.SmallFont));
 
             canvas.SetAnchor(_infoStacker, CanvasAlignment.BottomLeft);
             canvas.SetAlignment(_infoStacker, CanvasAlignment.BottomLeft);
@@ -115,16 +103,29 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
 
             _shellTest.Click += ShellTestClick;
 
-            var win = OpenWindow("Hello world!");
-            win.Content = new Label("This is a window.");
-
             _scrollerTest.Children.Add(_toggleSwitch);
             _toggleSwitch.Content = _toggleLabel;
 
             _scrollerTest.Spacing = 15;
+            _scrollerTest.Children.Add(_testProgress);
+            _scrollerTest.Children.Add(_testSlider);
 
             Content = canvas;
             base.OnInitialize();
+        }
+
+        protected override void OnUpdate(GameTime gameTime)
+        {
+            if (_testProgress.Progress >= 1)
+            {
+                _testProgress.Progress = 0;
+            }
+            else
+            {
+                _testProgress.Progress += (float)gameTime.ElapsedGameTime.TotalSeconds / 4;
+            }
+
+            base.OnUpdate(gameTime);
         }
 
         private void ShellTestClick(object sender, Input.MouseButtonEventArgs e)

@@ -1,7 +1,7 @@
-﻿using AlkalineThunder.CodenameLadouceur.Debugging;
+﻿using AlkalineThunder.Nucleus.Debugging;
 using System;
 
-namespace AlkalineThunder.CodenameLadouceur
+namespace AlkalineThunder.Nucleus
 {
     class Program
     {

@@ -1,5 +1,5 @@
-﻿using AlkalineThunder.CodenameLadouceur.Input;
-using AlkalineThunder.CodenameLadouceur.Rendering;
+﻿using AlkalineThunder.Nucleus.Input;
+using AlkalineThunder.Nucleus.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 
-namespace AlkalineThunder.CodenameLadouceur.Gui
+namespace AlkalineThunder.Nucleus.Gui
 {
     public abstract class Control : IRenderer
     {

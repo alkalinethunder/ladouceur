@@ -1,11 +1,11 @@
-﻿using AlkalineThunder.CodenameLadouceur.Gui;
+﻿using AlkalineThunder.Nucleus.Gui;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AlkalineThunder.CodenameLadouceur.Screens
+namespace AlkalineThunder.Nucleus.Screens
 {
     public sealed class ShellScreen : Screen
     {

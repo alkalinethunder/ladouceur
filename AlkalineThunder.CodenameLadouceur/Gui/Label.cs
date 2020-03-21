@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace AlkalineThunder.CodenameLadouceur.Gui
+namespace AlkalineThunder.Nucleus.Gui
 {
     public sealed class Label : Control
     {
@@ -19,6 +19,11 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         public Label(string text) : this()
         {
             this.Text = text;
+        }
+
+        public Label(string text, SpriteFont font) : this(text)
+        {
+            Font = font;
         }
 
         public string Text { get; set; } = string.Empty;

@@ -1,4 +1,4 @@
-﻿namespace AlkalineThunder.CodenameLadouceur.Gui
+﻿namespace AlkalineThunder.Nucleus.Gui
 {
     public enum VerticalAlignment
     {

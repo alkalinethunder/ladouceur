@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AlkalineThunder.CodenameLadouceur.Gui
+namespace AlkalineThunder.Nucleus.Gui
 {
     public sealed class TextChangedEventArgs : EventArgs
     {
