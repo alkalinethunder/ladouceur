@@ -63,5 +63,9 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         {
             _font = content.Load<SpriteFont>("ConsoleFont");
         }
+
+        public override Color ToggleSwitchForegroundColor => Color.White;
+        public override Color ToggleSwitchBackgroundColor => Color.Gray;
+        public override Color ToggleSwitchActiveBackgroundColor => Color.CornflowerBlue;
     }
 }

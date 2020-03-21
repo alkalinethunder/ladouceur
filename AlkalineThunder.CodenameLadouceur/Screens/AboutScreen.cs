@@ -22,6 +22,8 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
         private StackPanel _scrollerContent = new StackPanel();
         private WrapBox _wrapperTest = new WrapBox();
         private Texture2D _cogWheel = null;
+        private Label _toggleLabel = new Label("Toggle switch");
+        private ToggleSwitch _toggleSwitch = new ToggleSwitch();
 
         protected override void OnInitialize()
         {
@@ -115,6 +117,11 @@ namespace AlkalineThunder.CodenameLadouceur.Screens
 
             var win = OpenWindow("Hello world!");
             win.Content = new Label("This is a window.");
+
+            _scrollerTest.Children.Add(_toggleSwitch);
+            _toggleSwitch.Content = _toggleLabel;
+
+            _scrollerTest.Spacing = 15;
 
             Content = canvas;
             base.OnInitialize();

@@ -39,5 +39,12 @@ namespace AlkalineThunder.CodenameLadouceur.Gui
         public abstract Brush TextEntryBrush { get; }
         public abstract Brush TextEntryHoveredBrush { get; }
         public abstract Brush TextEntryFocusedBrush { get; }
+
+        public abstract Color ToggleSwitchBackgroundColor { get; }
+        public abstract Color ToggleSwitchForegroundColor { get; }
+        public abstract Color ToggleSwitchActiveBackgroundColor { get; }
+
+        public virtual int ToggleSwitchNubRadius { get; } = 12;
+        public virtual int ToggleSwitchNubPadding { get; } = 2;
     }
 }
