@@ -11,7 +11,7 @@ namespace AlkalineThunder.Nucleus.Windowing
 {
     public class Window : IContentControl
     {
-        public class WindowCollection : ICollection<Window>
+        public class WindowCollection : IReorderable<Window>
         {
             private List<Window> _windows = new List<Window>();
             private Screen _owner = null;
@@ -24,6 +24,24 @@ namespace AlkalineThunder.Nucleus.Windowing
             public int Count => _windows.Count;
 
             public bool IsReadOnly => false;
+
+            public void BringToFront(Window item)
+            {
+                if(Contains(item))
+                {
+                    _windows.Remove(item);
+                    _windows.Add(item);
+                }
+            }
+
+            public void SendToBack(Window item)
+            {
+                if(Contains(item))
+                {
+                    _windows.Remove(item);
+                    _windows.Insert(0, item);
+                }
+            }
 
             public void Add(Window item)
             {

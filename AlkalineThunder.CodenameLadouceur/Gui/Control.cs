@@ -15,7 +15,7 @@ namespace AlkalineThunder.Nucleus.Gui
     {
         private List<IAttachedProperty> _props = new List<IAttachedProperty>();
 
-        public sealed class ControlCollection : ICollection<Control>
+        public sealed class ControlCollection : IReorderable<Control>
         {
             private List<Control> _children = new List<Control>();
             private Control _owner = null;
@@ -81,6 +81,24 @@ namespace AlkalineThunder.Nucleus.Gui
             IEnumerator IEnumerable.GetEnumerator()
             {
                 return _children.GetEnumerator();
+            }
+
+            public void SendToBack(Control item)
+            {
+                if(Contains(item))
+                {
+                    _children.Remove(item);
+                    _children.Insert(0, item);
+                }
+            }
+
+            public void BringToFront(Control item)
+            {
+                if(Contains(item))
+                {
+                    _children.Remove(item);
+                    _children.Add(item);
+                }
             }
         }
 
