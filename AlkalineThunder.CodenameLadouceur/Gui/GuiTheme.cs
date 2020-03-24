@@ -56,6 +56,62 @@ namespace AlkalineThunder.Nucleus.Gui
         public virtual int SliderRadius { get; } = 10;
         public virtual int SliderAxelHeight { get; } = 3;
 
+        public virtual Color ConsoleBlack => DefaultBackground;
+        public virtual Color ConsoleWhite => DefaultForeground;
+        public virtual Color ConsoleGray => Color.Gray;
+        public virtual Color ConsoleDarkGray => Color.DarkGray;
+        public virtual Color ConsoleDarkRed => Color.DarkRed;
+        public virtual Color ConsoleDarkGreen => Color.DarkGreen;
+        public virtual Color ConsoleDarkBlue => Color.DarkBlue;
+        public virtual Color ConsoleDarkCyan => Color.DarkCyan;
+        public virtual Color ConsoleDarkYellow => Color.Orange;
+        public virtual Color ConsoleDarkMagenta => Color.DarkMagenta;
+        public virtual Color ConsoleRed => Color.Red;
+        public virtual Color ConsoleGreen => Color.Green;
+        public virtual Color ConsoleBlue => Color.Blue;
+        public virtual Color ConsoleYellow => Color.Yellow;
+        public virtual Color ConsoleMagenta => Color.Magenta;
+        public virtual Color ConsoleCyan => Color.Cyan;
+
+        public Color MapConsoleColor(ConsoleColor consoleColor)
+        {
+            switch (consoleColor)
+            {
+                case ConsoleColor.Black:
+                    return ConsoleBlack;
+                case ConsoleColor.White:
+                    return ConsoleWhite;
+                case ConsoleColor.Gray:
+                    return ConsoleGray;
+                case ConsoleColor.Red:
+                    return ConsoleRed;
+                case ConsoleColor.Green:
+                    return ConsoleGreen;
+                case ConsoleColor.Blue:
+                    return ConsoleBlue;
+                case ConsoleColor.Cyan:
+                    return ConsoleCyan;
+                case ConsoleColor.DarkGray:
+                    return ConsoleDarkGray;
+                case ConsoleColor.Magenta:
+                    return ConsoleMagenta;
+                case ConsoleColor.Yellow:
+                    return ConsoleYellow;
+                case ConsoleColor.DarkRed:
+                    return ConsoleDarkRed;
+                case ConsoleColor.DarkGreen:
+                    return ConsoleDarkGreen;
+                case ConsoleColor.DarkBlue:
+                    return ConsoleDarkBlue;
+                case ConsoleColor.DarkCyan:
+                    return ConsoleDarkCyan;
+                case ConsoleColor.DarkMagenta:
+                    return ConsoleDarkMagenta;
+                default:
+                    return ConsoleWhite;
+
+            }
+        }
 
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace AlkalineThunder.Nucleus.Gui
 {
@@ -81,5 +82,6 @@ namespace AlkalineThunder.Nucleus.Gui
         public override Brush ProgressBrush => Brush.Image.InColor(Color.CornflowerBlue);
 
         public override Color SliderBarColor => DefaultForeground;
+
     }
 }

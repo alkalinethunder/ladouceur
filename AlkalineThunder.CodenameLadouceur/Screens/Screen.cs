@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace AlkalineThunder.Nucleus.Screens
@@ -14,17 +15,20 @@ namespace AlkalineThunder.Nucleus.Screens
         private ScreenManager ScreenManager { get; set; }
         public ContentManager ContentManager { get; private set; }
 
-        private List<Window> _windows = new List<Window>();
-
-        public Window[] Windows => _windows.ToArray();
+        public Window.WindowCollection Windows { get; }
 
         public virtual Rectangle WindowBounds => Bounds;
+
+        public Screen()
+        {
+            Windows = new Window.WindowCollection(this);
+        }
 
         public Window OpenWindow(string titleText)
         {
             var win = new Window();
             win.Title = titleText;
-            _windows.Add(win);
+            Windows.Add(win);
             return win;
         }
 

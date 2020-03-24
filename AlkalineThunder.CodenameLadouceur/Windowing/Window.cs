@@ -3,6 +3,7 @@ using AlkalineThunder.Nucleus.Rendering;
 using AlkalineThunder.Nucleus.Screens;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,6 +11,77 @@ namespace AlkalineThunder.Nucleus.Windowing
 {
     public class Window : IContentControl
     {
+        public class WindowCollection : ICollection<Window>
+        {
+            private List<Window> _windows = new List<Window>();
+            private Screen _owner = null;
+
+            public WindowCollection(Screen screen)
+            {
+                _owner = screen ?? throw new ArgumentNullException(nameof(screen));
+            }
+
+            public int Count => _windows.Count;
+
+            public bool IsReadOnly => false;
+
+            public void Add(Window item)
+            {
+                if (item == null) throw new ArgumentNullException(nameof(item));
+                if (item.Screen != null) throw new InvalidOperationException("Window already belongs to this screen.");
+
+                _windows.Add(item);
+                item.Screen = this._owner;
+            }
+
+            public void Clear()
+            {
+                while(_windows.Count > 0)
+                {
+                    Remove(_windows[0]);
+                }
+            }
+
+            public bool Contains(Window item)
+            {
+                return item != null && item.Screen == _owner;
+            }
+
+            public void CopyTo(Window[] array, int arrayIndex)
+            {
+                _windows.CopyTo(array, arrayIndex);
+            }
+
+            public IEnumerator<Window> GetEnumerator()
+            {
+                return _windows.GetEnumerator();
+            }
+
+            public Window this[int index]
+            {
+                get => this._windows[index];
+            }
+
+            public bool Remove(Window item)
+            {
+                if(Contains(item))
+                {
+                    item.Screen = null;
+                    _windows.Remove(item);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return _windows.GetEnumerator();
+            }
+        }
+
         private Border _rootBorder = new Border();
         private StackPanel _mainStacker = new StackPanel();
         private StackPanel _titleStacker = new StackPanel();
@@ -21,6 +93,8 @@ namespace AlkalineThunder.Nucleus.Windowing
         private Button _maxButton = new Button();
         private Border _clientArea = new Border();
         private bool _dragging = false;
+
+        public Screen Screen { get; private set; }
 
         public Control Content
         {

@@ -39,7 +39,9 @@ namespace AlkalineThunder.Nucleus.Gui
 
         protected override Vector2 MeasureOverride()
         {
-            return Vector2.Zero;
+            var contentMeasure = (Content != null) ? Content.CalculateSize() : Vector2.Zero;
+
+            return new Vector2(contentMeasure.X, 0);
         }
 
         public void ScrollToTop()

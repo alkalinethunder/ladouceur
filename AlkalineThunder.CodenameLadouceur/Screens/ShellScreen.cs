@@ -1,4 +1,5 @@
 ﻿using AlkalineThunder.Nucleus.Gui;
+using AlkalineThunder.Nucleus.Windowing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -19,6 +20,9 @@ namespace AlkalineThunder.Nucleus.Screens
         private Button _appsButton = new Button();
         private StackPanel _panelButtons = new StackPanel();
         private Button _test = new Button();
+        private Window _terminalWindow = null;
+        private TerminalEmulator _terminal = new TerminalEmulator();
+        private ScrollPanel _terminalScroller = new ScrollPanel();
 
         protected override void OnInitialize()
         {
@@ -60,6 +64,10 @@ namespace AlkalineThunder.Nucleus.Screens
 
             _time.VerticalAlignment = VerticalAlignment.Middle;
 
+            _terminalWindow = OpenWindow("Terminal");
+
+            _terminalWindow.Content = _terminalScroller;
+            _terminalScroller.Content = _terminal;
             base.OnInitialize();
         }
 

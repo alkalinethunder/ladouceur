@@ -70,7 +70,7 @@ namespace AlkalineThunder.Nucleus.Screens
         {
             if(ActiveScreen != null)
             {
-                for(int i = ActiveScreen.Windows.Length - 1; i >= 0; i--)
+                for(int i = ActiveScreen.Windows.Count - 1; i >= 0; i--)
                 {
                     var win = ActiveScreen.Windows[i];
 
