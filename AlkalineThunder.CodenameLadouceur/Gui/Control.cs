@@ -115,6 +115,8 @@ namespace AlkalineThunder.Nucleus.Gui
         public int Width { get; set; }
         public int Height { get; set; }
 
+        public Control TopLevel => (Parent != null) ? Parent.TopLevel : this;
+
         protected virtual bool SupportsChildren => false;
         protected ControlCollection InternalChildren { get; } = null;
         public Control Parent { get; private set; }

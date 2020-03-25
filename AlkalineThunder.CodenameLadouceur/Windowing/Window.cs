@@ -2,6 +2,7 @@
 using AlkalineThunder.Nucleus.Rendering;
 using AlkalineThunder.Nucleus.Screens;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +12,8 @@ namespace AlkalineThunder.Nucleus.Windowing
 {
     public class Window : IContentControl
     {
+        private bool _isContentLoaded = false;
+
         public class WindowCollection : IReorderable<Window>
         {
             private List<Window> _windows = new List<Window>();
@@ -50,6 +53,12 @@ namespace AlkalineThunder.Nucleus.Windowing
 
                 _windows.Add(item);
                 item.Screen = this._owner;
+
+                if(_owner.ContentManager != null && !item._isContentLoaded)
+                {
+                    item.LoadContent();
+                    item._isContentLoaded = true;
+                }
             }
 
             public void Clear()
@@ -106,9 +115,9 @@ namespace AlkalineThunder.Nucleus.Windowing
         private ImageBox _titleIcon = new ImageBox();
         private Label _titleText = new Label();
         private StackPanel _titleButtons = new StackPanel();
-        private Button _closeButton = new Button();
-        private Button _minButton = new Button();
-        private Button _maxButton = new Button();
+        private ImageBox _closeButton = new ImageBox();
+        private ImageBox _minButton = new ImageBox();
+        private ImageBox _maxButton = new ImageBox();
         private Border _clientArea = new Border();
         private bool _dragging = false;
 
@@ -163,10 +172,6 @@ namespace AlkalineThunder.Nucleus.Windowing
 
             _titleText.VerticalAlignment = VerticalAlignment.Middle;
 
-            _closeButton.Content = new Label("X");
-            _maxButton.Content = new Label("[]");
-            _minButton.Content = new Label("_");
-
             _maxButton.Click += MaximizeHandler;
 
             _titleStacker.MouseDown += StartDrag;
@@ -195,6 +200,7 @@ namespace AlkalineThunder.Nucleus.Windowing
         {
             if(e.Button == Input.MouseButton.Left && WindowState == WindowState.Normal)
             {
+                Screen.Windows.BringToFront(this);
                 _dragging = true;
             }
         }
@@ -213,6 +219,15 @@ namespace AlkalineThunder.Nucleus.Windowing
 
         public void Update(Screen owningScreen, GameTime gameTime)
         {
+            if(!_isContentLoaded)
+            {
+                if(Screen.ContentManager != null)
+                {
+                    LoadContent();
+                    _isContentLoaded = true;
+                }
+            }
+
             if(WindowState == WindowState.Maximized)
             {
                 Control.PlaceControl(WindowBorder, owningScreen.WindowBounds);
@@ -239,6 +254,17 @@ namespace AlkalineThunder.Nucleus.Windowing
         public Control FindControl(int x, int y)
         {
             return WindowBorder.FindControl(x, y);
+        }
+
+        private void LoadContent()
+        {
+            _closeButton.Image = Screen.ContentManager.Load<Texture2D>("Textures/WindowBorder/Close");
+            _maxButton.Image = Screen.ContentManager.Load<Texture2D>("Textures/WindowBorder/Max");
+            _minButton.Image = Screen.ContentManager.Load<Texture2D>("Textures/WindowBorder/Min");
+
+            _closeButton.VerticalAlignment = VerticalAlignment.Middle;
+            _maxButton.VerticalAlignment = VerticalAlignment.Middle;
+            _minButton.VerticalAlignment = VerticalAlignment.Middle;
         }
 
         public void Draw(GameTime gameTime, Renderer renderer)

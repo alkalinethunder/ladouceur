@@ -37,32 +37,6 @@ namespace AlkalineThunder.Nucleus.Gui
 
         protected override void OnDraw(GameTime gameTime)
         {
-            FillRectangle(ContentBounds, ActiveTheme.MapConsoleColor(ConsoleColor.Black));
-
-            _myRenderer.DefaultColor = ActiveTheme.MapConsoleColor(ConsoleColor.Gray);
-
-            if(IsFocused)
-            {
-                // First we draw a background layer of the terminal as a hack.
-                // In this background layer, everything but the current input pos
-                // transparent.  We also insert a cursor char at that position.
-                var hackInput = _input;
-                if (_inputPos < hackInput.Length)
-                {
-                    hackInput = hackInput.Remove(_inputPos, 1);
-                }
-                
-                hackInput = hackInput.Insert(_inputPos, $"{CURSOR_CHAR}\\{CURSOR_CHAR}{CURSOR_CHAR}");
-
-                _myRenderer.DefaultColor = Color.Transparent;
-                _myRenderer.SetColor(CURSOR_CHAR, ActiveTheme.MapConsoleColor(ConsoleColor.White));
-                _myRenderer.DrawString(this, _text + hackInput, ActiveTheme.ConsoleFont, new Vector2(ContentBounds.Left, ContentBounds.Top), ContentBounds.Width);
-
-            }
-            else
-            {
-                _myRenderer.DrawString(this, Text, ActiveTheme.ConsoleFont, new Vector2(ContentBounds.Left, ContentBounds.Top), ContentBounds.Width);
-            }
         }
     }
 }
