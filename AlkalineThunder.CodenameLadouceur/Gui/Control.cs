@@ -425,6 +425,7 @@ namespace AlkalineThunder.Nucleus.Gui
         }
 
         public bool IsFocused => Screens.ScreenManager.FocusedControl == this;
+        public bool HasAnyFocus => IsFocused || InternalChildren.Any(x => x.HasAnyFocus);
 
         public bool HasParent(Control control)
         {
