@@ -138,14 +138,14 @@ namespace AlkalineThunder.Nucleus.Screens
 
                 if(FocusedControl != null)
                 {
-                    Propagate(HoveredControl, x => x.FireLostFocus(ev));
+                    Propagate(FocusedControl, x => x.FireLostFocus(ev));
                 }
 
                 FocusedControl = control;
 
                 if (FocusedControl != null)
                 {
-                    Propagate(HoveredControl, x => x.FireGainedFocus(ev));
+                    Propagate(FocusedControl, x => x.FireGainedFocus(ev));
                 }
             }
         }
@@ -166,10 +166,18 @@ namespace AlkalineThunder.Nucleus.Screens
                         {
                             SetFocus(_preFocus);
                         }
+                        else
+                        {
+                            SetFocus(null);
+                        }
                     }
 
                     _preFocus = null;
                 }
+            }
+            else
+            {
+                SetFocus(null);
             }
         }
 
