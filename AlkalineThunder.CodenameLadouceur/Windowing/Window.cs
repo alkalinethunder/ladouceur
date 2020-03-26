@@ -232,6 +232,19 @@ namespace AlkalineThunder.Nucleus.Windowing
             // GUI system can't do this due to reasons.  Why? BEcause reasons.  Is it your fault?
             // No, chill.  Otherwise I'll have to cancle you.  Fuck I need to stop quoting that guy...
             GameLoop.Instance.Input.MouseMove += Drag;
+
+            _closeButton.Click += HandleClose;
+            _minButton.Click += HGandleMinimize;
+        }
+
+        private void HGandleMinimize(object sender, Input.MouseButtonEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        } 
+
+        private void HandleClose(object sender, Input.MouseButtonEventArgs e)
+        {
+            Screen.Windows.Remove(this);
         }
 
         private void Drag(object sender, Input.MouseMoveEventArgs e)
@@ -271,47 +284,50 @@ namespace AlkalineThunder.Nucleus.Windowing
 
         public void Update(Screen owningScreen, GameTime gameTime)
         {
-            if(!_isContentLoaded)
+            if (WindowState != WindowState.Minimized)
             {
-                if(Screen.ContentManager != null)
+                if (!_isContentLoaded)
                 {
-                    LoadContent();
-                    _isContentLoaded = true;
+                    if (Screen.ContentManager != null)
+                    {
+                        LoadContent();
+                        _isContentLoaded = true;
+                    }
                 }
+
+                if (WindowState == WindowState.Maximized)
+                {
+                    Control.PlaceControl(WindowBorder, owningScreen.WindowBounds);
+                }
+                else if (WindowState == WindowState.Normal)
+                {
+                    var center = owningScreen.WindowBounds.Center;
+                    var winPos = center + new Point(X, Y);
+
+                    var winSize = WindowBorder.CalculateSize();
+
+                    var winPosActual = winPos.ToVector2() - new Vector2(winSize.X / 2, winSize.Y / 2);
+
+                    Control.PlaceControl(WindowBorder, new Rectangle(
+                            (int)winPosActual.X,
+                            (int)winPosActual.Y,
+                            (int)winSize.X,
+                            (int)winSize.Y
+                        ));
+                }
+                WindowBorder.Update(gameTime);
+
+                _clientArea.Color = Screen.ActiveTheme.WindowBackground;
+
+                SetColors(IsActive ? Screen.ActiveTheme.WindowActiveColor : Screen.ActiveTheme.WindowInactiveColor);
+
+                _rootBorder.Color = Color.Transparent;
             }
-
-            if(WindowState == WindowState.Maximized)
-            {
-                Control.PlaceControl(WindowBorder, owningScreen.WindowBounds);
-            }
-            else if(WindowState == WindowState.Normal)
-            {
-                var center = owningScreen.WindowBounds.Center;
-                var winPos = center + new Point(X, Y);
-
-                var winSize = WindowBorder.CalculateSize();
-
-                var winPosActual = winPos.ToVector2() - new Vector2(winSize.X / 2, winSize.Y / 2);
-
-                Control.PlaceControl(WindowBorder, new Rectangle(
-                        (int)winPosActual.X,
-                        (int)winPosActual.Y,
-                        (int)winSize.X,
-                        (int)winSize.Y
-                    ));
-            }
-            WindowBorder.Update(gameTime);
-
-            _clientArea.Color = Screen.ActiveTheme.WindowBackground;
-
-            SetColors(IsActive ? Screen.ActiveTheme.WindowActiveColor : Screen.ActiveTheme.WindowInactiveColor);
-
-            _rootBorder.Color = Color.Transparent;
         }
 
         public Control FindControl(int x, int y)
         {
-            return WindowBorder.FindControl(x, y);
+            return WindowState == WindowState.Minimized ? null : WindowBorder.FindControl(x, y);
         }
 
         private void LoadContent()
@@ -364,7 +380,10 @@ namespace AlkalineThunder.Nucleus.Windowing
 
         public void Draw(GameTime gameTime, Renderer renderer)
         {
-            WindowBorder.Draw(gameTime, renderer);
+            if (WindowState != WindowState.Minimized)
+            {
+                WindowBorder.Draw(gameTime, renderer);
+            }
         }
     }
 
