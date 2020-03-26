@@ -30,8 +30,8 @@ namespace AlkalineThunder.Nucleus
 
             var nativeResolution = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
 
-            _graphics.PreferredBackBufferWidth = 1366;
-            _graphics.PreferredBackBufferHeight = 768;
+            _graphics.PreferredBackBufferWidth = nativeResolution.Width;
+            _graphics.PreferredBackBufferHeight = nativeResolution.Height;
 
             IsFixedTimeStep = true;
             IsMouseVisible = true;

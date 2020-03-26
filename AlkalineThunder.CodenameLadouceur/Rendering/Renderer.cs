@@ -49,7 +49,7 @@ namespace AlkalineThunder.Nucleus.Rendering
 
         private void SetGraphicsState()
         {
-            _gfx.SamplerStates[0] = SamplerState.PointClamp;
+            _gfx.SamplerStates[0] = SamplerState.AnisotropicClamp;
             _gfx.BlendState = BlendState.AlphaBlend;
             _gfx.DepthStencilState = DepthStencilState.None;
             _gfx.RasterizerState = new RasterizerState
@@ -162,7 +162,7 @@ namespace AlkalineThunder.Nucleus.Rendering
 
             // Now compute the edges.
             var left = new Rectangle(rect.Left, tlRect.Bottom, edges.Left, rect.Height - edges.Height);
-            var top = new Rectangle(tlRect.Right, rect.Top, rect.Width - edges.Width, edges.Height);
+            var top = new Rectangle(tlRect.Right, rect.Top, rect.Width - edges.Width, edges.Top);
             var right = new Rectangle(trRect.Left, trRect.Bottom, edges.Right, left.Height);
             var bottom = new Rectangle(blRect.Right, blRect.Top, top.Width, edges.Bottom);
 
@@ -214,10 +214,10 @@ namespace AlkalineThunder.Nucleus.Rendering
             var bl = new Vector3(tl.X, tl.Y + rect.Height, 0);
             var br = new Vector3(tr.X, tr.Y + rect.Height, 0);
 
-            var uvTL = LinearMap(new Vector2(tl.X, tl.Y), rect, uvRect);
-            var uvTR = LinearMap(new Vector2(tr.X, tr.Y), rect, uvRect);
-            var uvBL = LinearMap(new Vector2(bl.X, bl.Y), rect, uvRect);
-            var uvBR = LinearMap(new Vector2(br.X, br.Y), rect, uvRect);
+            var uvTL = new Vector2(uvRect.U, uvRect.V);
+            var uvTR = new Vector2(uvRect.Right, uvRect.Top);
+            var uvBL = new Vector2(uvRect.Left, uvRect.Bottom);
+            var uvBR = new Vector2(uvRect.Right, uvRect.Bottom);
 
             var tlIndex = GetVertex(tl, color, uvTL);
             var trIndex = GetVertex(tr, color, uvTR);

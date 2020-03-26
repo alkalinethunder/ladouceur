@@ -58,22 +58,13 @@ namespace AlkalineThunder.Nucleus.Rendering
 
         public static UVRectangle Map(Rectangle outerRect, Rectangle innerRect)
         {
-            // this is what the outer rect is considered to be.
-            var unit = Unit;
+            float u = ((float)innerRect.X - outerRect.X) / outerRect.Width;
+            float v = ((float)innerRect.Y - outerRect.Y) / outerRect.Height;
 
-            // Size is inner rect / outer rect.
-            unit.Width = (float)innerRect.Width / (float)outerRect.Width;
-            unit.Height = (float)innerRect.Height / (float)outerRect.Height;
+            float w = (float)innerRect.Width / outerRect.Width;
+            float h = (float)innerRect.Height / outerRect.Height;
 
-            // Get inner position relative to outer rect.
-            var relX = innerRect.X - outerRect.Left;
-            var relY = innerRect.Y - outerRect.Top;
-
-            // UV coords are relative position / outer size.
-            unit.U = (float)relX / (float)outerRect.Width;
-            unit.V = (float)relY / (float)outerRect.Height;
-
-            return unit;
+            return new UVRectangle(u, v, w, h);
         }
     }
 }
