@@ -33,7 +33,7 @@ namespace AlkalineThunder.Nucleus.Rendering
 
         public void SetScissorRect(Rectangle rect)
         {
-
+            _gfx.ScissorRectangle = rect.IsEmpty ? _gfx.Viewport.Bounds : rect;
         }
 
         public void Begin()
@@ -81,7 +81,7 @@ namespace AlkalineThunder.Nucleus.Rendering
 
         private int GetVertex(Vector3 position, Color color, Vector2 texture)
         {
-            var vertex = new VertexPositionColorTexture(position, color, texture);
+            var vertex = new VertexPositionColorTexture(position, TintColor(color), texture);
 
             if(_vertexBuffer.Contains(vertex))
             {
