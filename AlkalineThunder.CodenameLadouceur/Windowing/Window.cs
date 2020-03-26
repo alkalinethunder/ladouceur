@@ -110,6 +110,7 @@ namespace AlkalineThunder.Nucleus.Windowing
         }
 
         private Border _rootBorder = new Border();
+        private Border _titleBackground = new Border();
         private StackPanel _mainStacker = new StackPanel();
         private StackPanel _titleStacker = new StackPanel();
         private ImageBox _titleIcon = new ImageBox();
@@ -120,6 +121,23 @@ namespace AlkalineThunder.Nucleus.Windowing
         private ImageBox _maxButton = new ImageBox();
         private Border _clientArea = new Border();
         private bool _dragging = false;
+
+        private Overlay _titleOverlay = new Overlay();
+        private StackPanel _horizBorderStacker = new StackPanel();
+
+        private ImageBox _leftBorder = new ImageBox();
+        private ImageBox _rightBorder = new ImageBox();
+
+        private ImageBox _blBorder = new ImageBox();
+        private ImageBox _brBorder = new ImageBox();
+        private ImageBox _bottomBorder = new ImageBox();
+
+        private ImageBox _trCorner = new ImageBox();
+        private ImageBox _tlCorner = new ImageBox();
+        private ImageBox _titleLeft = new ImageBox();
+        private ImageBox _titleRight = new ImageBox();
+
+        private StackPanel _bottomStacker = new StackPanel();
 
         public Screen Screen { get; private set; }
 
@@ -141,16 +159,47 @@ namespace AlkalineThunder.Nucleus.Windowing
             set => _titleText.Text = value;
         }
 
+        public bool IsActive => Screen.Windows[Screen.Windows.Count - 1] == this;
+
         public Window()
         {
             _rootBorder.Content = _mainStacker;
-            _mainStacker.Children.Add(_titleStacker);
-            _mainStacker.Children.Add(_clientArea);
+            _mainStacker.Children.Add(_titleOverlay);
+            _mainStacker.Children.Add(_horizBorderStacker);
+            _mainStacker.Children.Add(_bottomStacker);
+
+            _bottomStacker.Orientation = Orientation.Horizontal;
+
+            _bottomStacker.Children.Add(_blBorder);
+            _bottomStacker.Children.Add(_bottomBorder);
+            _bottomStacker.Children.Add(_brBorder);
+
+            _bottomStacker.SetSizeMode(_bottomBorder, SizeMode.Fill);
 
             _clientArea.MinWidth = 300;
             _clientArea.MinHeight = 300;
 
-            _mainStacker.SetSizeMode(_clientArea, SizeMode.Fill);
+            _mainStacker.SetSizeMode(_horizBorderStacker, SizeMode.Fill);
+
+            _horizBorderStacker.Children.Add(_leftBorder);
+            _horizBorderStacker.Children.Add(_clientArea);
+            _horizBorderStacker.Children.Add(_rightBorder);
+
+            _horizBorderStacker.SetSizeMode(_clientArea, SizeMode.Fill);
+
+            _titleOverlay.Children.Add(_titleBackground);
+            _titleOverlay.Children.Add(_titleLeft);
+            _titleOverlay.Children.Add(_tlCorner);
+            _titleOverlay.Children.Add(_titleRight);
+            _titleOverlay.Children.Add(_trCorner);
+            _titleOverlay.Children.Add(_titleStacker);
+
+            _titleLeft.HorizontalAlignment = HorizontalAlignment.Left;
+            _titleRight.HorizontalAlignment = HorizontalAlignment.Right;
+            _tlCorner.VerticalAlignment = VerticalAlignment.Top;
+            _trCorner.VerticalAlignment = VerticalAlignment.Top;
+            _tlCorner.HorizontalAlignment = HorizontalAlignment.Left;
+            _trCorner.HorizontalAlignment = HorizontalAlignment.Right;
 
             _titleStacker.Children.Add(_titleIcon);
             _titleStacker.Children.Add(_titleText);
@@ -174,8 +223,11 @@ namespace AlkalineThunder.Nucleus.Windowing
 
             _maxButton.Click += MaximizeHandler;
 
-            _titleStacker.MouseDown += StartDrag;
-            _titleStacker.MouseUp += EndDrag;
+            _titleOverlay.MouseDown += StartDrag;
+            _titleOverlay.MouseUp += EndDrag;
+
+            _titleStacker.VerticalAlignment = VerticalAlignment.Middle;
+            _titleStacker.Padding = new Padding(8, 0);
 
             // GUI system can't do this due to reasons.  Why? BEcause reasons.  Is it your fault?
             // No, chill.  Otherwise I'll have to cancle you.  Fuck I need to stop quoting that guy...
@@ -249,6 +301,12 @@ namespace AlkalineThunder.Nucleus.Windowing
                     ));
             }
             WindowBorder.Update(gameTime);
+
+            _clientArea.Color = Screen.ActiveTheme.WindowBackground;
+
+            SetColors(IsActive ? Screen.ActiveTheme.WindowActiveColor : Screen.ActiveTheme.WindowInactiveColor);
+
+            _rootBorder.Color = Color.Transparent;
         }
 
         public Control FindControl(int x, int y)
@@ -265,6 +323,43 @@ namespace AlkalineThunder.Nucleus.Windowing
             _closeButton.VerticalAlignment = VerticalAlignment.Middle;
             _maxButton.VerticalAlignment = VerticalAlignment.Middle;
             _minButton.VerticalAlignment = VerticalAlignment.Middle;
+
+            _leftBorder.Image = Screen.ContentManager.Load<Texture2D>("Textures/WindowBorder/LSide");
+            _rightBorder.Image = Screen.ContentManager.Load<Texture2D>("Textures/WindowBorder/RSide");
+
+            _horizBorderStacker.Orientation = Orientation.Horizontal;
+
+            _bottomBorder.Image = Screen.ContentManager.Load<Texture2D>("Textures/WindowBorder/WinBottom");
+
+            _blBorder.Image = Screen.ContentManager.Load<Texture2D>("Textures/WindowBorder/BLCorner");
+            _brBorder.Image = Screen.ContentManager.Load<Texture2D>("Textures/WindowBorder/BRCorner");
+
+            _titleBackground.Image = Screen.ContentManager.Load<Texture2D>("Textures/WindowBorder/WinTop");
+            _titleBackground.BorderType = BrushType.Box;
+            _titleBackground.BrushPadding = 6;
+
+            _titleLeft.Image = _leftBorder.Image;
+            _titleRight.Image = _rightBorder.Image;
+
+            _tlCorner.Image = Screen.ContentManager.Load<Texture2D>("Textures/WindowBorder/TLCorner");
+            _trCorner.Image = Screen.ContentManager.Load<Texture2D>("Textures/WindowBorder/TRCorner");
+        }
+
+        private void SetColors(Color color)
+        {
+            _trCorner.Tint = color;
+            _tlCorner.Tint = color;
+            _titleLeft.Tint = color;
+            _titleRight.Tint = color;
+
+            _titleBackground.Color = color;
+
+            _leftBorder.Tint = color;
+            _rightBorder.Tint = color;
+            _bottomBorder.Tint = color;
+
+            _brBorder.Tint = color;
+            _blBorder.Tint = color;
         }
 
         public void Draw(GameTime gameTime, Renderer renderer)

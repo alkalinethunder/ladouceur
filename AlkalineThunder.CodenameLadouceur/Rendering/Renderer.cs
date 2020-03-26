@@ -154,64 +154,42 @@ namespace AlkalineThunder.Nucleus.Rendering
             // Set the texture.
             SetTexture(texture);
 
-            // because I'm FUCKING LAZY.
-            texture = texture ?? _white;
+            // Start by computing corner rectangles.
+            var tlRect = new Rectangle(rect.Left, rect.Top, edges.Left, edges.Top);
+            var trRect = new Rectangle(rect.Right - edges.Right, rect.Top, edges.Right, edges.Top);
+            var blRect = new Rectangle(rect.Left, rect.Bottom - edges.Bottom, edges.Left, edges.Bottom);
+            var brRect = new Rectangle(rect.Right - edges.Right, rect.Bottom - edges.Bottom, edges.Right, edges.Bottom);
 
-            // Left edge
-            var tl = GetVertex(new Vector3(rect.Left, rect.Top, 0), color, TexCoord(0, 0));
-            var tr = GetVertex(new Vector3(rect.Left + edges.Left, rect.Top, 0), color, TexCoord(edges.Left, 0));
-            var bl = GetVertex(new Vector3(rect.Left, rect.Bottom, 0), color, TexCoord(0, texture.Height));
-            var br = GetVertex(new Vector3(rect.Left + edges.Left, rect.Bottom, 0), color, TexCoord(edges.Left, texture.Height));
+            // Now compute the edges.
+            var left = new Rectangle(rect.Left, tlRect.Bottom, edges.Left, rect.Height - edges.Height);
+            var top = new Rectangle(tlRect.Right, rect.Top, rect.Width - edges.Width, edges.Height);
+            var right = new Rectangle(trRect.Left, trRect.Bottom, edges.Right, left.Height);
+            var bottom = new Rectangle(blRect.Right, blRect.Top, top.Width, edges.Bottom);
 
-            // add the triangles...
-            _indexBuffer.Add(tl);
-            _indexBuffer.Add(tr);
-            _indexBuffer.Add(bl);
-            _indexBuffer.Add(bl);
-            _indexBuffer.Add(br);
-            _indexBuffer.Add(tr);
+            // Compute UV rectangles next.
+            var uvTL = UVRectangle.Map(rect, tlRect);
+            var uvTR = UVRectangle.Map(rect, trRect);
+            var uvBL = UVRectangle.Map(rect, blRect);
+            var uvBR = UVRectangle.Map(rect, brRect);
 
-            // right edge
-            tl = GetVertex(new Vector3(rect.Right - edges.Right, rect.Top, 0), color, TexCoord(texture.Width - edges.Right, 0));
-            tr = GetVertex(new Vector3(rect.Right, rect.Top, 0), color, TexCoord(texture.Width, 0));
-            bl = GetVertex(new Vector3(rect.Right - edges.Right, rect.Bottom, 0), color, TexCoord(texture.Width - edges.Right, texture.Height));
-            br = GetVertex(new Vector3(rect.Right, rect.Bottom, 0), color, TexCoord(texture.Width, texture.Height));
+            // Compute UVs for edges.
+            var uvLeft = UVRectangle.Map(rect, left);
+            var uvRight = UVRectangle.Map(rect, right);
+            var uvTop = UVRectangle.Map(rect, top);
+            var uvBottom = UVRectangle.Map(rect, bottom);
 
-            // add the triangles...
-            _indexBuffer.Add(tl);
-            _indexBuffer.Add(tr);
-            _indexBuffer.Add(bl);
-            _indexBuffer.Add(bl);
-            _indexBuffer.Add(br);
-            _indexBuffer.Add(tr);
+            // Render all 8 quads now that we have the necessary information.
+            DrawQuad(tlRect, color, uvTL);
+            DrawQuad(trRect, color, uvTR);
+            DrawQuad(blRect, color, uvBL);
+            DrawQuad(brRect, color, uvBR);
 
-            // Top edge.
-            tl = GetVertex(new Vector3(rect.Left + edges.Left, rect.Top, 0), color, TexCoord(edges.Left, 0));
-            tr = GetVertex(new Vector3(rect.Right - edges.Right, rect.Top, 0), color, TexCoord(texture.Width - edges.Right, 0));
-            bl = GetVertex(new Vector3(rect.Left + edges.Left, rect.Top + edges.Top, 0), color, TexCoord(edges.Left, edges.Top));
-            br = GetVertex(new Vector3(rect.Right - edges.Right, rect.Top + edges.Top, 0), color, TexCoord(texture.Width - edges.Right, edges.Top));
+            DrawQuad(left, color, uvLeft);
+            DrawQuad(top, color, uvTop);
+            DrawQuad(right, color, uvRight);
+            DrawQuad(bottom, color, uvBottom);
 
-            // add the triangles...
-            _indexBuffer.Add(tl);
-            _indexBuffer.Add(tr);
-            _indexBuffer.Add(bl);
-            _indexBuffer.Add(bl);
-            _indexBuffer.Add(br);
-            _indexBuffer.Add(tr);
 
-            // Bottom edge.
-            tl = GetVertex(new Vector3(rect.Left + edges.Left, rect.Bottom - edges.Bottom, 0), color, TexCoord(edges.Left, texture.Height - edges.Bottom));
-            tr = GetVertex(new Vector3(rect.Right - edges.Right, rect.Bottom - edges.Bottom, 0), color, TexCoord(texture.Width - edges.Right, texture.Height - edges.Bottom));
-            bl = GetVertex(new Vector3(rect.Left + edges.Left, rect.Bottom, 0), color, TexCoord(edges.Left, texture.Height));
-            br = GetVertex(new Vector3(rect.Right - edges.Right, rect.Bottom, 0), color, TexCoord(texture.Width - edges.Right, texture.Height));
-
-            // add the triangles...
-            _indexBuffer.Add(tl);
-            _indexBuffer.Add(tr);
-            _indexBuffer.Add(bl);
-            _indexBuffer.Add(bl);
-            _indexBuffer.Add(br);
-            _indexBuffer.Add(tr);
         }
 
         public void FillRectangle(Rectangle rect, Texture2D texture, Color color, Padding edges)
@@ -219,27 +197,39 @@ namespace AlkalineThunder.Nucleus.Rendering
             // Draw the outline of the rectangle.
             DrawRectangle(rect, texture, color, edges);
 
-            // again, because I'm lazy.
-
-            texture = texture ?? _white;
-
-            // No need to set texture, DrawRectangle did it for us.
-            // But now we do need to get vertices for the inner rectangle.
+            // Inner rectangle for UV calculation.
             var innerRect = edges.Affect(rect);
 
-            var tl = GetVertex(new Vector3(innerRect.Left, innerRect.Top, 0), color, new Vector2(edges.Left, edges.Top));
-            var tr = GetVertex(new Vector3(innerRect.Right, innerRect.Top, 0), color, new Vector2(texture.Width - edges.Right, edges.Top));
-            var bl = GetVertex(new Vector3(innerRect.Left, innerRect.Bottom, 0), color, new Vector2(edges.Left, texture.Height - edges.Bottom));
-            var br = GetVertex(new Vector3(innerRect.Right, innerRect.Bottom, 0), color, new Vector2(texture.Width - edges.Right, texture.Height - edges.Bottom));
+            // This is the area of the texture we want to draw.
+            var uvRect = UVRectangle.Map(rect, innerRect);
 
-            // And now we add the triangles.
-            _indexBuffer.Add(tl);
-            _indexBuffer.Add(tr);
-            _indexBuffer.Add(bl);
+            // Draw a quad from that area of the texture.
+            DrawQuad(innerRect, color, uvRect);
+        }
 
-            _indexBuffer.Add(bl);
-            _indexBuffer.Add(br);
-            _indexBuffer.Add(tr);
+        private void DrawQuad(Rectangle rect, Color color, UVRectangle uvRect)
+        {
+            var tl = new Vector3(rect.Left, rect.Top, 0);
+            var tr = new Vector3(tl.X + rect.Width, tl.Y, 0);
+            var bl = new Vector3(tl.X, tl.Y + rect.Height, 0);
+            var br = new Vector3(tr.X, tr.Y + rect.Height, 0);
+
+            var uvTL = LinearMap(new Vector2(tl.X, tl.Y), rect, uvRect);
+            var uvTR = LinearMap(new Vector2(tr.X, tr.Y), rect, uvRect);
+            var uvBL = LinearMap(new Vector2(bl.X, bl.Y), rect, uvRect);
+            var uvBR = LinearMap(new Vector2(br.X, br.Y), rect, uvRect);
+
+            var tlIndex = GetVertex(tl, color, uvTL);
+            var trIndex = GetVertex(tr, color, uvTR);
+            var blIndex = GetVertex(bl, color, uvBL);
+            var brIndex = GetVertex(br, color, uvBR);
+
+            _indexBuffer.Add(tlIndex);
+            _indexBuffer.Add(trIndex);
+            _indexBuffer.Add(blIndex);
+            _indexBuffer.Add(blIndex);
+            _indexBuffer.Add(brIndex);
+            _indexBuffer.Add(trIndex);
         }
 
         public void DrawRectangle(Rectangle rect, Color color, int thickness)
@@ -273,7 +263,7 @@ namespace AlkalineThunder.Nucleus.Rendering
                         var tex = brush.Texture;
                         var edges = brush.Margin;
 
-                        if(brush.BrushType == BrushType.Box)
+                        if(brush.BrushType == BrushType.Border)
                         {
                             DrawRectangle(rect, tex, brush.BrushColor, edges);
                         }
@@ -430,6 +420,18 @@ namespace AlkalineThunder.Nucleus.Rendering
                     dest.Top + (dest.Height * y)
                 );
         }
+
+        private Vector2 LinearMap(Vector2 pos, Rectangle src, UVRectangle dest)
+        {
+            float x = (pos.X - src.Left) / src.Width;
+            float y = (pos.Y - src.Top) / src.Height;
+
+            return new Vector2(
+                    dest.Left + (dest.Width * x),
+                    dest.Top + (dest.Height * y)
+                );
+        }
+
 
         private Rectangle RectFromRadius(Vector2 center, float radius)
         {

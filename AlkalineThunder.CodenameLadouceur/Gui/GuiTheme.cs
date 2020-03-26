@@ -73,6 +73,10 @@ namespace AlkalineThunder.Nucleus.Gui
         public virtual Color ConsoleMagenta => Color.Magenta;
         public virtual Color ConsoleCyan => Color.Cyan;
 
+        public virtual Color WindowInactiveColor => DefaultBackground;
+        public virtual Color WindowActiveColor => SelectionBrush.BrushColor;
+        public virtual Color WindowBackground => DefaultBackground;
+
         public Color MapConsoleColor(ConsoleColor consoleColor)
         {
             switch (consoleColor)

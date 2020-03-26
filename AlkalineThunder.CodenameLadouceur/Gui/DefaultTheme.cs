@@ -83,5 +83,6 @@ namespace AlkalineThunder.Nucleus.Gui
 
         public override Color SliderBarColor => DefaultForeground;
 
+        
     }
 }
