@@ -49,7 +49,7 @@ namespace AlkalineThunder.Nucleus.Rendering
 
         private void SetGraphicsState()
         {
-            _gfx.SamplerStates[0] = SamplerState.AnisotropicClamp;
+            _gfx.SamplerStates[0] = SamplerState.PointClamp;
             _gfx.BlendState = BlendState.AlphaBlend;
             _gfx.DepthStencilState = DepthStencilState.None;
             _gfx.RasterizerState = new RasterizerState
@@ -166,29 +166,37 @@ namespace AlkalineThunder.Nucleus.Rendering
             var right = new Rectangle(trRect.Left, trRect.Bottom, edges.Right, left.Height);
             var bottom = new Rectangle(blRect.Right, blRect.Top, top.Width, edges.Bottom);
 
-            // Compute UV rectangles next.
-            var uvTL = UVRectangle.Map(rect, tlRect);
-            var uvTR = UVRectangle.Map(rect, trRect);
-            var uvBL = UVRectangle.Map(rect, blRect);
-            var uvBR = UVRectangle.Map(rect, brRect);
+            // We need to know the UV "sizes" that represent the widths and heights of the
+            // edges of the texture, based on the edges we've been given for this rectangle.
+            var texBounds = (_texture ?? _white).Bounds;
+            float uvLeft = (float)edges.Left / texBounds.Width;
+            float uvRight = (float)edges.Right / texBounds.Width;
+            float uvTop = (float)edges.Top / texBounds.Height;
+            float uvBottom = (float)edges.Bottom / texBounds.Height;
 
-            // Compute UVs for edges.
-            var uvLeft = UVRectangle.Map(rect, left);
-            var uvRight = UVRectangle.Map(rect, right);
-            var uvTop = UVRectangle.Map(rect, top);
-            var uvBottom = UVRectangle.Map(rect, bottom);
+            // Now we can start computing UVs for the corners.
+            var uvTL = new UVRectangle(0, 0, uvLeft, uvTop);
+            var uvTR = new UVRectangle(1 - uvRight, 0, uvRight, uvTop);
+            var uvBL = new UVRectangle(0, 1 - uvBottom, uvLeft, uvBottom);
+            var uvBR = new UVRectangle(1 - uvRight, 1 - uvBottom, uvRight, uvBottom);
 
-            // Render all 8 quads now that we have the necessary information.
+            // And now we can compute the edge UVs.
+            var uvLeftEdge = new UVRectangle(0, uvTop, uvLeft, 1 - (uvTop + uvBottom));
+            var uvTopEdge = new UVRectangle(uvLeft, 0, 1 - (uvLeft + uvRight), uvTop);
+            var uvRightEdge = new UVRectangle(1 - uvRight, uvLeftEdge.Top, uvRight, uvLeftEdge.Height);
+            var uvBottomEdge = new UVRectangle(uvTopEdge.Left, 1 - uvBottom, uvTopEdge.Width, uvBottom);
+
+            // And now draw corner quads.
             DrawQuad(tlRect, color, uvTL);
             DrawQuad(trRect, color, uvTR);
             DrawQuad(blRect, color, uvBL);
             DrawQuad(brRect, color, uvBR);
 
-            DrawQuad(left, color, uvLeft);
-            DrawQuad(top, color, uvTop);
-            DrawQuad(right, color, uvRight);
-            DrawQuad(bottom, color, uvBottom);
-
+            // Draw the edge quads next.
+            DrawQuad(left, color, uvLeftEdge);
+            DrawQuad(top, color, uvTopEdge);
+            DrawQuad(right, color, uvRightEdge);
+            DrawQuad(bottom, color, uvBottomEdge);
 
         }
 
@@ -197,11 +205,20 @@ namespace AlkalineThunder.Nucleus.Rendering
             // Draw the outline of the rectangle.
             DrawRectangle(rect, texture, color, edges);
 
-            // Inner rectangle for UV calculation.
-            var innerRect = edges.Affect(rect);
+            // So DrawRectangle does this for the outer edge but we need to do it for the
+            // inner area.  We need to know the same UV "sizes".
+            var texBounds = (_texture ?? _white).Bounds;
+            float uvLeft = (float)edges.Left / texBounds.Width;
+            float uvRight = (float)edges.Right / texBounds.Width;
+            float uvTop = (float)edges.Top / texBounds.Height;
+            float uvBottom = (float)edges.Bottom / texBounds.Height;
 
-            // This is the area of the texture we want to draw.
-            var uvRect = UVRectangle.Map(rect, innerRect);
+            // Only difference is we only need one uv rect, and it's way fucking easier
+            // to compute.
+            var uvRect = new UVRectangle(uvLeft, uvTop, 1 - (uvLeft + uvRight), 1 - (uvTop + uvBottom));
+
+            // And all we need now is the actual inner rectangle.
+            var innerRect = edges.Affect(rect);
 
             // Draw a quad from that area of the texture.
             DrawQuad(innerRect, color, uvRect);

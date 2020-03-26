@@ -352,7 +352,7 @@ namespace AlkalineThunder.Nucleus.Windowing
 
             _titleBackground.Image = Screen.ContentManager.Load<Texture2D>("Textures/WindowBorder/WinTop");
             _titleBackground.BorderType = BrushType.Box;
-            _titleBackground.BrushPadding = 5;
+            _titleBackground.BrushPadding = 4;
 
             _titleLeft.Image = _leftBorder.Image;
             _titleRight.Image = _rightBorder.Image;
