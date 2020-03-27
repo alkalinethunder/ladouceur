@@ -41,7 +41,7 @@ namespace AlkalineThunder.Nucleus.Gui
         {
             var contentMeasure = (Content != null) ? Content.CalculateSize() : Vector2.Zero;
 
-            return new Vector2(contentMeasure.X, 0);
+            return new Vector2(contentMeasure.X + ActiveTheme.ScrollBarWidth, (_content == null) ? 0 : _content.MinHeight);
         }
 
         public void ScrollToTop()
@@ -55,7 +55,7 @@ namespace AlkalineThunder.Nucleus.Gui
             {
                 if(_content.DesiredSize.Y >= ContentBounds.Height)
                 {
-                    _scrollOffset = (int)_content.DesiredSize.Y - ContentBounds.Height;
+                    _scrollOffset = -((int)_content.DesiredSize.Y - ContentBounds.Height);
                 }
                 else
                 {
@@ -89,7 +89,7 @@ namespace AlkalineThunder.Nucleus.Gui
                     PlaceControl(_content, new Rectangle(
                             ContentBounds.Left,
                             ContentBounds.Top,
-                            ContentBounds.Width,
+                            ContentBounds.Width - ActiveTheme.ScrollBarWidth,
                             (int)contentSize.Y
                         ));
                 }

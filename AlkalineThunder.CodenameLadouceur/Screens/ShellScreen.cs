@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AlkalineThunder.Nucleus.Screens
 {
@@ -68,6 +69,20 @@ namespace AlkalineThunder.Nucleus.Screens
 
             _terminalWindow.Content = _terminalScroller;
             _terminalScroller.Content = _terminal;
+
+            Task.Run(() =>
+            {
+                bool exit = false;
+                do
+                {
+                    _terminal.StandardOut.Write("> ");
+                    var line = _terminal.StandardIn.ReadLine();
+                    _terminal.StandardOut.WriteLine(line);
+
+                    if (line == "exit") exit = true;
+                } while (!exit);
+            });
+
             base.OnInitialize();
         }
 

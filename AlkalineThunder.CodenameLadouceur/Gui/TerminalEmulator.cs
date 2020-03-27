@@ -1,9 +1,13 @@
 ﻿using AlkalineThunder.MultiColorText;
 using AlkalineThunder.Nucleus.Input;
+using AlkalineThunder.Nucleus.Pty;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AlkalineThunder.Nucleus.Gui
 {
@@ -16,6 +20,41 @@ namespace AlkalineThunder.Nucleus.Gui
         private TextRenderer _myRenderer = new TextRenderer();
 
         public string Text => _text + _input;
+
+        private PseudoTerminal _master;
+        private PseudoTerminal _slave;
+
+        private StreamReader _stdin = null;
+        private StreamWriter _stdout = null;
+
+        public StreamReader StandardIn
+        {
+            get
+            {
+                if (_stdin == null)
+                    _stdin = new StreamReader(_master);
+
+                return _stdin;
+            }
+        }
+
+        public StreamWriter StandardOut
+        {
+            get
+            {
+                if (_stdout == null)
+                {
+                    _stdout = new StreamWriter(_master);
+                    _stdout.AutoFlush = true;
+                }
+                return _stdout;
+            }
+        }
+
+        public TerminalEmulator()
+        {
+            PseudoTerminal.CreatePair(out _master, out _slave);
+        }   
 
         protected override Vector2 MeasureOverride()
         {
@@ -63,6 +102,8 @@ namespace AlkalineThunder.Nucleus.Gui
 
             var actualSize = ActiveTheme.ConsoleFont.MeasureString(sb);
 
+            MinHeight = (int)minSize.Y;
+
             return new Vector2(minSize.X, Math.Max(minSize.Y, actualSize.Y));
         }
 
@@ -109,10 +150,15 @@ namespace AlkalineThunder.Nucleus.Gui
 
         private void SubmitInput()
         {
-            // TODO: std streams.
+            // Submit the input text to the slave stream.
+            for(int i = 0; i < _input.Length; i++)
+            {
+                _slave.WriteByte((byte)_input[i]);
+            }
 
-            // add input to text buffer.
-            _text += _input + Environment.NewLine; // Newline would be submitted to std stream too
+            // Submit a newline.
+            _slave.WriteByte((byte)'\r');
+            _slave.WriteByte((byte)'\n');
 
             // clear input, move cursor to start.
             _inputPos = 0;
@@ -305,6 +351,21 @@ namespace AlkalineThunder.Nucleus.Gui
                     x += measure.X;
                 }
             }
+        }
+
+        protected override void OnUpdate(GameTime gameTime)
+        {
+            int read = 0;
+            while ((read = _slave.ReadByte()) > 0)
+            {
+                _text += (char)read;
+                if(Parent is ScrollPanel sp)
+                {
+                    sp.ScrollToBottom();
+                }
+            }
+
+            base.OnUpdate(gameTime);
         }
     }
 }
