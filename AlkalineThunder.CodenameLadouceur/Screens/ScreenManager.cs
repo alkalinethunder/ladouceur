@@ -34,8 +34,6 @@ namespace AlkalineThunder.Nucleus.Screens
             input.MouseMove += HandleMouseMove;
             input.MouseScroll += HandleMouseScroll;
 
-            AddScreen<AboutScreen>();
-
             base.Initialize();
         }
 

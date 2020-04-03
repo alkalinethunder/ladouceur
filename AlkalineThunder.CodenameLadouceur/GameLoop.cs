@@ -21,6 +21,8 @@ namespace AlkalineThunder.Nucleus
         public InputManager Input { get; private set; }
         public DevConsole.DevConsole DevConsole { get; private set; }
 
+        public static event EventHandler GameReady;
+
         public GameLoop()
         {
             Instance = this;
@@ -60,6 +62,8 @@ namespace AlkalineThunder.Nucleus
             this.DevConsole.ConsoleFont = Content.Load<SpriteFont>("ConsoleFont");
 
             base.LoadContent();
+
+            GameReady?.Invoke(this, EventArgs.Empty);
         }
 
         protected override void Draw(GameTime gameTime)
