@@ -26,6 +26,9 @@ namespace AlkalineThunder.Nucleus.Windowing
         public abstract Brush BottomLeftBrush { get; }
         public abstract Brush BottomRightBrush { get; }
 
+        public abstract Color ActiveTitleTextColor { get; }
+        public virtual Color InactiveTitleTextColor { get; }
+
         public virtual Color ActiveFrameColor => Color.CornflowerBlue;
         public virtual Color InactiveFrameColor => Color.Gray;
 

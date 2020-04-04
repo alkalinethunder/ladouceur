@@ -47,6 +47,9 @@ namespace AlkalineThunder.Nucleus.Windowing
         public override Brush MaximizeButtonBrush => Color.Yellow;
         public override Brush MinimizeButtonBrush => Color.Green;
 
+        public override Color ActiveTitleTextColor => Color.White;
+        public override Color InactiveTitleTextColor => Color.Gray;
+
         public override void LoadContent(ContentManager content)
         {
         }

@@ -518,6 +518,14 @@ namespace AlkalineThunder.Nucleus.Windowing
             else
                 _minButton.Brush = ActiveDecorator.MinimizeButtonBrush;
 
+            if(IsActive)
+            {
+                _titleText.TextColor = ActiveDecorator.ActiveTitleTextColor;
+            }
+            else
+            {
+                _titleText.TextColor = ActiveDecorator.InactiveTitleTextColor;
+            }
         }
 
         public void Draw(GameTime gameTime, Renderer renderer)
