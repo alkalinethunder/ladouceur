@@ -127,5 +127,24 @@ namespace AlkalineThunder.Nucleus.Rendering
         {
             return new Brush(Texture, BrushColor, Margin, type);
         }
+
+        public Brush TintWith(Color color)
+        {
+            var originalColor = this.BrushColor;
+
+            var rPercent = (float)color.R / 255;
+            var gPercent = (float)color.G / 255;
+            var bPercent = (float)color.B / 255;
+            var aPercent = (float)color.A / 255;
+
+            var tintedColor = new Color(
+                    (byte)(originalColor.R * rPercent),
+                    (byte)(originalColor.G * gPercent),
+                    (byte)(originalColor.B * bPercent),
+                    (byte)(originalColor.A * aPercent)
+                );
+
+            return this.InColor(tintedColor);
+        }
     }
 }

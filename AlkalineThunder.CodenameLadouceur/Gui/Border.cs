@@ -9,14 +9,11 @@ namespace AlkalineThunder.Nucleus.Gui
 {
     public sealed class Border : ContentControl
     {
-        public Color Color { get; set; } = Color.White;
-        public Texture2D Image { get; set; } = null;
-        public BrushType BorderType { get; set; } = BrushType.Image;
-        public Padding BrushPadding { get; set; } = 0;
+        public Brush Brush { get; set; } = Brush.Image.InColor(Color.White);
 
         protected override void OnDraw(GameTime gameTime)
         {
-            DrawBrush(Bounds, new Brush(Image, Color, BrushPadding, BorderType));
+            DrawBrush(Bounds, Brush);
         }
     }
 }
