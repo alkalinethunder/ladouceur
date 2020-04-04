@@ -27,7 +27,7 @@ namespace AlkalineThunder.Nucleus.Gui
         }
 
         public string Text { get; set; } = string.Empty;
-        public Color TextColor { get => _textRenderer.DefaultColor; set => _textRenderer.DefaultColor = value; }
+        public Color? TextColor { get; set; } = null;
         public SpriteFont Font { get; set; }
         public float WrapWidth { get; set; } = 0;
 
@@ -48,6 +48,7 @@ namespace AlkalineThunder.Nucleus.Gui
         {
             if(!string.IsNullOrEmpty(Text))
             {
+                _textRenderer.DefaultColor = (TextColor == null) ? ActiveTheme.DefaultForeground : (Color)TextColor;
                 var realFont = Font ?? ActiveTheme.DefaultFont;
                 _textRenderer.DrawString(this, Text, realFont, new Vector2(Bounds.Left, Bounds.Top), WrapWidth);
             }

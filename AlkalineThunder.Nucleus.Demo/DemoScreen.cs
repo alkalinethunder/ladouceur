@@ -17,6 +17,7 @@ namespace AlkalineThunder.Nucleus.Demo
 
             stacker.Children.Add(new Label("Welcome to Nucleus!", ActiveTheme.TitleFont)
             {
+                TextColor = new Color(0x1B, 0xAA, 0xF7),
                 HorizontalAlignment = HorizontalAlignment.Center
             });
             stacker.Children.Add(new Label("If you are seeing this, then Nucleus is working correctly.  This is a demo of Nucleus' windowing system. Feel free to drag the window around, maximize it, minimize it, or do what you want with it.")
