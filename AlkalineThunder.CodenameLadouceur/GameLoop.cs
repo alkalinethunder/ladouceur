@@ -8,11 +8,13 @@ using AlkalineThunder.Nucleus.Screens;
 using AlkalineThunder.DevConsole;
 using AlkalineThunder.Nucleus.Rendering;
 using AlkalineThunder.Nucleus.Gui;
+using Microsoft.Xna.Framework.Content;
 
 namespace AlkalineThunder.Nucleus
 {
     public sealed class GameLoop : Game
     {
+        private ContentManager _engineContent = null;
         private GraphicsDeviceManager _graphics = null;
         private Renderer _renderer = null;
         
@@ -21,10 +23,15 @@ namespace AlkalineThunder.Nucleus
         public InputManager Input { get; private set; }
         public DevConsole.DevConsole DevConsole { get; private set; }
 
+        internal ContentManager EngineContent => _engineContent;
+
         public static event EventHandler GameReady;
 
         public GameLoop()
         {
+            _engineContent = new ContentManager(this.Services);
+            _engineContent.RootDirectory = "EngineContent";
+
             Instance = this;
 
             _graphics = new GraphicsDeviceManager(this);
@@ -43,7 +50,7 @@ namespace AlkalineThunder.Nucleus
 
         protected override void Initialize()
         {
-            Control.LoadTheme<DefaultTheme>(Content);
+            Control.LoadTheme<DefaultTheme>(EngineContent);
 
             _renderer = new Renderer(this.GraphicsDevice);
 
@@ -59,7 +66,7 @@ namespace AlkalineThunder.Nucleus
 
         protected override void LoadContent()
         {
-            this.DevConsole.ConsoleFont = Content.Load<SpriteFont>("ConsoleFont");
+            this.DevConsole.ConsoleFont = EngineContent.Load<SpriteFont>("ConsoleFont");
 
             base.LoadContent();
 
