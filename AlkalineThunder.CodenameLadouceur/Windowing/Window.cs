@@ -412,6 +412,11 @@ namespace AlkalineThunder.Nucleus.Windowing
                 SetColors(IsActive ? ActiveDecorator.ActiveFrameColor : ActiveDecorator.InactiveFrameColor);
 
                 _rootBorder.Brush = Brush.None;
+
+                if(WindowBorder.HasAnyFocus && !IsActive)
+                {
+                    Screen.Windows.BringToFront(this);
+                }
             }
         }
 
