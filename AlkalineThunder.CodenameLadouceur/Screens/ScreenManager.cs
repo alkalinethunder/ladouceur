@@ -160,14 +160,8 @@ namespace AlkalineThunder.Nucleus.Screens
                     // Are we still hovering over the same control?
                     if(_preFocus == HoveredControl)
                     {
-                        if (Propagate(_preFocus, x => x.FireClick(e)))
-                        {
-                            SetFocus(_preFocus);
-                        }
-                        else
-                        {
-                            SetFocus(null);
-                        }
+                        Propagate(_preFocus, x => x.FireClick(e));
+                        SetFocus(_preFocus);
                     }
 
                     _preFocus = null;
