@@ -221,7 +221,7 @@ namespace AlkalineThunder.Nucleus.Screens
 
                 screen.Update(gameTime);
 
-                foreach(var win in screen.Windows)
+                foreach(var win in screen.Windows.ToArray())
                 {
                     win.Update(screen, gameTime);
                 }
