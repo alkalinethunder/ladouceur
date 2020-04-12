@@ -170,7 +170,7 @@ namespace AlkalineThunder.Nucleus.Windowing
             set => _titleText.Text = value;
         }
 
-        public bool IsActive => Screen.Windows[Screen.Windows.Count - 1] == this || WindowBorder.HasAnyFocus;
+        public bool IsActive => Screen.Windows[Screen.Windows.Count - 1] == this && WindowBorder.HasAnyFocus;
 
         private bool _closeDown = false;
         private bool _closeOver = false;
