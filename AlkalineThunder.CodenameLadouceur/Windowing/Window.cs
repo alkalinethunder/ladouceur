@@ -356,6 +356,7 @@ namespace AlkalineThunder.Nucleus.Windowing
             if(e.Button == Input.MouseButton.Left && WindowState == WindowState.Normal)
             {
                 Screen.Windows.BringToFront(this);
+                GameLoop.Instance.ScreenManager.SetFocus(this.WindowBorder);
                 _dragging = true;
             }
         }
